@@ -1,3 +1,5 @@
+import { ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
 import ProductCard from "./ProductCard";
 import productPaleta from "@/assets/product-paleta.jpg";
 import productPelotas from "@/assets/product-pelotas.jpg";
@@ -10,7 +12,7 @@ const products = [
     price: "$189.990",
     originalPrice: "$229.990",
     image: productPaleta,
-    category: "Paletas",
+    category: "Palas",
     isNew: true,
     discount: "-17%",
   },
@@ -39,7 +41,7 @@ const products = [
     name: "Paleta Control Soft Touch",
     price: "$149.990",
     image: productPaleta,
-    category: "Paletas",
+    category: "Palas",
   },
   {
     name: "Kit Pelotas Presión x4",
@@ -66,20 +68,21 @@ const products = [
 
 const FeaturedProducts = () => {
   return (
-    <section className="py-20 md:py-28 bg-secondary/30">
+    <section className="py-20 md:py-28 bg-card/30">
       <div className="container mx-auto px-4">
         <div className="flex items-end justify-between mb-12">
           <div>
-            <h2 className="font-heading text-3xl md:text-5xl font-black tracking-tight">
+            <h2 className="font-heading text-3xl md:text-5xl font-black tracking-tighter uppercase">
               Productos <span className="text-gradient">destacados</span>
             </h2>
             <p className="mt-3 text-muted-foreground">
               Lo más vendido de la temporada
             </p>
           </div>
-          <a href="#" className="hidden md:flex items-center gap-1 text-sm font-medium text-primary hover:underline">
+          <Button variant="outline" className="hidden md:flex items-center gap-1 font-heading font-bold uppercase tracking-wider text-xs border-primary/30 text-primary hover:bg-primary/10">
             Ver todo
-          </a>
+            <ArrowRight className="w-4 h-4" />
+          </Button>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">

@@ -9,13 +9,13 @@ const features = [
 
 const PromoBanner = () => {
   return (
-    <section className="py-12 border-y border-border">
+    <section className="py-10 border-y border-border bg-card/50">
       <div className="container mx-auto px-4">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {features.map((f) => (
-            <div key={f.title} className="flex flex-col items-center text-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-primary/10 flex items-center justify-center">
-                <f.icon className="w-5 h-5 text-primary" />
+            <div key={f.title} className="flex flex-col items-center text-center gap-3 group">
+              <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 group-hover:border-primary/40 transition-all duration-300">
+                <f.icon className="w-6 h-6 text-primary" />
               </div>
               <div>
                 <p className="font-heading font-bold text-sm text-foreground">{f.title}</p>
