@@ -7,8 +7,8 @@ const Footer = () => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
             <a href="/" className="font-heading text-2xl font-black tracking-tighter">
-              <span className="text-primary">PADEL</span>
-              <span className="text-background">PRO</span>
+              <span className="text-primary">PUNTO</span>
+              <span className="text-background"> PÁDEL</span>
             </a>
             <p className="mt-3 text-sm text-background/60 leading-relaxed">
               Tu tienda online de pádel. Equipamiento premium para jugadores que van por todo.
@@ -53,7 +53,7 @@ const Footer = () => {
           </div>
         </div>
         <div className="border-t border-background/20 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-background/50">© 2026 PadelPro. Todos los derechos reservados.</p>
+          <p className="text-xs text-background/50">© 2026 Punto Pádel. Todos los derechos reservados.</p>
           <div className="flex items-center gap-1 text-xs text-background/50">
             <Zap className="w-3 h-3 text-primary" />
             Hecho con pasión por el pádel

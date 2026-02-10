@@ -4,23 +4,19 @@ import { ShoppingCart, Menu, X, ChevronDown, Search, Zap } from "lucide-react";
 const categories = [
   {
     name: "Palas",
-    subcategories: ["Control", "Potencia", "Polivalente", "Profesional"],
-  },
-  {
-    name: "Pelotas",
-    subcategories: ["Tubos x3", "Tubos x4", "Cajón x24"],
+    subcategories: ["Control", "Potencia", "Polivalente", "Profesional", "Principiante"],
   },
   {
     name: "Bolsos",
-    subcategories: ["Mochilas", "Paleteros", "Bolsos de viaje"],
+    subcategories: ["Mochilas", "Bolsos paleteros", "Fundas"],
   },
   {
     name: "Indumentaria",
-    subcategories: ["Remeras", "Shorts", "Calzas", "Camperas"],
+    subcategories: ["Remeras", "Shorts"],
   },
   {
     name: "Accesorios",
-    subcategories: ["Grips", "Protectores", "Muñequeras", "Viseras"],
+    subcategories: ["Pelotas", "Muñequeras", "Cubre grip", "Protectores", "Correas"],
   },
 ];
 
@@ -87,8 +83,8 @@ const Header = () => {
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
             <a href="/" className="font-heading text-2xl md:text-3xl font-black tracking-tighter">
-              <span className="text-primary">PADEL</span>
-              <span className="text-foreground">PRO</span>
+              <span className="text-primary">PUNTO</span>
+              <span className="text-foreground"> PÁDEL</span>
             </a>
 
             {/* Desktop Navigation */}
