@@ -83,7 +83,7 @@ const OffersSection = () => {
                 { val: pad(time.minutes), label: "MIN" },
                 { val: pad(time.seconds), label: "SEG" },
               ].map((t) => (
-                <div key={t.label} className="bg-card border border-border rounded-lg px-3 py-2 text-center min-w-[56px]">
+                <div key={t.label} className="bg-card border border-border rounded-lg px-3 py-2 text-center min-w-[56px] shadow-sm">
                   <span className="font-heading font-black text-2xl text-foreground animate-countdown inline-block">
                     {t.val}
                   </span>
@@ -103,7 +103,7 @@ const OffersSection = () => {
         </div>
 
         <div className="text-center mt-10">
-          <Button variant="outline" size="lg" className="font-heading font-bold text-base uppercase tracking-wider border-accent/40 text-accent hover:bg-accent/10 hover:border-accent">
+          <Button variant="outline" size="lg" className="font-heading font-bold text-base uppercase tracking-wider border-destructive/40 text-destructive hover:bg-destructive/10 hover:border-destructive">
             Ver todas las ofertas
             <ArrowRight className="ml-2 w-4 h-4" />
           </Button>

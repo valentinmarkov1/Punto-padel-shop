@@ -9,7 +9,7 @@ const features = [
 
 const PromoBanner = () => {
   return (
-    <section className="py-10 border-y border-border bg-card/50">
+    <section className="py-10 border-y border-border bg-secondary/50">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {features.map((f) => (
