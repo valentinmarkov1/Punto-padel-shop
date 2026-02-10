@@ -13,7 +13,7 @@ interface ProductCardProps {
 
 const ProductCard = ({ name, price, originalPrice, image, category, isNew, discount }: ProductCardProps) => {
   return (
-    <div className="group card-gradient rounded-2xl border border-border overflow-hidden transition-all duration-500 hover:border-primary/40 hover:shadow-[0_0_40px_hsl(145_80%_42%/0.12)] hover:-translate-y-1">
+    <div className="group bg-card rounded-2xl border border-border overflow-hidden transition-all duration-500 hover:border-primary/60 hover:shadow-lg hover:-translate-y-1">
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-secondary">
         <img

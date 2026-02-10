@@ -68,7 +68,7 @@ const products = [
 
 const FeaturedProducts = () => {
   return (
-    <section className="py-20 md:py-28 bg-card/30">
+    <section className="py-20 md:py-28 bg-secondary/30">
       <div className="container mx-auto px-4">
         <div className="flex items-end justify-between mb-12">
           <div>

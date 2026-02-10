@@ -37,7 +37,7 @@ const CategorySection = () => {
                 alt={cat.name}
                 className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
+              <div className="absolute inset-0 bg-gradient-to-t from-foreground/80 via-foreground/30 to-transparent" />
               
               {cat.tag && (
                 <div className="absolute top-3 left-3">
@@ -49,7 +49,7 @@ const CategorySection = () => {
               
               <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
                 <p className="text-xs text-primary font-bold mb-1 uppercase tracking-wider">{cat.count} productos</p>
-                <h3 className="font-heading text-xl md:text-2xl font-black text-foreground uppercase tracking-tight">{cat.name}</h3>
+                <h3 className="font-heading text-xl md:text-2xl font-black text-white uppercase tracking-tight">{cat.name}</h3>
                 <div className="flex items-center gap-1 mt-3 text-sm text-primary font-bold opacity-0 group-hover:opacity-100 transform translate-y-3 group-hover:translate-y-0 transition-all duration-300 uppercase tracking-wider">
                   Ver todo <ArrowRight className="w-4 h-4" />
                 </div>

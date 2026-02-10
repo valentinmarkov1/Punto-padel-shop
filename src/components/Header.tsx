@@ -55,6 +55,11 @@ const Header = () => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
         setSearchOpen(false);
       }
+      // Close dropdown when clicking outside nav
+      const nav = document.querySelector('nav');
+      if (nav && !nav.contains(e.target as Node)) {
+        setActiveDropdown(null);
+      }
     };
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
@@ -63,7 +68,7 @@ const Header = () => {
   return (
     <>
       {/* Top ticker */}
-      <div className="bg-primary text-primary-foreground overflow-hidden">
+      <div className="bg-foreground text-background overflow-hidden">
         <div className="animate-marquee flex whitespace-nowrap py-1.5">
           {Array.from({ length: 4 }).map((_, i) => (
             <span key={i} className="mx-8 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
@@ -77,12 +82,12 @@ const Header = () => {
         </div>
       </div>
 
-      <header className="sticky top-0 z-50 bg-background/90 backdrop-blur-xl border-b border-border">
+      <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-xl border-b border-border shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
             <a href="/" className="font-heading text-2xl md:text-3xl font-black tracking-tighter">
-              <span className="text-gradient">PADEL</span>
+              <span className="text-primary">PADEL</span>
               <span className="text-foreground">PRO</span>
             </a>
 
@@ -92,20 +97,21 @@ const Header = () => {
                 <div
                   key={cat.name}
                   className="relative"
-                  onMouseEnter={() => setActiveDropdown(cat.name)}
-                  onMouseLeave={() => setActiveDropdown(null)}
                 >
-                  <button className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-primary transition-colors uppercase tracking-wide">
+                  <button
+                    className="flex items-center gap-1 px-3 py-2 text-sm font-semibold text-foreground/80 hover:text-primary transition-colors uppercase tracking-wide"
+                    onClick={() => setActiveDropdown(activeDropdown === cat.name ? null : cat.name)}
+                  >
                     {cat.name}
-                    <ChevronDown className="w-3 h-3" />
+                    <ChevronDown className={`w-3 h-3 transition-transform ${activeDropdown === cat.name ? 'rotate-180' : ''}`} />
                   </button>
                   {activeDropdown === cat.name && (
-                    <div className="absolute top-full left-0 mt-1 w-52 bg-popover border border-border rounded-lg shadow-xl py-2 z-50 animate-fade-in">
+                    <div className="absolute top-full left-0 mt-1 w-52 bg-card border border-border rounded-lg shadow-xl py-2 z-50 animate-fade-in">
                       {cat.subcategories.map((sub) => (
                         <a
                           key={sub}
                           href="#"
-                          className="block px-4 py-2.5 text-sm text-popover-foreground/80 hover:text-primary hover:bg-secondary transition-colors font-medium"
+                          className="block px-4 py-2.5 text-sm text-foreground/70 hover:text-primary hover:bg-secondary transition-colors font-medium"
                         >
                           {sub}
                         </a>
@@ -114,7 +120,7 @@ const Header = () => {
                   )}
                 </div>
               ))}
-              <a href="#" className="px-3 py-2 text-sm font-bold text-accent uppercase tracking-wide hover:text-accent/80 transition-colors flex items-center gap-1">
+              <a href="#" className="px-3 py-2 text-sm font-bold text-destructive uppercase tracking-wide hover:text-destructive/80 transition-colors flex items-center gap-1">
                 <Zap className="w-3.5 h-3.5" />
                 Ofertas
               </a>
