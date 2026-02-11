@@ -69,9 +69,9 @@ const Header = () => {
             <span key={i} className="mx-8 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
               <Zap className="w-3 h-3 text-primary" /> ENVÍO GRATIS EN COMPRAS +$50.000
               <span className="mx-4 text-primary">•</span>
-              🔥 HASTA 40% OFF EN PALAS SELECCIONADAS
+              HASTA 40% OFF EN PALAS SELECCIONADAS
               <span className="mx-4 text-primary">•</span>
-              ⚡ NUEVA COLECCIÓN 2026 DISPONIBLE
+              NUEVA COLECCIÓN 2026 DISPONIBLE
             </span>
           ))}
         </div>
