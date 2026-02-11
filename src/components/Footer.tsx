@@ -2,13 +2,16 @@ import { Instagram, Facebook, Twitter, Zap } from "lucide-react";
 
 const Footer = () => {
   return (
-    <footer className="bg-foreground text-background border-t border-border pt-16 pb-8">
-      <div className="container mx-auto px-4">
+    <footer className="bg-foreground text-background border-t border-border pt-16 pb-8 relative overflow-hidden">
+      {/* Court texture */}
+      <div className="absolute inset-0 court-lines opacity-5" />
+
+      <div className="relative container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
             <a href="/" className="font-heading text-2xl font-black tracking-tighter">
-              <span className="text-primary">PUNTO</span>
-              <span className="text-background"> PÁDEL</span>
+              <span className="text-background">PUNTO</span>
+              <span className="text-primary"> PÁDEL</span>
             </a>
             <p className="mt-3 text-sm text-background/60 leading-relaxed">
               Tu tienda online de pádel. Equipamiento premium para jugadores que van por todo.

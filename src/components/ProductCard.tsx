@@ -9,11 +9,13 @@ interface ProductCardProps {
   category: string;
   isNew?: boolean;
   discount?: string;
+  level?: string;
+  type?: string;
 }
 
-const ProductCard = ({ name, price, originalPrice, image, category, isNew, discount }: ProductCardProps) => {
+const ProductCard = ({ name, price, originalPrice, image, category, isNew, discount, level, type }: ProductCardProps) => {
   return (
-    <div className="group bg-card rounded-2xl border border-border overflow-hidden transition-all duration-500 hover:border-primary/60 hover:shadow-lg hover:-translate-y-1">
+    <div className="group bg-card rounded-2xl border border-border overflow-hidden transition-all duration-500 hover:border-primary/60 hover:shadow-[0_8px_40px_hsl(48_96%_53%_/_0.15)] hover:-translate-y-2">
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-secondary">
         <img
@@ -22,20 +24,35 @@ const ProductCard = ({ name, price, originalPrice, image, category, isNew, disco
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
         {/* Badges */}
-        <div className="absolute top-3 left-3 flex gap-2">
+        <div className="absolute top-3 left-3 flex flex-col gap-2">
           {isNew && (
-            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-primary text-primary-foreground rounded-full">
-              Nuevo
+            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-[hsl(145,80%,42%)] text-white rounded-full shadow-[0_0_15px_hsl(145_80%_42%_/_0.4)]">
+              🆕 Nuevo
             </span>
           )}
           {discount && (
-            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-destructive text-destructive-foreground rounded-full">
-              {discount}
+            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-destructive text-destructive-foreground rounded-full animate-pulse shadow-[0_0_15px_hsl(0_90%_55%_/_0.4)]">
+              🔥 HOT DEAL {discount}
             </span>
           )}
         </div>
+        {/* Type/Level badges */}
+        {(level || type) && (
+          <div className="absolute top-3 right-3 flex flex-col gap-1.5">
+            {type && (
+              <span className="px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider bg-primary/90 text-primary-foreground rounded-full">
+                {type}
+              </span>
+            )}
+            {level && (
+              <span className="px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider bg-foreground/80 text-background rounded-full">
+                {level}
+              </span>
+            )}
+          </div>
+        )}
         {/* Hover Actions */}
-        <div className="absolute inset-0 bg-background/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4">
+        <div className="absolute inset-0 bg-foreground/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4">
           <Button size="icon" variant="secondary" className="rounded-full w-12 h-12 border border-border">
             <Eye className="w-5 h-5" />
           </Button>
@@ -43,11 +60,13 @@ const ProductCard = ({ name, price, originalPrice, image, category, isNew, disco
             <ShoppingCart className="w-5 h-5" />
           </Button>
         </div>
+        {/* Neon glow on hover */}
+        <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-primary via-[hsl(145,80%,42%)] to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
       {/* Info */}
       <div className="p-5 space-y-2">
-        <p className="text-[11px] text-primary font-bold uppercase tracking-widest">{category}</p>
+        <p className="text-[11px] text-[hsl(145,80%,42%)] font-bold uppercase tracking-widest">{category}</p>
         <h3 className="font-heading font-bold text-foreground text-sm leading-tight line-clamp-2">{name}</h3>
         <div className="flex items-center gap-2 pt-1">
           <span className="font-heading font-black text-xl text-foreground">{price}</span>

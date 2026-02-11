@@ -14,6 +14,8 @@ const offerProducts = [
     image: productPaleta,
     category: "Palas",
     discount: "-17%",
+    type: "Potencia",
+    level: "Avanzado",
   },
   {
     name: "Tubo de Pelotas Championship x3",
@@ -56,25 +58,29 @@ const OffersSection = () => {
 
   return (
     <section className="py-20 md:py-28 relative overflow-hidden">
-      {/* Background accent */}
-      <div className="absolute inset-0 bg-gradient-to-b from-background via-accent/5 to-background" />
+      {/* Court texture background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-background via-[hsl(145,80%,42%)]/5 to-background" />
+      <div className="absolute inset-0 court-texture" />
 
       <div className="relative container mx-auto px-4">
         {/* Header with countdown */}
         <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-6">
           <div>
             <div className="flex items-center gap-2 mb-3">
-              <Flame className="w-6 h-6 text-accent" />
-              <span className="text-accent font-heading font-black text-sm uppercase tracking-widest">
+              <Flame className="w-6 h-6 text-destructive" />
+              <span className="text-destructive font-heading font-black text-sm uppercase tracking-widest">
                 Ofertas flash
               </span>
             </div>
             <h2 className="font-heading text-3xl md:text-5xl font-black tracking-tighter">
-              PRECIOS QUE <span className="text-gradient-hot">EXPLOTAN</span>
+              PRECIOS QUE{" "}
+              <span className="text-gradient-hot animate-text-flicker inline-block text-4xl md:text-6xl">
+                EXPLOTAN
+              </span>
             </h2>
           </div>
 
-          {/* Countdown */}
+          {/* Modern Countdown */}
           <div className="flex items-center gap-3">
             <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Termina en:</span>
             <div className="flex gap-2">
@@ -82,12 +88,17 @@ const OffersSection = () => {
                 { val: pad(time.hours), label: "HS" },
                 { val: pad(time.minutes), label: "MIN" },
                 { val: pad(time.seconds), label: "SEG" },
-              ].map((t) => (
-                <div key={t.label} className="bg-card border border-border rounded-lg px-3 py-2 text-center min-w-[56px] shadow-sm">
-                  <span className="font-heading font-black text-2xl text-foreground animate-countdown inline-block">
+              ].map((t, i) => (
+                <div key={t.label} className="relative bg-foreground rounded-xl px-4 py-3 text-center min-w-[64px] shadow-lg overflow-hidden">
+                  {/* Neon border */}
+                  <div className="absolute inset-0 rounded-xl border border-primary/30" />
+                  <span className="font-heading font-black text-3xl text-primary animate-countdown inline-block">
                     {t.val}
                   </span>
-                  <p className="text-[10px] font-bold text-muted-foreground tracking-wider mt-0.5">{t.label}</p>
+                  <p className="text-[10px] font-bold text-background/50 tracking-wider mt-0.5">{t.label}</p>
+                  {i < 2 && (
+                    <span className="absolute -right-2.5 top-1/2 -translate-y-1/2 text-primary font-black text-xl z-10">:</span>
+                  )}
                 </div>
               ))}
             </div>
@@ -103,7 +114,7 @@ const OffersSection = () => {
         </div>
 
         <div className="text-center mt-10">
-          <Button variant="outline" size="lg" className="font-heading font-bold text-base uppercase tracking-wider border-destructive/40 text-destructive hover:bg-destructive/10 hover:border-destructive">
+          <Button variant="outline" size="lg" className="font-heading font-bold text-base uppercase tracking-wider border-destructive/40 text-destructive hover:bg-destructive/10 hover:border-destructive rounded-xl">
             Ver todas las ofertas
             <ArrowRight className="ml-2 w-4 h-4" />
           </Button>
