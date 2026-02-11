@@ -9,12 +9,14 @@ const features = [
 
 const PromoBanner = () => {
   return (
-    <section className="py-10 border-y border-border bg-secondary/50">
-      <div className="container mx-auto px-4">
+    <section className="py-10 border-y border-border bg-secondary/50 relative overflow-hidden">
+      {/* Subtle court lines */}
+      <div className="absolute inset-0 court-lines opacity-30" />
+      <div className="relative container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
           {features.map((f) => (
             <div key={f.title} className="flex flex-col items-center text-center gap-3 group">
-              <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 group-hover:border-primary/40 transition-all duration-300">
+              <div className="w-14 h-14 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center group-hover:bg-primary/20 group-hover:border-primary/40 group-hover:shadow-[0_0_20px_hsl(48_96%_53%_/_0.2)] transition-all duration-300">
                 <f.icon className="w-6 h-6 text-primary" />
               </div>
               <div>

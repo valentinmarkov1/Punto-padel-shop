@@ -51,7 +51,6 @@ const Header = () => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
         setSearchOpen(false);
       }
-      // Close dropdown when clicking outside nav
       const nav = document.querySelector('nav');
       if (nav && !nav.contains(e.target as Node)) {
         setActiveDropdown(null);
@@ -68,10 +67,10 @@ const Header = () => {
         <div className="animate-marquee flex whitespace-nowrap py-1.5">
           {Array.from({ length: 4 }).map((_, i) => (
             <span key={i} className="mx-8 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-              <Zap className="w-3 h-3" /> ENVÍO GRATIS EN COMPRAS +$50.000
-              <span className="mx-4">•</span>
+              <Zap className="w-3 h-3 text-primary" /> ENVÍO GRATIS EN COMPRAS +$50.000
+              <span className="mx-4 text-primary">•</span>
               🔥 HASTA 40% OFF EN PALAS SELECCIONADAS
-              <span className="mx-4">•</span>
+              <span className="mx-4 text-primary">•</span>
               ⚡ NUEVA COLECCIÓN 2026 DISPONIBLE
             </span>
           ))}
@@ -83,8 +82,8 @@ const Header = () => {
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
             <a href="/" className="font-heading text-2xl md:text-3xl font-black tracking-tighter">
-              <span className="text-primary">PUNTO</span>
-              <span className="text-foreground"> PÁDEL</span>
+              <span className="text-foreground">PUNTO</span>
+              <span className="text-primary"> PÁDEL</span>
             </a>
 
             {/* Desktop Navigation */}
@@ -102,7 +101,7 @@ const Header = () => {
                     <ChevronDown className={`w-3 h-3 transition-transform ${activeDropdown === cat.name ? 'rotate-180' : ''}`} />
                   </button>
                   {activeDropdown === cat.name && (
-                    <div className="absolute top-full left-0 mt-1 w-52 bg-card border border-border rounded-lg shadow-xl py-2 z-50 animate-fade-in">
+                    <div className="absolute top-full left-0 mt-1 w-52 bg-card border border-border rounded-xl shadow-xl py-2 z-50 animate-fade-in">
                       {cat.subcategories.map((sub) => (
                         <a
                           key={sub}
@@ -177,7 +176,7 @@ const Header = () => {
 
               <button className="relative p-2 text-foreground/70 hover:text-primary transition-colors">
                 <ShoppingCart className="w-5 h-5" />
-                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-accent text-accent-foreground text-[10px] font-black rounded-full flex items-center justify-center">
+                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-primary text-primary-foreground text-[10px] font-black rounded-full flex items-center justify-center">
                   0
                 </span>
               </button>
@@ -215,7 +214,7 @@ const Header = () => {
                   )}
                 </div>
               ))}
-              <a href="#" className="flex items-center gap-1 py-3 text-sm font-bold text-accent uppercase tracking-wide">
+              <a href="#" className="flex items-center gap-1 py-3 text-sm font-bold text-destructive uppercase tracking-wide">
                 <Zap className="w-4 h-4" />
                 Ofertas
               </a>

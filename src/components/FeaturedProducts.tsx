@@ -15,6 +15,8 @@ const products = [
     category: "Palas",
     isNew: true,
     discount: "-17%",
+    type: "Potencia",
+    level: "Avanzado",
   },
   {
     name: "Tubo de Pelotas Championship x3",
@@ -42,6 +44,8 @@ const products = [
     price: "$149.990",
     image: productPaleta,
     category: "Palas",
+    type: "Control",
+    level: "Intermedio",
   },
   {
     name: "Kit Pelotas Presión x4",
@@ -63,13 +67,18 @@ const products = [
     price: "$29.990",
     image: productIndumentaria,
     category: "Indumentaria",
+    level: "Todos",
   },
 ];
 
 const FeaturedProducts = () => {
   return (
-    <section className="py-20 md:py-28 bg-secondary/30">
-      <div className="container mx-auto px-4">
+    <section className="py-20 md:py-28 relative overflow-hidden">
+      {/* Subtle diagonal texture */}
+      <div className="absolute inset-0 diagonal-accent" />
+      <div className="absolute inset-0 bg-secondary/30" />
+
+      <div className="relative container mx-auto px-4">
         <div className="flex items-end justify-between mb-12">
           <div>
             <h2 className="font-heading text-3xl md:text-5xl font-black tracking-tighter uppercase">
@@ -79,7 +88,7 @@ const FeaturedProducts = () => {
               Lo más vendido de la temporada
             </p>
           </div>
-          <Button variant="outline" className="hidden md:flex items-center gap-1 font-heading font-bold uppercase tracking-wider text-xs border-primary/30 text-primary hover:bg-primary/10">
+          <Button variant="outline" className="hidden md:flex items-center gap-1 font-heading font-bold uppercase tracking-wider text-xs border-primary/30 text-primary hover:bg-primary/10 rounded-xl">
             Ver todo
             <ArrowRight className="w-4 h-4" />
           </Button>
