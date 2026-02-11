@@ -27,12 +27,12 @@ const ProductCard = ({ name, price, originalPrice, image, category, isNew, disco
         <div className="absolute top-3 left-3 flex flex-col gap-2">
           {isNew && (
             <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-[hsl(145,80%,42%)] text-white rounded-full shadow-[0_0_15px_hsl(145_80%_42%_/_0.4)]">
-              🆕 Nuevo
+              Nuevo
             </span>
           )}
           {discount && (
             <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-destructive text-destructive-foreground rounded-full animate-pulse shadow-[0_0_15px_hsl(0_90%_55%_/_0.4)]">
-              🔥 HOT DEAL {discount}
+              HOT DEAL {discount}
             </span>
           )}
         </div>

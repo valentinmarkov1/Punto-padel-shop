@@ -69,11 +69,11 @@ const HeroSection = () => {
           <div className="flex flex-wrap gap-4 animate-slide-up" style={{ animationDelay: "0.4s" }}>
             <Button size="lg" className="font-heading font-black text-base uppercase tracking-wider animate-pulse-glow px-10 h-16 text-lg rounded-xl">
               <Trophy className="mr-2 w-5 h-5" />
-              Elegí tu arma
+              Ver Productos
               <ArrowRight className="ml-2 w-5 h-5" />
             </Button>
             <Button size="lg" className="font-heading font-bold text-sm uppercase tracking-wider bg-[hsl(145,80%,42%)] text-white hover:bg-[hsl(145,80%,42%)]/90 px-7 h-14 rounded-xl border border-[hsl(145,80%,42%)]/50">
-              🔥 Ofertas
+              Ofertas
             </Button>
           </div>
         </div>
