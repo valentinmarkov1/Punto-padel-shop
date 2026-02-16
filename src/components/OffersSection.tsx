@@ -1,39 +1,9 @@
 import { useState, useEffect } from "react";
 import { Flame, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import productPaleta from "@/assets/product-paleta.jpg";
-import productPelotas from "@/assets/product-pelotas.jpg";
-import productBolso from "@/assets/product-bolso.jpg";
-
-const offerProducts = [
-  {
-    name: "Paleta Pro Carbon Elite 2026",
-    price: "$189.990",
-    originalPrice: "$229.990",
-    image: productPaleta,
-    category: "Palas",
-    discount: "-17%",
-    type: "Potencia",
-    level: "Avanzado",
-  },
-  {
-    name: "Tubo de Pelotas Championship x3",
-    price: "$9.990",
-    originalPrice: "$12.990",
-    image: productPelotas,
-    category: "Pelotas",
-    discount: "-23%",
-  },
-  {
-    name: "Mochila Paletero Tour Pro",
-    price: "$69.990",
-    originalPrice: "$109.990",
-    image: productBolso,
-    category: "Bolsos",
-    discount: "-36%",
-  },
-];
+import { products } from "@/data/products";
 
 const getTimeLeft = () => {
   const now = new Date();
@@ -48,6 +18,7 @@ const getTimeLeft = () => {
 
 const OffersSection = () => {
   const [time, setTime] = useState(getTimeLeft);
+  const offerProducts = products.filter(p => p.isOffer).slice(0, 3);
 
   useEffect(() => {
     const interval = setInterval(() => setTime(getTimeLeft()), 1000);
@@ -107,16 +78,18 @@ const OffersSection = () => {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {offerProducts.map((product, i) => (
-            <div key={i} className="animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
+            <div key={product.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
               <ProductCard {...product} />
             </div>
           ))}
         </div>
 
         <div className="text-center mt-10">
-          <Button variant="outline" size="lg" className="font-heading font-bold text-base uppercase tracking-wider border-destructive/40 text-destructive hover:bg-destructive/10 hover:border-destructive rounded-xl">
-            Ver todas las ofertas
-            <ArrowRight className="ml-2 w-4 h-4" />
+          <Button asChild variant="outline" size="lg" className="font-heading font-bold text-base uppercase tracking-wider border-destructive/40 text-destructive hover:bg-destructive/10 hover:border-destructive rounded-xl">
+            <Link to="/productos?ofertas=true">
+              Ver todas las ofertas
+              <ArrowRight className="ml-2 w-4 h-4" />
+            </Link>
           </Button>
         </div>
       </div>

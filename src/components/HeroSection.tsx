@@ -1,6 +1,7 @@
 import heroBg from "@/assets/hero-padel.jpg";
 import { ArrowRight, Trophy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const particles = Array.from({ length: 20 }, (_, i) => ({
   id: i,
@@ -33,7 +34,7 @@ const HeroSection = () => {
             className="absolute rounded-full bg-primary/60 animate-particle"
             style={{
               left: p.left,
-              bottom: '-10px',
+              bottom: "-10px",
               width: `${p.size}px`,
               height: `${p.size}px`,
               animationDuration: `${p.duration}s`,
@@ -57,23 +58,27 @@ const HeroSection = () => {
             </span>
           </div>
           <h1 className="font-heading text-6xl sm:text-7xl md:text-[7rem] font-black leading-[0.85] tracking-[-0.04em] text-white animate-slide-up" style={{ animationDelay: "0.2s" }}>
-            POTENCIA.
+            POTENCIA
             <br />
-            <span className="text-primary">PRECISIÓN.</span>
+            <span className="text-primary">PRECISIÓN</span>
             <br />
-            <span className="text-[hsl(145,80%,42%)]">DOMINIO.</span>
+            <span className="text-[hsl(145,80%,42%)]">DOMINIO</span>
           </h1>
           <p className="text-white/60 text-lg md:text-xl max-w-lg animate-slide-up leading-relaxed" style={{ animationDelay: "0.3s" }}>
-            Armas para jugadores que no vinieron a participar. Vinieron a ganar.
+            Todo lo necesario para jugadores que no vinieron a participar. Vinieron a ganar.
           </p>
           <div className="flex flex-wrap gap-4 animate-slide-up" style={{ animationDelay: "0.4s" }}>
-            <Button size="lg" className="font-heading font-black text-base uppercase tracking-wider animate-pulse-glow px-10 h-16 text-lg rounded-xl">
-              <Trophy className="mr-2 w-5 h-5" />
-              Ver Productos
-              <ArrowRight className="ml-2 w-5 h-5" />
+            <Button size="lg" asChild className="font-heading font-black text-base uppercase tracking-wider animate-pulse-glow px-10 h-16 text-lg rounded-xl">
+              <Link to="/productos">
+                <Trophy className="mr-2 w-5 h-5" />
+                Ver Productos
+                <ArrowRight className="ml-2 w-5 h-5" />
+              </Link>
             </Button>
-            <Button size="lg" className="font-heading font-bold text-sm uppercase tracking-wider bg-[hsl(145,80%,42%)] text-white hover:bg-[hsl(145,80%,42%)]/90 px-7 h-14 rounded-xl border border-[hsl(145,80%,42%)]/50">
-              Ofertas
+            <Button size="lg" asChild className="font-heading font-bold text-sm uppercase tracking-wider bg-[hsl(145,80%,42%)] text-white hover:bg-[hsl(145,80%,42%)]/90 px-7 h-14 rounded-xl border border-[hsl(145,80%,42%)]/50">
+              <Link to="/productos?ofertas=true">
+                Ofertas
+              </Link>
             </Button>
           </div>
         </div>

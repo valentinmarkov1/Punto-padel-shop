@@ -25,11 +25,11 @@ const BrandSection = () => {
         <h2 className="font-heading text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-black text-white leading-[0.9] tracking-[-0.03em] max-w-4xl mx-auto animate-slide-up" style={{ animationDelay: "0.1s" }}>
           NO VENDEMOS
           <br />
-          <span className="text-primary">PALAS.</span>
+          <span className="text-primary">PALAS</span>
           <br />
           VENDEMOS
           <br />
-          <span className="text-gradient-neon">DOMINIO.</span>
+          <span className="text-gradient-neon">DOMINIO</span>
         </h2>
         <p className="mt-8 text-white/50 text-lg md:text-xl max-w-lg mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: "0.2s" }}>
           Cada producto fue pensado para jugadores que buscan rendimiento real. No excusas.

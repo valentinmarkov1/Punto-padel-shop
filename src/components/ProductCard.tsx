@@ -1,21 +1,51 @@
 import { ShoppingCart, Eye } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link, useNavigate } from "react-router-dom";
+import { useCart } from "@/context/CartContext";
+import { Product } from "@/data/products";
 
-interface ProductCardProps {
+interface ProductCardProps extends Omit<Partial<Product>, "price"> {
   name: string;
-  price: string;
-  originalPrice?: string;
+  price: number | string;
   image: string;
-  category: string;
-  isNew?: boolean;
-  discount?: string;
-  level?: string;
-  type?: string;
+  category: "Palas" | "Pelotas" | "Bolsos" | "Indumentaria" | "Accesorios";
 }
 
-const ProductCard = ({ name, price, originalPrice, image, category, isNew, discount, level, type }: ProductCardProps) => {
+const ProductCard = (props: ProductCardProps) => {
+  const {
+    id,
+    slug,
+    name,
+    price,
+    originalPrice,
+    originalPriceFormatted,
+    priceFormatted,
+    image,
+    category,
+    isNew,
+    discount,
+    level,
+    type
+  } = props;
+
+  const { addItem } = useCart();
+  const navigate = useNavigate();
+
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    // Reconstruct product object if needed or use props directly if it matches Product
+    addItem(props as Product);
+  };
+
+  const displayPrice = typeof price === "number" ? `$${price.toLocaleString("es-AR")}` : price;
+  const displayOriginalPrice = originalPriceFormatted || (originalPrice ? `$${originalPrice.toLocaleString("es-AR")}` : null);
+
   return (
-    <div className="group bg-card rounded-2xl border border-border overflow-hidden transition-all duration-500 hover:border-primary/60 hover:shadow-[0_8px_40px_hsl(48_96%_53%_/_0.15)] hover:-translate-y-2">
+    <div
+      onClick={() => slug && navigate(`/producto/${slug}`)}
+      className="group bg-card rounded-2xl border border-border overflow-hidden transition-all duration-500 hover:border-primary/60 hover:shadow-[0_8px_40px_hsl(48_96%_53%_/_0.15)] hover:-translate-y-2 cursor-pointer"
+    >
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-secondary">
         <img
@@ -53,10 +83,22 @@ const ProductCard = ({ name, price, originalPrice, image, category, isNew, disco
         )}
         {/* Hover Actions */}
         <div className="absolute inset-0 bg-foreground/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4">
-          <Button size="icon" variant="secondary" className="rounded-full w-12 h-12 border border-border">
+          <Button
+            size="icon"
+            variant="secondary"
+            className="rounded-full w-12 h-12 border border-border"
+            onClick={(e) => {
+              e.stopPropagation();
+              slug && navigate(`/producto/${slug}`);
+            }}
+          >
             <Eye className="w-5 h-5" />
           </Button>
-          <Button size="icon" className="rounded-full w-12 h-12 glow">
+          <Button
+            size="icon"
+            className="rounded-full w-12 h-12 glow"
+            onClick={handleAddToCart}
+          >
             <ShoppingCart className="w-5 h-5" />
           </Button>
         </div>
@@ -69,9 +111,9 @@ const ProductCard = ({ name, price, originalPrice, image, category, isNew, disco
         <p className="text-[11px] text-[hsl(145,80%,42%)] font-bold uppercase tracking-widest">{category}</p>
         <h3 className="font-heading font-bold text-foreground text-sm leading-tight line-clamp-2">{name}</h3>
         <div className="flex items-center gap-2 pt-1">
-          <span className="font-heading font-black text-xl text-foreground">{price}</span>
-          {originalPrice && (
-            <span className="text-sm text-muted-foreground line-through">{originalPrice}</span>
+          <span className="font-heading font-black text-xl text-foreground">{priceFormatted || displayPrice}</span>
+          {displayOriginalPrice && (
+            <span className="text-sm text-muted-foreground line-through">{displayOriginalPrice}</span>
           )}
         </div>
       </div>

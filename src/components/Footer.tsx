@@ -1,4 +1,5 @@
 import { Instagram, Facebook, Twitter, Zap } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   return (
@@ -9,10 +10,11 @@ const Footer = () => {
       <div className="relative container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
-            <a href="/" className="font-heading text-2xl font-black tracking-tighter">
+            <Link to="/" className="font-heading text-2xl font-black tracking-tighter">
               <span className="text-background">PUNTO</span>
               <span className="text-primary"> PÁDEL</span>
-            </a>
+              <span className="text-background"> SHOP</span>
+            </Link>
             <p className="mt-3 text-sm text-background/60 leading-relaxed">
               Tu tienda online de pádel. Equipamiento premium para jugadores que van por todo.
             </p>
@@ -29,7 +31,7 @@ const Footer = () => {
             <ul className="space-y-2.5">
               {["Palas", "Pelotas", "Bolsos", "Indumentaria", "Accesorios"].map((item) => (
                 <li key={item}>
-                  <a href="#" className="text-sm text-background/60 hover:text-primary transition-colors">{item}</a>
+                  <Link to={`/productos?categoria=${item.toLowerCase()}`} className="text-sm text-background/60 hover:text-primary transition-colors">{item}</Link>
                 </li>
               ))}
             </ul>
@@ -47,9 +49,14 @@ const Footer = () => {
           <div>
             <h4 className="font-heading font-black text-sm mb-4 text-background uppercase tracking-wider">Empresa</h4>
             <ul className="space-y-2.5">
-              {["Sobre nosotros", "Blog", "Términos", "Privacidad"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-background/60 hover:text-primary transition-colors">{item}</a>
+              {[
+                { name: "Sobre nosotros", path: "/sobre-nosotros" },
+                { name: "Blog", path: "/blog" },
+                { name: "Términos", path: "/terminos" },
+                { name: "Privacidad", path: "/privacidad" }
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link to={item.path} className="text-sm text-background/60 hover:text-primary transition-colors">{item.name}</Link>
                 </li>
               ))}
             </ul>
