@@ -9,6 +9,7 @@ import Productos from "./pages/Productos";
 import ProductoDetalle from "./pages/ProductoDetalle";
 import { SobreNosotros, Blog, Terminos, Privacidad } from "./pages/StaticPages";
 import NotFound from "./pages/NotFound";
+import WhatsAppWidget from "./components/WhatsAppWidget";
 
 const queryClient = new QueryClient();
 
@@ -30,6 +31,7 @@ const App = () => (
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
+          <WhatsAppWidget />
         </BrowserRouter>
       </TooltipProvider>
     </CartProvider>

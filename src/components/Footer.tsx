@@ -1,4 +1,4 @@
-import { Instagram, Facebook, Twitter, Zap } from "lucide-react";
+import { Instagram, Facebook, Zap } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -19,7 +19,7 @@ const Footer = () => {
               Tu tienda online de pádel. Equipamiento premium para jugadores que van por todo.
             </p>
             <div className="flex gap-3 mt-4">
-              {[Instagram, Facebook, Twitter].map((Icon, i) => (
+              {[Instagram, Facebook].map((Icon, i) => (
                 <a key={i} href="#" className="w-10 h-10 rounded-xl bg-background/10 border border-background/20 flex items-center justify-center text-background/60 hover:text-primary hover:border-primary/40 hover:bg-primary/10 transition-all duration-300">
                   <Icon className="w-4 h-4" />
                 </a>

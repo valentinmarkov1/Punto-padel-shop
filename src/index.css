@@ -74,7 +74,12 @@
     font-family: var(--font-body);
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     font-family: var(--font-heading);
   }
 }
@@ -112,14 +117,12 @@
   }
 
   .court-texture {
-    background-image: 
-      repeating-linear-gradient(
-        -45deg,
+    background-image:
+      repeating-linear-gradient(-45deg,
         transparent,
         transparent 40px,
         hsl(145 80% 42% / 0.03) 40px,
-        hsl(145 80% 42% / 0.03) 41px
-      );
+        hsl(145 80% 42% / 0.03) 41px);
   }
 
   .court-lines {
@@ -130,13 +133,11 @@
   }
 
   .diagonal-accent {
-    background-image: repeating-linear-gradient(
-      -45deg,
-      transparent,
-      transparent 20px,
-      hsl(48 96% 53% / 0.04) 20px,
-      hsl(48 96% 53% / 0.04) 21px
-    );
+    background-image: repeating-linear-gradient(-45deg,
+        transparent,
+        transparent 20px,
+        hsl(48 96% 53% / 0.04) 20px,
+        hsl(48 96% 53% / 0.04) 21px);
   }
 
   .skew-section {
@@ -144,8 +145,13 @@
   }
 
   @keyframes marquee {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
+    0% {
+      transform: translateX(0);
+    }
+
+    100% {
+      transform: translateX(-50%);
+    }
   }
 
   .animate-marquee {
@@ -153,8 +159,15 @@
   }
 
   @keyframes pulse-glow {
-    0%, 100% { box-shadow: 0 0 20px hsl(48 96% 53% / 0.2); }
-    50% { box-shadow: 0 0 50px hsl(48 96% 53% / 0.5), 0 0 80px hsl(145 80% 42% / 0.2); }
+
+    0%,
+    100% {
+      box-shadow: 0 0 20px hsl(48 96% 53% / 0.2);
+    }
+
+    50% {
+      box-shadow: 0 0 50px hsl(48 96% 53% / 0.5), 0 0 80px hsl(145 80% 42% / 0.2);
+    }
   }
 
   .animate-pulse-glow {
@@ -162,8 +175,15 @@
   }
 
   @keyframes countdown-pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+
+    0%,
+    100% {
+      transform: scale(1);
+    }
+
+    50% {
+      transform: scale(1.05);
+    }
   }
 
   .animate-countdown {
@@ -171,8 +191,13 @@
   }
 
   @keyframes hero-zoom {
-    0% { transform: scale(1); }
-    100% { transform: scale(1.08); }
+    0% {
+      transform: scale(1);
+    }
+
+    100% {
+      transform: scale(1.08);
+    }
   }
 
   .animate-hero-zoom {
@@ -180,10 +205,25 @@
   }
 
   @keyframes float-particle {
-    0%, 100% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
-    10% { opacity: 0.6; }
-    90% { opacity: 0.6; }
-    100% { transform: translateY(-100vh) translateX(50px) rotate(360deg); opacity: 0; }
+
+    0%,
+    100% {
+      transform: translateY(0) translateX(0) rotate(0deg);
+      opacity: 0;
+    }
+
+    10% {
+      opacity: 0.6;
+    }
+
+    90% {
+      opacity: 0.6;
+    }
+
+    100% {
+      transform: translateY(-100vh) translateX(50px) rotate(360deg);
+      opacity: 0;
+    }
   }
 
   .animate-particle {
@@ -191,8 +231,17 @@
   }
 
   @keyframes text-flicker {
-    0%, 100% { opacity: 1; text-shadow: 0 0 20px hsl(0 90% 55% / 0.5), 0 0 40px hsl(0 90% 55% / 0.3); }
-    50% { opacity: 0.95; text-shadow: 0 0 30px hsl(0 90% 55% / 0.7), 0 0 60px hsl(0 90% 55% / 0.4); }
+
+    0%,
+    100% {
+      opacity: 1;
+      text-shadow: 0 0 20px hsl(0 90% 55% / 0.5), 0 0 40px hsl(0 90% 55% / 0.3);
+    }
+
+    50% {
+      opacity: 0.95;
+      text-shadow: 0 0 30px hsl(0 90% 55% / 0.7), 0 0 60px hsl(0 90% 55% / 0.4);
+    }
   }
 
   .animate-text-flicker {
@@ -200,11 +249,37 @@
   }
 
   @keyframes slide-up-reveal {
-    from { opacity: 0; transform: translateY(60px); }
-    to { opacity: 1; transform: translateY(0); }
+    from {
+      opacity: 0;
+      transform: translateY(60px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .animate-slide-up {
     animation: slide-up-reveal 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  @keyframes pulse-whatsapp-slow {
+
+    0%,
+    90%,
+    100% {
+      transform: scale(1);
+      box-shadow: 0 4px 15px rgba(37, 211, 102, 0.4);
+    }
+
+    95% {
+      transform: scale(1.1);
+      box-shadow: 0 4px 25px rgba(37, 211, 102, 0.6);
+    }
+  }
+
+  .animate-pulse-whatsapp {
+    animation: pulse-whatsapp-slow 10s ease-in-out infinite;
   }
 }
