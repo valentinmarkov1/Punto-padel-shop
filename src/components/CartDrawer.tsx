@@ -4,6 +4,7 @@ import { useCart } from "@/context/CartContext";
 import { ShoppingCart, Trash2, Plus, Minus, X } from "lucide-react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
+import { useNavigate } from "react-router-dom";
 
 interface CartDrawerProps {
     open: boolean;
@@ -12,6 +13,7 @@ interface CartDrawerProps {
 
 const CartDrawer = ({ open, onOpenChange }: CartDrawerProps) => {
     const { items, removeItem, updateQuantity, subtotal, itemCount } = useCart();
+    const navigate = useNavigate();
 
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat("es-AR", {
@@ -44,7 +46,10 @@ const CartDrawer = ({ open, onOpenChange }: CartDrawerProps) => {
                             ¡Explorá nuestros productos y encontrá lo que necesitás para tu próximo partido!
                         </p>
                         <Button
-                            onClick={() => onOpenChange(false)}
+                            onClick={() => {
+                                onOpenChange(false);
+                                navigate("/productos");
+                            }}
                             className="mt-4 font-heading font-bold uppercase tracking-wider rounded-xl glow"
                         >
                             Ver productos

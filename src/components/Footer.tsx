@@ -19,11 +19,9 @@ const Footer = () => {
               Tu tienda online de pádel. Equipamiento premium para jugadores que van por todo.
             </p>
             <div className="flex gap-3 mt-4">
-              {[Instagram, Facebook].map((Icon, i) => (
-                <a key={i} href="#" className="w-10 h-10 rounded-xl bg-background/10 border border-background/20 flex items-center justify-center text-background/60 hover:text-primary hover:border-primary/40 hover:bg-primary/10 transition-all duration-300">
-                  <Icon className="w-4 h-4" />
-                </a>
-              ))}
+              <a href="https://www.instagram.com/puntopadel.shop?igsh=YndpOGd3dHF2cGp6&utm_source=qr" target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-background/10 border border-background/20 flex items-center justify-center text-background/60 hover:text-primary hover:border-primary/40 hover:bg-primary/10 transition-all duration-300">
+                <Instagram className="w-4 h-4" />
+              </a>
             </div>
           </div>
           <div>
@@ -39,9 +37,14 @@ const Footer = () => {
           <div>
             <h4 className="font-heading font-black text-sm mb-4 text-background uppercase tracking-wider">Ayuda</h4>
             <ul className="space-y-2.5">
-              {["Envíos", "Devoluciones", "Métodos de pago", "Contacto"].map((item) => (
-                <li key={item}>
-                  <a href="#" className="text-sm text-background/60 hover:text-primary transition-colors">{item}</a>
+              {[
+                { name: "Envíos", path: "/envios" },
+                { name: "Devoluciones", path: "/devoluciones" },
+                { name: "Métodos de pago", path: "/metodos-de-pago" },
+                { name: "Contacto", path: "/contacto" }
+              ].map((item) => (
+                <li key={item.name}>
+                  <Link to={item.path} className="text-sm text-background/60 hover:text-primary transition-colors">{item.name}</Link>
                 </li>
               ))}
             </ul>
@@ -51,9 +54,7 @@ const Footer = () => {
             <ul className="space-y-2.5">
               {[
                 { name: "Sobre nosotros", path: "/sobre-nosotros" },
-                { name: "Blog", path: "/blog" },
-                { name: "Términos", path: "/terminos" },
-                { name: "Privacidad", path: "/privacidad" }
+                { name: "Términos", path: "/terminos" }
               ].map((item) => (
                 <li key={item.name}>
                   <Link to={item.path} className="text-sm text-background/60 hover:text-primary transition-colors">{item.name}</Link>

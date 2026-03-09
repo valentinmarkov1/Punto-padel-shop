@@ -44,7 +44,7 @@ const ProductCard = (props: ProductCardProps) => {
   return (
     <div
       onClick={() => slug && navigate(`/producto/${slug}`)}
-      className="group bg-card rounded-2xl border border-border overflow-hidden transition-all duration-500 hover:border-primary/60 hover:shadow-[0_8px_40px_hsl(48_96%_53%_/_0.15)] hover:-translate-y-2 cursor-pointer"
+      className="group bg-card rounded-2xl border border-border overflow-hidden transition-all duration-500 hover:border-primary/60 hover:shadow-[0_8px_40px_rgba(74,222,128,0.2)] hover:-translate-y-2 cursor-pointer"
     >
       {/* Image */}
       <div className="relative aspect-square overflow-hidden bg-secondary">
@@ -61,26 +61,11 @@ const ProductCard = (props: ProductCardProps) => {
             </span>
           )}
           {discount && (
-            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-destructive text-destructive-foreground rounded-full animate-pulse shadow-[0_0_15px_hsl(0_90%_55%_/_0.4)]">
-              HOT DEAL {discount}
+            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-destructive text-white rounded-full animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]">
+              HOT SALE {discount}
             </span>
           )}
         </div>
-        {/* Type/Level badges */}
-        {(level || type) && (
-          <div className="absolute top-3 right-3 flex flex-col gap-1.5">
-            {type && (
-              <span className="px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider bg-primary/90 text-primary-foreground rounded-full">
-                {type}
-              </span>
-            )}
-            {level && (
-              <span className="px-2.5 py-1 text-[9px] font-bold uppercase tracking-wider bg-foreground/80 text-background rounded-full">
-                {level}
-              </span>
-            )}
-          </div>
-        )}
         {/* Hover Actions */}
         <div className="absolute inset-0 bg-foreground/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4">
           <Button

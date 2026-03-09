@@ -12,6 +12,7 @@ export interface Product {
     originalPrice?: number;
     originalPriceFormatted?: string;
     image: string;
+    images: string[];
     category: "Palas" | "Pelotas" | "Bolsos" | "Indumentaria" | "Accesorios";
     isNew?: boolean;
     discount?: string;
@@ -42,6 +43,7 @@ export const products: Product[] = [
         originalPrice: 229990,
         originalPriceFormatted: "$229.990",
         image: productPaleta,
+        images: [productPaleta, productPaleta, productPaleta, productPaleta, productPaleta],
         category: "Palas",
         isNew: true,
         discount: "-17%",
@@ -60,6 +62,7 @@ export const products: Product[] = [
         originalPrice: 12990,
         originalPriceFormatted: "$12.990",
         image: productPelotas,
+        images: [productPelotas, productPelotas, productPelotas],
         category: "Pelotas",
         discount: "-23%",
         description: "Pelotas de alta competición con mayor durabilidad y rebote consistente. Ideales para todo tipo de superficies.",
@@ -75,6 +78,7 @@ export const products: Product[] = [
         originalPrice: 109990,
         originalPriceFormatted: "$109.990",
         image: productBolso,
+        images: [productBolso, productBolso, productBolso, productBolso],
         category: "Bolsos",
         discount: "-36%",
         description: "Mochila técnica con compartimento térmico para paletas y espacio ventilado para calzado. Diseño ergonómico y resistente.",
@@ -88,6 +92,7 @@ export const products: Product[] = [
         price: 34990,
         priceFormatted: "$34.990",
         image: productIndumentaria,
+        images: [productIndumentaria, productIndumentaria],
         category: "Indumentaria",
         isNew: true,
         description: "Remera técnica con tecnología Dry-Fit que absorbe el sudor para mantenerte seco y cómodo durante el juego.",
@@ -100,6 +105,7 @@ export const products: Product[] = [
         price: 149900,
         priceFormatted: "$149.900",
         image: productPaleta,
+        images: [productPaleta],
         category: "Palas",
         type: "Control",
         level: "Intermedio",
@@ -115,6 +121,7 @@ export const products: Product[] = [
         originalPrice: 18990,
         originalPriceFormatted: "$18.990",
         image: productPelotas,
+        images: [productPelotas],
         category: "Pelotas",
         discount: "-16%",
         description: "Pack ahorro de 4 pelotas con mantenimiento de presión prolongado.",
@@ -128,6 +135,7 @@ export const products: Product[] = [
         price: 74990,
         priceFormatted: "$74.990",
         image: productBolso,
+        images: [productBolso],
         category: "Bolsos",
         isNew: true,
         description: "Bolso de gran capacidad para tus entrenamientos o escapadas de fin de semana.",
@@ -140,6 +148,7 @@ export const products: Product[] = [
         price: 29990,
         priceFormatted: "$29.990",
         image: productIndumentaria,
+        images: [productIndumentaria],
         category: "Indumentaria",
         level: "Todos",
         description: "Short ligero con paneles de malla para una ventilación óptima.",
@@ -152,6 +161,7 @@ export const products: Product[] = [
         price: 210000,
         priceFormatted: "$210.000",
         image: productPaleta,
+        images: [productPaleta],
         category: "Palas",
         type: "Potencia",
         level: "Avanzado",
@@ -165,6 +175,7 @@ export const products: Product[] = [
         price: 5990,
         priceFormatted: "$5.990",
         image: productIndumentaria, // Usando indumentaria como placeholder
+        images: [productIndumentaria],
         category: "Accesorios",
         description: "Alta absorción de sudor para un agarre firme en todo momento.",
         salesCount: 900,
@@ -176,6 +187,7 @@ export const products: Product[] = [
         price: 8500,
         priceFormatted: "$8.500",
         image: productPaleta, // Usando paleta como placeholder
+        images: [productPaleta],
         category: "Accesorios",
         description: "Máximo agarre y confort. Pack de 3 unidades en colores variados.",
         salesCount: 1500,

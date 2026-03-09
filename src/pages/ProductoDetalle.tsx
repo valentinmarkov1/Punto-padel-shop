@@ -7,14 +7,13 @@ import {
     ShoppingCart,
     ArrowLeft,
     Zap,
-    ShieldCheck,
-    Truck,
-    RotateCcw,
     Minus,
     Plus
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+
+import ProductGallery from "@/components/ProductGallery";
 
 const ProductoDetalle = () => {
     const { slug } = useParams();
@@ -47,7 +46,7 @@ const ProductoDetalle = () => {
         <div className="min-h-screen bg-background">
             <Header />
 
-            <main className="container mx-auto px-4 py-8 md:py-16">
+            <main className="container mx-auto px-4 py-8 md:py-16 lg:py-24">
                 <button
                     onClick={() => navigate(-1)}
                     className="flex items-center gap-2 text-sm font-bold text-muted-foreground hover:text-primary transition-colors mb-8 uppercase tracking-wider"
@@ -55,23 +54,18 @@ const ProductoDetalle = () => {
                     <ArrowLeft className="w-4 h-4" /> Volver
                 </button>
 
-                <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-                    {/* Image Gallery Placeholder */}
-                    <div className="space-y-4">
-                        <div className="aspect-square rounded-3xl overflow-hidden bg-secondary border border-border group relative">
-                            <img
-                                src={product.image}
-                                alt={product.name}
-                                className="w-full h-full object-cover transition-transform duration-700 hover:scale-105"
-                            />
-                            {product.isOffer && (
-                                <div className="absolute top-6 left-6">
-                                    <span className="px-4 py-1.5 text-xs font-black uppercase tracking-widest bg-destructive text-white rounded-full shadow-lg animate-pulse">
-                                        Hot Deal {product.discount}
-                                    </span>
-                                </div>
-                            )}
-                        </div>
+                <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-12 lg:gap-24 items-start">
+                    {/* Advanced Product Gallery */}
+                    <div className="animate-fade-in">
+                        <ProductGallery images={product.images} name={product.name} />
+                        {product.isOffer && (
+                            <div className="mt-6 flex justify-center lg:justify-start">
+                                <span className="px-4 py-2 text-xs font-black uppercase tracking-[0.2em] bg-destructive text-white rounded-full shadow-[0_0_20px_rgba(239,68,68,0.4)] animate-pulse flex items-center gap-2">
+                                    <Zap className="w-4 h-4 fill-white" />
+                                    Oferta Especial {product.discount}
+                                </span>
+                            </div>
+                        )}
                     </div>
 
                     {/* Product Info */}
@@ -142,28 +136,6 @@ const ProductoDetalle = () => {
                                     <ShoppingCart className="mr-2 w-6 h-6" />
                                     Agregar al carrito
                                 </Button>
-                            </div>
-
-                            {/* Shopping Features */}
-                            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 border-t border-border pt-8">
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                        <Truck className="w-5 h-5 text-primary" />
-                                    </div>
-                                    <div className="text-[10px] font-black uppercase tracking-widest leading-tight">Envío Gratis<br /><span className="text-muted-foreground font-bold">En compras +$50k</span></div>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                        <ShieldCheck className="w-5 h-5 text-primary" />
-                                    </div>
-                                    <div className="text-[10px] font-black uppercase tracking-widest leading-tight">Garantía<br /><span className="text-muted-foreground font-bold">Oficial 12 meses</span></div>
-                                </div>
-                                <div className="flex items-center gap-3">
-                                    <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
-                                        <RotateCcw className="w-5 h-5 text-primary" />
-                                    </div>
-                                    <div className="text-[10px] font-black uppercase tracking-widest leading-tight">Cambios<br /><span className="text-muted-foreground font-bold">Hasta 30 días</span></div>
-                                </div>
                             </div>
                         </div>
                     </div>

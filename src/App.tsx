@@ -7,7 +7,7 @@ import { CartProvider } from "./context/CartContext";
 import Index from "./pages/Index";
 import Productos from "./pages/Productos";
 import ProductoDetalle from "./pages/ProductoDetalle";
-import { SobreNosotros, Blog, Terminos, Privacidad } from "./pages/StaticPages";
+import { SobreNosotros, Terminos, Envios, Devoluciones, MetodosPago, Contacto } from "./pages/StaticPages";
 import NotFound from "./pages/NotFound";
 import WhatsAppWidget from "./components/WhatsAppWidget";
 
@@ -25,9 +25,11 @@ const App = () => (
             <Route path="/productos" element={<Productos />} />
             <Route path="/producto/:slug" element={<ProductoDetalle />} />
             <Route path="/sobre-nosotros" element={<SobreNosotros />} />
-            <Route path="/blog" element={<Blog />} />
             <Route path="/terminos" element={<Terminos />} />
-            <Route path="/privacidad" element={<Privacidad />} />
+            <Route path="/envios" element={<Envios />} />
+            <Route path="/devoluciones" element={<Devoluciones />} />
+            <Route path="/metodos-de-pago" element={<MetodosPago />} />
+            <Route path="/contacto" element={<Contacto />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

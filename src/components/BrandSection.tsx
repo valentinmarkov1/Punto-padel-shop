@@ -34,12 +34,6 @@ const BrandSection = () => {
         <p className="mt-8 text-white/50 text-lg md:text-xl max-w-lg mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: "0.2s" }}>
           Cada producto fue pensado para jugadores que buscan rendimiento real. No excusas.
         </p>
-        <div className="mt-10 animate-slide-up" style={{ animationDelay: "0.3s" }}>
-          <Button size="lg" className="font-heading font-black text-sm uppercase tracking-wider px-8 h-14 rounded-xl">
-            Explorar colección
-            <ArrowRight className="ml-2 w-5 h-5" />
-          </Button>
-        </div>
       </div>
     </section>
   );
