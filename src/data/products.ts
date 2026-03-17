@@ -20,7 +20,10 @@ export interface Product {
     type?: "Control" | "Potencia" | "Polivalente";
     description: string;
     isOffer?: boolean;
+    discountPercentage?: number;
     salesCount: number;
+    offerStartDate?: string;
+    offerEndDate?: string;
 }
 
 const generateSlug = (name: string) => {

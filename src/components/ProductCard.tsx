@@ -24,6 +24,7 @@ const ProductCard = (props: ProductCardProps) => {
     category,
     isNew,
     discount,
+    discountPercentage,
     level,
     type
   } = props;
@@ -60,7 +61,11 @@ const ProductCard = (props: ProductCardProps) => {
               Nuevo
             </span>
           )}
-          {discount && (
+          {discountPercentage && discountPercentage > 0 ? (
+            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-orange-500 text-white rounded-full shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+              SALE -{discountPercentage}%
+            </span>
+          ) : discount && (
             <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-destructive text-white rounded-full animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]">
               HOT SALE {discount}
             </span>

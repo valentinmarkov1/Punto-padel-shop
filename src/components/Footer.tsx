@@ -1,4 +1,4 @@
-import { Instagram, Facebook, Zap } from "lucide-react";
+import { Instagram, Facebook, Zap, Lock as LockIcon } from "lucide-react";
 import { Link } from "react-router-dom";
 
 const Footer = () => {
@@ -65,9 +65,14 @@ const Footer = () => {
         </div>
         <div className="border-t border-background/20 pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-background/50">© 2026 Punto Pádel. Todos los derechos reservados.</p>
-          <div className="flex items-center gap-1 text-xs text-background/50">
-            <Zap className="w-3 h-3 text-primary" />
-            Hecho con pasión por el pádel
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1 text-xs text-background/50">
+              <Zap className="w-3 h-3 text-primary" />
+              Hecho con pasión por el pádel
+            </div>
+            <Link to="/admin-login" className="text-background/10 hover:text-primary/40 transition-colors">
+              <LockIcon className="w-3 h-3" />
+            </Link>
           </div>
         </div>
       </div>

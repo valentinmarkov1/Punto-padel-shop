@@ -122,10 +122,18 @@ const CartDrawer = ({ open, onOpenChange }: CartDrawerProps) => {
                                 </div>
                             </div>
 
-                            <Button className="w-full h-14 font-heading font-black text-lg uppercase tracking-wider rounded-xl glow group">
-                                Finalizar Compra
-                                <Plus className="ml-2 w-5 h-5 group-hover:rotate-90 transition-transform" />
-                            </Button>
+                            <div className="flex flex-col gap-2">
+                                <Button 
+                                    onClick={() => {
+                                        onOpenChange(false);
+                                        navigate("/carrito");
+                                    }}
+                                    className="w-full h-14 font-heading font-black text-lg uppercase tracking-wider rounded-xl glow group"
+                                >
+                                    IR AL CARRITO
+                                    <Plus className="ml-2 w-5 h-5 group-hover:rotate-90 transition-transform" />
+                                </Button>
+                            </div>
                             <p className="text-[10px] text-center text-muted-foreground uppercase tracking-widest">
                                 Pagos seguros con todas las tarjetas
                             </p>
