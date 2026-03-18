@@ -10,10 +10,9 @@ const Footer = () => {
       <div className="relative container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
           <div className="col-span-2 md:col-span-1">
-            <Link to="/" className="font-heading text-2xl font-black tracking-tighter">
-              <span className="text-background">PUNTO</span>
-              <span className="text-primary"> PÁDEL</span>
-              <span className="text-background"> SHOP</span>
+            <Link to="/" className="flex items-center gap-2 font-heading text-2xl font-black tracking-tighter mb-2">
+              <span className="text-background">PUNTO PÁDEL SHOP</span>
+              <img src="/logo-corona.png" alt="Icono Punto Padel" className="w-8 h-8 object-contain" />
             </Link>
             <p className="mt-3 text-sm text-background/60 leading-relaxed">
               Tu tienda online de pádel. Equipamiento premium para jugadores que van por todo.

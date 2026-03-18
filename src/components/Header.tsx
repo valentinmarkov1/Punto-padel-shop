@@ -117,10 +117,9 @@ const Header = () => {
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-16 md:h-20">
             {/* Logo */}
-            <Link to="/" className="font-heading text-2xl md:text-3xl font-black tracking-tighter">
-              <span className="text-foreground">PUNTO</span>
-              <span className="text-primary"> PADEL</span>
-              <span className="text-foreground"> SHOP</span>
+            <Link to="/" className="flex items-center gap-2 font-heading text-2xl md:text-3xl font-black tracking-tighter">
+              <span className="text-black">PUNTO PADEL SHOP</span>
+              <img src="/logo-corona.png" alt="Icono Punto Padel" className="w-10 h-10 md:w-12 md:h-12 object-contain mix-blend-multiply" />
             </Link>
 
             {/* Desktop Navigation */}
