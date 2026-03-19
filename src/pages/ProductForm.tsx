@@ -23,8 +23,10 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { ImagePlus, X, Save, Upload, Info } from 'lucide-react';
+import { ImagePlus, X, Save, Upload, Info, Plus } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { supabase } from '@/lib/supabase';
+import { toast } from 'sonner';
 
 const productSchema = z.object({
   name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
@@ -48,6 +50,7 @@ interface ProductFormProps {
 }
 
 const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }) => {
+  const [isUploading, setIsUploading] = useState(false);
   const form = useForm<ProductFormValues>({
     resolver: zodResolver(productSchema),
     defaultValues: {
@@ -92,32 +95,55 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
 
   const currentLimit = getImageLimit(category);
 
-  const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>, isMain: boolean, index?: number) => {
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>, isMain: boolean, index?: number) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     if (!['image/jpeg', 'image/png', 'image/webp'].includes(file.type)) {
-      alert('Solo se aceptan formatos JPG, PNG y WEBP');
+      toast.error('Solo se aceptan formatos JPG, PNG y WEBP');
       return;
     }
 
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const base64String = reader.result as string;
+    try {
+      setIsUploading(true);
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random()}.${fileExt}`;
+      const filePath = `products/${fileName}`;
+
+      const { error: uploadError } = await supabase.storage
+        .from('product-images')
+        .upload(filePath, file, {
+          cacheControl: '3600',
+          upsert: false
+        });
+
+      if (uploadError) {
+        throw uploadError;
+      }
+
+      const { data: { publicUrl } } = supabase.storage
+        .from('product-images')
+        .getPublicUrl(filePath);
+
       if (isMain) {
-        form.setValue('image', base64String);
+        form.setValue('image', publicUrl);
       } else if (index !== undefined) {
         const currentImages = [...form.getValues('additionalImages')];
-        currentImages[index] = base64String;
+        currentImages[index] = publicUrl;
         form.setValue('additionalImages', currentImages);
       } else {
         const currentImages = [...form.getValues('additionalImages')];
         if (currentImages.length < currentLimit) {
-          form.setValue('additionalImages', [...currentImages, base64String]);
+          form.setValue('additionalImages', [...currentImages, publicUrl]);
         }
       }
-    };
-    reader.readAsDataURL(file);
+      toast.success('Imagen subida correctamente');
+    } catch (error: any) {
+      toast.error('Error al subir imagen: ' + (error.message || 'Error desconocido'));
+      console.error('Upload error:', error);
+    } finally {
+      setIsUploading(false);
+    }
   };
 
   const removeAdditionalImage = (index: number) => {
@@ -281,9 +307,15 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
                   </>
                 ) : (
                   <label className="w-full h-full flex flex-col items-center justify-center cursor-pointer gap-2">
-                    <Upload className="w-8 h-8 text-muted-foreground" />
-                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Subir Imagen</span>
-                    <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, true)} />
+                    {isUploading ? (
+                      <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+                    ) : (
+                      <Upload className="w-8 h-8 text-muted-foreground" />
+                    )}
+                    <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">
+                      {isUploading ? 'Subiendo...' : 'Subir Imagen'}
+                    </span>
+                    <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, true)} disabled={isUploading} />
                   </label>
                 )}
               </div>
@@ -296,10 +328,10 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
                     Imágenes Adicionales ({form.watch('additionalImages').length}/{currentLimit})
                   </FormLabel>
                   {form.watch('additionalImages').length < currentLimit && (
-                    <label className="text-primary hover:text-primary/80 cursor-pointer flex items-center gap-1">
+                    <label className={`text-primary hover:text-primary/80 cursor-pointer flex items-center gap-1 ${isUploading ? 'opacity-50 cursor-not-allowed' : ''}`}>
                       <Plus className="w-3 h-3" />
                       <span className="text-[9px] font-black uppercase tracking-widest">Agregar</span>
-                      <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, false)} />
+                      {!isUploading && <input type="file" className="hidden" accept="image/*" onChange={(e) => handleImageUpload(e, false)} />}
                     </label>
                   )}
                 </div>
@@ -334,7 +366,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
           <Button type="button" variant="outline" onClick={onCancel} className="rounded-xl h-12 px-8 uppercase font-bold text-xs tracking-widest">
             Cancelar
           </Button>
-          <Button type="submit" className="rounded-xl h-12 px-8 uppercase font-bold text-xs tracking-widest glow gap-2">
+          <Button type="submit" className="rounded-xl h-12 px-8 uppercase font-bold text-xs tracking-widest glow gap-2" disabled={isUploading}>
             <Save className="w-5 h-5" />
             {product ? 'Actualizar Producto' : 'Crear Producto'}
           </Button>
@@ -343,11 +375,5 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
     </Form>
   );
 };
-
-const Plus = ({ className }: { className?: string }) => (
-  <svg className={className} fill="none" viewBox="0 0 24 24" stroke="currentColor">
-    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-  </svg>
-);
 
 export default ProductForm;

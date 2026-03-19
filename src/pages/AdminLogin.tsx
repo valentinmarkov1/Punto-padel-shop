@@ -16,13 +16,14 @@ const AdminLogin = () => {
 
   const from = location.state?.from?.pathname || '/admin';
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (login(password)) {
+    const { error } = await login(email, password);
+    if (!error) {
       toast.success('Sesión iniciada correctamente');
       navigate(from, { replace: true });
     } else {
-      toast.error('Credenciales inválidas');
+      toast.error('Credenciales inválidas: ' + error.message);
     }
   };
 

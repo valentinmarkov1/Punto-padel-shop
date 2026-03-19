@@ -32,7 +32,7 @@ const BrandSection = () => {
           <span className="text-gradient-neon">DOMINIO</span>
         </h2>
         <p className="mt-8 text-white/50 text-lg md:text-xl max-w-lg mx-auto leading-relaxed animate-slide-up" style={{ animationDelay: "0.2s" }}>
-          Cada producto fue pensado para jugadores que buscan rendimiento real. No excusas.
+          Elegi el producto que te hace ganar puntos, no solo jugar.
         </p>
       </div>
     </section>

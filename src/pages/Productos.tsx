@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { products, Product } from "@/data/products";
+import { Product } from "@/data/products";
+import { useAdmin } from "@/context/AdminContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
@@ -29,6 +30,7 @@ const levels = ["Principiante", "Intermedio", "Avanzado", "Profesional"];
 const types = ["Control", "Potencia", "Polivalente"];
 
 const Productos = () => {
+    const { products, loading } = useAdmin();
     const [searchParams, setSearchParams] = useSearchParams();
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
@@ -58,7 +60,7 @@ const Productos = () => {
             if (sortBy === "best-sellers") return b.salesCount - a.salesCount;
             return 0; // featured/default
         });
-    }, [categoryFilter, offerFilter, searchFilter, levelFilter, typeFilter, minPrice, maxPrice, sortBy]);
+    }, [products, categoryFilter, offerFilter, searchFilter, levelFilter, typeFilter, minPrice, maxPrice, sortBy]);
 
     const updateFilters = (key: string, value: string | null) => {
         const newParams = new URLSearchParams(searchParams);
@@ -206,88 +208,95 @@ const Productos = () => {
 
                     {/* Main Content Area */}
                     <div className="flex-1">
-                        {/* Toolbar */}
-                        <div className="flex flex-wrap items-center justify-between gap-4 mb-8 bg-card border border-border rounded-2xl p-4">
-                            <div className="flex items-center gap-4">
-                                <Button
-                                    variant="outline"
-                                    size="sm"
-                                    className="lg:hidden rounded-xl h-10 border-border"
-                                    onClick={() => setMobileFiltersOpen(true)}
-                                >
-                                    <SlidersHorizontal className="w-4 h-4 mr-2" />
-                                    Filtros
-                                </Button>
-                                <div className="text-sm text-muted-foreground font-medium">
-                                    Mostrando <span className="text-foreground font-bold">{filteredProducts.length}</span> productos
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-2">
-                                <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground hidden sm:inline-block">Ordenar:</span>
-                                <DropdownMenu>
-                                    <DropdownMenuTrigger asChild>
-                                        <Button variant="ghost" size="sm" className="font-bold text-sm h-10 rounded-xl px-4 hover:bg-secondary">
-                                            {sortBy === "price-asc" ? "Menor precio" :
-                                                sortBy === "price-desc" ? "Mayor precio" :
-                                                    sortBy === "best-sellers" ? "Más vendidos" : "Destacados"}
-                                            <ChevronDown className="ml-2 w-4 h-4" />
-                                        </Button>
-                                    </DropdownMenuTrigger>
-                                    <DropdownMenuContent align="end" className="rounded-xl border-border bg-card">
-                                        <DropdownMenuItem onClick={() => updateFilters("sort", "featured")} className="font-medium cursor-pointer">Destacados</DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => updateFilters("sort", "best-sellers")} className="font-medium cursor-pointer">Más vendidos</DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => updateFilters("sort", "price-asc")} className="font-medium cursor-pointer">Precio: Menor a Mayor</DropdownMenuItem>
-                                        <DropdownMenuItem onClick={() => updateFilters("sort", "price-desc")} className="font-medium cursor-pointer">Precio: Mayor a Menor</DropdownMenuItem>
-                                    </DropdownMenuContent>
-                                </DropdownMenu>
-                            </div>
-                        </div>
-
-                        {/* Active Tags */}
-                        {(categoryFilter || searchFilter) && (
-                            <div className="flex flex-wrap gap-2 mb-6">
-                                {categoryFilter && (
-                                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full border border-primary/20 capitalize">
-                                        {categoryFilter}
-                                        <button onClick={() => updateFilters("categoria", null)}><X className="w-3 h-3" /></button>
-                                    </span>
-                                )}
-                                {searchFilter && (
-                                    <span className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-foreground text-xs font-bold rounded-full border border-border">
-                                        Busca: {searchFilter}
-                                        <button onClick={() => updateFilters("search", null)}><X className="w-3 h-3" /></button>
-                                    </span>
-                                )}
-                            </div>
-                        )}
-
-                        {/* Product Grid */}
-                        {filteredProducts.length > 0 ? (
-                            <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
-                                {filteredProducts.map((product) => (
-                                    <ProductCard key={product.id} {...product} />
-                                ))}
+                        {loading ? (
+                            <div className="flex flex-col items-center justify-center py-20">
+                                <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+                                <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">Cargando productos...</p>
                             </div>
                         ) : (
-                            <div className="py-20 text-center">
-                                <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
-                                    <Search className="w-10 h-10 text-muted-foreground opacity-20" />
+                            <>
+                                {/* Toolbar */}
+                                <div className="flex flex-wrap items-center justify-between gap-4 mb-8 bg-card border border-border rounded-2xl p-4">
+                                    <div className="flex items-center gap-4">
+                                        <Button
+                                            variant="outline"
+                                            size="sm"
+                                            className="lg:hidden rounded-xl h-10 border-border"
+                                            onClick={() => setMobileFiltersOpen(true)}
+                                        >
+                                            <SlidersHorizontal className="w-4 h-4 mr-2" />
+                                            Filtros
+                                        </Button>
+                                        <div className="text-sm text-muted-foreground font-medium">
+                                            Mostrando <span className="text-foreground font-bold">{filteredProducts.length}</span> productos
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-xs font-bold uppercase tracking-widest text-muted-foreground hidden sm:inline-block">Ordenar:</span>
+                                        <DropdownMenu>
+                                            <DropdownMenuTrigger asChild>
+                                                <Button variant="ghost" size="sm" className="font-bold text-sm h-10 rounded-xl px-4 hover:bg-secondary">
+                                                    {sortBy === "price-asc" ? "Menor precio" :
+                                                        sortBy === "price-desc" ? "Mayor precio" :
+                                                            sortBy === "best-sellers" ? "Más vendidos" : "Destacados"}
+                                                    <ChevronDown className="ml-2 w-4 h-4" />
+                                                </Button>
+                                            </DropdownMenuTrigger>
+                                            <DropdownMenuContent align="end" className="rounded-xl border-border bg-card">
+                                                <DropdownMenuItem onClick={() => updateFilters("sort", "featured")} className="font-medium cursor-pointer">Destacados</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => updateFilters("sort", "best-sellers")} className="font-medium cursor-pointer">Más vendidos</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => updateFilters("sort", "price-asc")} className="font-medium cursor-pointer">Precio: Menor a Mayor</DropdownMenuItem>
+                                                <DropdownMenuItem onClick={() => updateFilters("sort", "price-desc")} className="font-medium cursor-pointer">Precio: Mayor a Menor</DropdownMenuItem>
+                                            </DropdownMenuContent>
+                                        </DropdownMenu>
+                                    </div>
                                 </div>
-                                <h3 className="font-heading font-black text-2xl uppercase italic mb-2">No se encontraron productos</h3>
-                                <p className="text-muted-foreground mb-8">Intentá ajustando los filtros o buscando algo diferente.</p>
-                                <Button onClick={clearFilters} variant="outline" className="rounded-xl border-primary/30 text-primary font-bold uppercase tracking-wider">
-                                    Ver todo el catálogo
-                                </Button>
-                            </div>
+
+                                {/* Active Tags */}
+                                {(categoryFilter || searchFilter) && (
+                                    <div className="flex flex-wrap gap-2 mb-6">
+                                        {categoryFilter && (
+                                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary/10 text-primary text-xs font-bold rounded-full border border-primary/20 capitalize">
+                                                {categoryFilter}
+                                                <button onClick={() => updateFilters("categoria", null)}><X className="w-3 h-3" /></button>
+                                            </span>
+                                        )}
+                                        {searchFilter && (
+                                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-foreground text-xs font-bold rounded-full border border-border">
+                                                Busca: {searchFilter}
+                                                <button onClick={() => updateFilters("search", null)}><X className="w-3 h-3" /></button>
+                                            </span>
+                                        )}
+                                    </div>
+                                )}
+
+                                {/* Product Grid */}
+                                {filteredProducts.length > 0 ? (
+                                    <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6">
+                                        {filteredProducts.map((product) => (
+                                            <ProductCard key={product.id} {...product} />
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div className="py-20 text-center">
+                                        <div className="w-20 h-20 bg-secondary rounded-full flex items-center justify-center mx-auto mb-6">
+                                            <Search className="w-10 h-10 text-muted-foreground opacity-20" />
+                                        </div>
+                                        <h3 className="font-heading font-black text-2xl uppercase italic mb-2">No se encontraron productos</h3>
+                                        <p className="text-muted-foreground mb-8">Intentá ajustando los filtros o buscando algo diferente.</p>
+                                        <Button onClick={clearFilters} variant="outline" className="rounded-xl border-primary/30 text-primary font-bold uppercase tracking-wider">
+                                            Ver todo el catálogo
+                                        </Button>
+                                    </div>
+                                )}
+                            </>
                         )}
                     </div>
                 </div>
             </main>
 
             <Footer />
-
-            {/* Mobile Filters Modal placeholder - can be implemented with a Sheet if needed */}
         </div>
     );
 };

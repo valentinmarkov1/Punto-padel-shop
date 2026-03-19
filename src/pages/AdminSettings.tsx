@@ -23,6 +23,10 @@ const AdminSettings = () => {
     defaultValues: settings,
   });
 
+  React.useEffect(() => {
+    form.reset(settings);
+  }, [settings, form]);
+
   const onSubmit = (values: any) => {
     updateSettings(values);
     toast.success('Configuración actualizada correctamente');

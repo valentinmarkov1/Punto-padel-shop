@@ -4,26 +4,38 @@ import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
 import { products } from "@/data/products";
+import { useAdmin } from "@/context/AdminContext";
 
-const getTimeLeft = () => {
+const getTimeLeft = (targetDate: string | null) => {
+  if (!targetDate) return { hours: 0, minutes: 0, seconds: 0, isExpired: true };
   const now = new Date();
-  const endOfDay = new Date(now);
-  endOfDay.setHours(23, 59, 59, 999);
-  const diff = endOfDay.getTime() - now.getTime();
+  const end = new Date(targetDate);
+  const diff = end.getTime() - now.getTime();
+  
+  if (diff <= 0) {
+    return { hours: 0, minutes: 0, seconds: 0, isExpired: true };
+  }
+  
   const hours = Math.floor(diff / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
   const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-  return { hours, minutes, seconds };
+  return { hours, minutes, seconds, isExpired: false };
 };
 
 const OffersSection = () => {
-  const [time, setTime] = useState(getTimeLeft);
+  const { products, settings, loading } = useAdmin();
+  const [time, setTime] = useState(() => getTimeLeft(settings.offerCountdownEnd));
   const offerProducts = products.filter(p => p.isOffer).slice(0, 3);
 
   useEffect(() => {
-    const interval = setInterval(() => setTime(getTimeLeft()), 1000);
+    setTime(getTimeLeft(settings.offerCountdownEnd));
+    const interval = setInterval(() => setTime(getTimeLeft(settings.offerCountdownEnd)), 1000);
     return () => clearInterval(interval);
-  }, []);
+  }, [settings.offerCountdownEnd]);
+
+  if (loading || !settings.offerCountdownEnabled) {
+    return null;
+  }
 
   const pad = (n: number) => n.toString().padStart(2, "0");
 
@@ -53,45 +65,60 @@ const OffersSection = () => {
 
           {/* Modern Countdown */}
           <div className="flex items-center gap-3">
-            <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Termina en:</span>
-            <div className="flex gap-2">
-              {[
-                { val: pad(time.hours), label: "HS" },
-                { val: pad(time.minutes), label: "MIN" },
-                { val: pad(time.seconds), label: "SEG" },
-              ].map((t, i) => (
-                <div key={t.label} className="relative bg-foreground rounded-xl px-4 py-3 text-center min-w-[64px] shadow-lg overflow-hidden">
-                  {/* Neon border */}
-                  <div className="absolute inset-0 rounded-xl border border-primary/30" />
-                  <span className="font-heading font-black text-3xl text-primary animate-countdown inline-block">
-                    {t.val}
-                  </span>
-                  <p className="text-[10px] font-bold text-background/50 tracking-wider mt-0.5">{t.label}</p>
-                  {i < 2 && (
-                    <span className="absolute -right-2.5 top-1/2 -translate-y-1/2 text-primary font-black text-xl z-10">:</span>
-                  )}
+            {time.isExpired ? (
+              <div className="bg-foreground rounded-xl px-6 py-3 shadow-lg relative overflow-hidden">
+                <div className="absolute inset-0 rounded-xl border border-primary/30" />
+                <span className="font-heading font-black text-2xl md:text-3xl text-primary relative z-10">
+                  OFERTAS FINALIZADAS
+                </span>
+              </div>
+            ) : (
+              <>
+                <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Termina en:</span>
+                <div className="flex gap-2">
+                  {[
+                    { val: pad(time.hours), label: "HS" },
+                    { val: pad(time.minutes), label: "MIN" },
+                    { val: pad(time.seconds), label: "SEG" },
+                  ].map((t, i) => (
+                    <div key={t.label} className="relative bg-foreground rounded-xl px-4 py-3 text-center min-w-[64px] shadow-lg overflow-hidden">
+                      {/* Neon border */}
+                      <div className="absolute inset-0 rounded-xl border border-primary/30" />
+                      <span className="font-heading font-black text-3xl text-primary animate-countdown inline-block">
+                        {t.val}
+                      </span>
+                      <p className="text-[10px] font-bold text-background/50 tracking-wider mt-0.5">{t.label}</p>
+                      {i < 2 && (
+                        <span className="absolute -right-2.5 top-1/2 -translate-y-1/2 text-primary font-black text-xl z-10">:</span>
+                      )}
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </>
+            )}
           </div>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-          {offerProducts.map((product, i) => (
-            <div key={product.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
-              <ProductCard {...product} />
+        {!time.isExpired && (
+          <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {offerProducts.map((product, i) => (
+                <div key={product.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 0.1}s` }}>
+                  <ProductCard {...product} />
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
 
-        <div className="text-center mt-10">
-          <Button asChild variant="outline" size="lg" className="font-heading font-bold text-base uppercase tracking-wider border-destructive/40 text-destructive hover:bg-destructive/10 hover:border-destructive rounded-xl">
-            <Link to="/productos?ofertas=true">
-              Ver todas las ofertas
-              <ArrowRight className="ml-2 w-4 h-4" />
-            </Link>
-          </Button>
-        </div>
+            <div className="text-center mt-10">
+              <Button asChild variant="outline" size="lg" className="font-heading font-bold text-base uppercase tracking-wider border-destructive/40 text-destructive hover:bg-destructive/10 hover:border-destructive rounded-xl">
+                <Link to="/productos?ofertas=true">
+                  Ver todas las ofertas
+                  <ArrowRight className="ml-2 w-4 h-4" />
+                </Link>
+              </Button>
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

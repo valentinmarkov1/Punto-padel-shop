@@ -2,10 +2,22 @@ import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
-import { products } from "@/data/products";
+import { useAdmin } from "@/context/AdminContext";
 
 const FeaturedProducts = () => {
-  const featured = products.slice(0, 8); // Just take the first 8 for home
+  const { products, loading } = useAdmin();
+  const featured = products.filter(p => !p.isOffer).slice(0, 8); // Just take the first 8 for home
+
+  if (loading) {
+    return (
+      <section className="py-20 bg-secondary/30">
+        <div className="container mx-auto px-4 text-center">
+          <div className="w-10 h-10 border-4 border-primary border-t-transparent rounded-full animate-spin mx-auto mb-4" />
+          <p className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Cargando destacados...</p>
+        </div>
+      </section>
+    );
+  }
 
   return (
     <section className="py-20 md:py-28 relative overflow-hidden">
