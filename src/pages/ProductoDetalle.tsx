@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { products } from "@/data/products";
+import { useAdmin } from "@/context/AdminContext";
 import { useCart } from "@/context/CartContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -19,9 +19,23 @@ const ProductoDetalle = () => {
     const { slug } = useParams();
     const navigate = useNavigate();
     const { addItem } = useCart();
+    const { products, loading } = useAdmin();
     const [quantity, setQuantity] = useState(1);
 
     const product = products.find((p) => p.slug === slug);
+
+    if (loading) {
+        return (
+            <div className="min-h-screen flex flex-col">
+                <Header />
+                <div className="flex-1 flex flex-col items-center justify-center p-8">
+                    <div className="w-12 h-12 border-4 border-primary border-t-transparent rounded-full animate-spin mb-4" />
+                    <p className="text-muted-foreground font-bold uppercase tracking-widest text-xs">Cargando producto...</p>
+                </div>
+                <Footer />
+            </div>
+        );
+    }
 
     if (!product) {
         return (

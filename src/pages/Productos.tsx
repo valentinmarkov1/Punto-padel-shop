@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Product } from "@/data/products";
+import { type Product } from "@/data/products";
 import { useAdmin } from "@/context/AdminContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
