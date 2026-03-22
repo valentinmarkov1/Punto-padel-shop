@@ -86,7 +86,7 @@ const ProductoDetalle = () => {
                             </h1>
                             <div className="flex items-end gap-3 pt-2">
                                 <span className="font-heading font-black text-4xl text-foreground">{product.priceFormatted}</span>
-                                {product.originalPriceFormatted && (
+                                {product.isOffer && product.originalPriceFormatted && (
                                     <span className="text-xl text-muted-foreground line-through mb-1">{product.originalPriceFormatted}</span>
                                 )}
                             </div>

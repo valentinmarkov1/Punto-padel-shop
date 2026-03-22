@@ -23,6 +23,7 @@ const ProductCard = (props: ProductCardProps) => {
     image,
     category,
     isNew,
+    isOffer,
     discount,
     discountPercentage,
     level,
@@ -61,7 +62,7 @@ const ProductCard = (props: ProductCardProps) => {
               Nuevo
             </span>
           )}
-          {discountPercentage && discountPercentage > 0 ? (
+          {isOffer && discountPercentage && discountPercentage > 0 ? (
             <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-orange-500 text-white rounded-full shadow-[0_0_15px_rgba(249,115,22,0.4)]">
               SALE -{discountPercentage}%
             </span>
@@ -102,7 +103,7 @@ const ProductCard = (props: ProductCardProps) => {
         <h3 className="font-heading font-bold text-foreground text-sm leading-tight line-clamp-2">{name}</h3>
         <div className="flex items-center gap-2 pt-1">
           <span className="font-heading font-black text-xl text-foreground">{priceFormatted || displayPrice}</span>
-          {displayOriginalPrice && (
+          {isOffer && displayOriginalPrice && (
             <span className="text-sm text-muted-foreground line-through">{displayOriginalPrice}</span>
           )}
         </div>

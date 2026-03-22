@@ -151,7 +151,7 @@ const AdminProducts = () => {
                 <TableCell>
                   <div className="flex flex-col">
                     <span className="font-heading font-black text-base">{product.priceFormatted}</span>
-                    {product.originalPrice && (
+                    {product.isOffer && product.originalPrice && (
                       <span className="text-[10px] text-muted-foreground line-through font-bold">{product.originalPriceFormatted}</span>
                     )}
                   </div>

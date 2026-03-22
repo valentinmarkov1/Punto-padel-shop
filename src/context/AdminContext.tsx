@@ -65,7 +65,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           currency: "ARS",
           minimumFractionDigits: 0,
         }).format(p.price).replace("ARS", "$"),
-        originalPriceFormatted: p.original_price ? new Intl.NumberFormat("es-AR", {
+        originalPriceFormatted: (p.is_offer && p.original_price && p.original_price > p.price) ? new Intl.NumberFormat("es-AR", {
           style: "currency",
           currency: "ARS",
           minimumFractionDigits: 0,
