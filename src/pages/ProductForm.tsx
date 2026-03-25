@@ -39,6 +39,8 @@ const productSchema = z.object({
   additionalImages: z.array(z.string()).default([]),
   isOffer: z.boolean().default(false),
   isNew: z.boolean().default(false),
+  level: z.string().optional(),
+  type: z.string().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -64,6 +66,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
       additionalImages: product?.images?.slice(1) || [],
       isOffer: product?.isOffer || false,
       isNew: product?.isNew || false,
+      level: product?.level || '',
+      type: product?.type || '',
     },
   });
 
@@ -210,6 +214,57 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
                   </FormItem>
                 )}
               />
+
+              {category === 'Palas' && (
+                <div className="grid grid-cols-2 gap-4 col-span-2 animate-in slide-in-from-top-2 duration-300">
+                  <FormField
+                    control={form.control}
+                    name="type"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="uppercase text-[10px] font-black tracking-widest text-primary">Tipo de Juego</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="bg-primary/5 border-primary/20 h-11 rounded-xl">
+                              <SelectValue placeholder="Seleccionar" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="rounded-xl border-border">
+                            <SelectItem value="Control">Control</SelectItem>
+                            <SelectItem value="Potencia">Potencia</SelectItem>
+                            <SelectItem value="Polivalente">Polivalente</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+
+                  <FormField
+                    control={form.control}
+                    name="level"
+                    render={({ field }) => (
+                      <FormItem>
+                        <FormLabel className="uppercase text-[10px] font-black tracking-widest text-primary">Nivel</FormLabel>
+                        <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <FormControl>
+                            <SelectTrigger className="bg-primary/5 border-primary/20 h-11 rounded-xl">
+                              <SelectValue placeholder="Seleccionar" />
+                            </SelectTrigger>
+                          </FormControl>
+                          <SelectContent className="rounded-xl border-border">
+                            <SelectItem value="Principiante">Principiante</SelectItem>
+                            <SelectItem value="Intermedio">Intermedio</SelectItem>
+                            <SelectItem value="Avanzado">Avanzado</SelectItem>
+                            <SelectItem value="Profesional">Profesional</SelectItem>
+                          </SelectContent>
+                        </Select>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                </div>
+              )}
 
               <div className="space-y-2">
                 <FormLabel className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Precio Final</FormLabel>

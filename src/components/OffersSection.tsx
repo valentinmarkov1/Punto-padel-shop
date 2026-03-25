@@ -7,19 +7,19 @@ import ProductCard from "./ProductCard";
 import { useAdmin } from "@/context/AdminContext";
 
 const getTimeLeft = (targetDate: string | null) => {
-  if (!targetDate) return { hours: 0, minutes: 0, seconds: 0, isExpired: true };
+  if (!targetDate) return { days: 0, hours: 0, minutes: 0, isExpired: true };
   const now = new Date();
   const end = new Date(targetDate);
   const diff = end.getTime() - now.getTime();
   
   if (diff <= 0) {
-    return { hours: 0, minutes: 0, seconds: 0, isExpired: true };
+    return { days: 0, hours: 0, minutes: 0, isExpired: true };
   }
   
-  const hours = Math.floor(diff / (1000 * 60 * 60));
+  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
   const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-  return { hours, minutes, seconds, isExpired: false };
+  return { days, hours, minutes, isExpired: false };
 };
 
 const OffersSection = () => {
@@ -29,7 +29,7 @@ const OffersSection = () => {
 
   useEffect(() => {
     setTime(getTimeLeft(settings.offerCountdownEnd));
-    const interval = setInterval(() => setTime(getTimeLeft(settings.offerCountdownEnd)), 1000);
+    const interval = setInterval(() => setTime(getTimeLeft(settings.offerCountdownEnd)), 60000); // Actualizar cada minuto
     return () => clearInterval(interval);
   }, [settings.offerCountdownEnd]);
 
@@ -77,9 +77,9 @@ const OffersSection = () => {
                 <span className="text-xs text-muted-foreground font-semibold uppercase tracking-wider">Termina en:</span>
                 <div className="flex gap-2">
                   {[
-                    { val: pad(time.hours), label: "HS" },
-                    { val: pad(time.minutes), label: "MIN" },
-                    { val: pad(time.seconds), label: "SEG" },
+                    { val: pad(time.days), label: "DÍAS" },
+                    { val: pad(time.hours), label: "HORAS" },
+                    { val: pad(time.minutes), label: "MINUTOS" },
                   ].map((t, i) => (
                     <div key={t.label} className="relative bg-foreground rounded-xl px-4 py-3 text-center min-w-[64px] shadow-lg overflow-hidden">
                       {/* Neon border */}

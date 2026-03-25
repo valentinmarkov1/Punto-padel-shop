@@ -111,16 +111,20 @@ const ProductoDetalle = () => {
                         </div>
 
                         {/* Attributes for Palas */}
-                        {product.category === "Palas" && (
+                        {product.category === "Palas" && (product.type || product.level) && (
                             <div className="grid grid-cols-2 gap-4 mb-10">
-                                <div className="bg-secondary/50 rounded-2xl p-4 border border-border">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Tipo de Juego</p>
-                                    <p className="font-heading font-bold text-lg">{product.type}</p>
-                                </div>
-                                <div className="bg-secondary/50 rounded-2xl p-4 border border-border">
-                                    <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Nivel</p>
-                                    <p className="font-heading font-bold text-lg">{product.level}</p>
-                                </div>
+                                {product.type && (
+                                    <div className="bg-secondary/50 rounded-2xl p-4 border border-border animate-in fade-in slide-in-from-bottom-2">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Tipo de Juego</p>
+                                        <p className="font-heading font-bold text-lg">{product.type}</p>
+                                    </div>
+                                )}
+                                {product.level && (
+                                    <div className="bg-secondary/50 rounded-2xl p-4 border border-border animate-in fade-in slide-in-from-bottom-2">
+                                        <p className="text-[10px] font-black uppercase tracking-widest text-muted-foreground mb-1">Nivel</p>
+                                        <p className="font-heading font-bold text-lg">{product.level}</p>
+                                    </div>
+                                )}
                             </div>
                         )}
 

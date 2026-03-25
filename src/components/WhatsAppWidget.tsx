@@ -59,17 +59,17 @@ const WhatsAppWidget = () => {
     ];
 
     return (
-        <div className="fixed bottom-6 right-6 z-[100] flex flex-col items-end pointer-events-none" ref={chatRef}>
+        <div className="whatsapp-container" ref={chatRef}>
             {/* Notificación automática (Globo de texto) */}
             {showNotification && !isOpen && (
-                <div className="mb-4 bg-white p-4 rounded-2xl shadow-xl border border-gray-100 max-w-[250px] animate-slide-up pointer-events-auto relative">
+                <div className="whatsapp-message animate-slide-up">
                     <button
                         onClick={() => setShowNotification(false)}
                         className="absolute -top-2 -right-2 bg-gray-200 rounded-full p-1 text-gray-600 hover:bg-gray-300 transition-colors"
                     >
                         <X size={12} />
                     </button>
-                    <p className="text-sm font-medium text-gray-800">
+                    <p className="text-sm font-medium text-gray-800 leading-tight">
                         ¿Necesitás ayuda para elegir tu equipamiento?
                     </p>
                 </div>
@@ -78,7 +78,7 @@ const WhatsAppWidget = () => {
             {/* Chat Modal */}
             <div
                 className={cn(
-                    "mb-4 bg-white w-[350px] max-w-[90vw] rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 transform origin-bottom-right pointer-events-auto",
+                    "bg-white w-[350px] max-w-[90vw] rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 transform origin-bottom-right pointer-events-auto",
                     isOpen ? "scale-100 opacity-100 translate-y-0" : "scale-90 opacity-0 translate-y-10 pointer-events-none"
                 )}
             >
@@ -152,8 +152,8 @@ const WhatsAppWidget = () => {
                     if (showNotification) setShowNotification(false);
                 }}
                 className={cn(
-                    "w-16 h-16 rounded-full flex items-center justify-center shadow-2xl transition-all duration-500 pointer-events-auto transform hover:scale-110 active:scale-95 group",
-                    isOpen ? "bg-white text-gray-400 rotate-90" : "bg-[#25D366] text-white animate-pulse-whatsapp"
+                    "whatsapp-button",
+                    isOpen ? "bg-white text-gray-400 rotate-90" : "text-white"
                 )}
             >
                 {isOpen ? (
@@ -161,8 +161,8 @@ const WhatsAppWidget = () => {
                 ) : (
                     <svg
                         viewBox="0 0 24 24"
-                        width="34"
-                        height="34"
+                        width="30"
+                        height="30"
                         fill="currentColor"
                         xmlns="http://www.w3.org/2000/svg"
                         className="group-hover:scale-110 transition-transform duration-300"
