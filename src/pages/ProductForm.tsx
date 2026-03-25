@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { ImagePlus, X, Save, Upload, Info, Plus } from 'lucide-react';
+import { ImagePlus, X, Save, Upload, Info, Plus, Tag as TagIcon } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
@@ -41,6 +41,8 @@ const productSchema = z.object({
   isNew: z.boolean().default(false),
   level: z.string().optional(),
   type: z.string().optional(),
+  tag1: z.string().optional(),
+  tag2: z.string().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -68,6 +70,8 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
       isNew: product?.isNew || false,
       level: product?.level || '',
       type: product?.type || '',
+      tag1: product?.tag1 || '',
+      tag2: product?.tag2 || '',
     },
   });
 
@@ -324,6 +328,39 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
                     )}
                   />
                 )}
+              </div>
+            </div>
+
+            <div className="p-4 rounded-2xl border border-border bg-secondary/5 space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <TagIcon className="w-5 h-5 text-muted-foreground" />
+                <FormLabel className="uppercase text-[10px] font-black tracking-widest leading-none">Etiquetas Personalizadas (Opcional)</FormLabel>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="tag1"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[9px] font-black uppercase tracking-widest opacity-60">Etiqueta 1 (Ej: MÁS VENDIDO)</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Texto de la etiqueta" className="bg-background h-10 rounded-lg" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="tag2"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel className="text-[9px] font-black uppercase tracking-widest opacity-60">Etiqueta 2 (Ej: NUEVO)</FormLabel>
+                      <FormControl>
+                        <Input {...field} placeholder="Texto de la etiqueta" className="bg-background h-10 rounded-lg" />
+                      </FormControl>
+                    </FormItem>
+                  )}
+                />
               </div>
             </div>
 

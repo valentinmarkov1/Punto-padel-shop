@@ -60,21 +60,6 @@ const WhatsAppWidget = () => {
 
     return (
         <div className="whatsapp-container" ref={chatRef}>
-            {/* Notificación automática (Globo de texto) */}
-            {showNotification && !isOpen && (
-                <div className="whatsapp-message animate-slide-up">
-                    <button
-                        onClick={() => setShowNotification(false)}
-                        className="absolute -top-2 -right-2 bg-gray-200 rounded-full p-1 text-gray-600 hover:bg-gray-300 transition-colors"
-                    >
-                        <X size={12} />
-                    </button>
-                    <p className="text-sm font-medium text-gray-800 leading-tight">
-                        ¿Necesitás ayuda para elegir tu equipamiento?
-                    </p>
-                </div>
-            )}
-
             {/* Chat Modal */}
             <div
                 className={cn(

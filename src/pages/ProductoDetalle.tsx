@@ -76,7 +76,7 @@ const ProductoDetalle = () => {
                             <div className="mt-6 flex justify-center lg:justify-start">
                                 <span className="px-4 py-2 text-xs font-black uppercase tracking-[0.2em] bg-destructive text-white rounded-full shadow-[0_0_20px_rgba(239,68,68,0.4)] animate-pulse flex items-center gap-2">
                                     <Zap className="w-4 h-4 fill-white" />
-                                    Oferta Especial {product.discount}
+                                    OFERTA {product.discountPercentage ? `-${product.discountPercentage}%` : product.discount || ""}
                                 </span>
                             </div>
                         )}
@@ -89,9 +89,14 @@ const ProductoDetalle = () => {
                                 <span className="px-3 py-1 bg-primary/10 text-primary text-[10px] font-black uppercase tracking-widest rounded-full border border-primary/20">
                                     {product.category}
                                 </span>
-                                {product.isNew && (
-                                    <span className="px-3 py-1 bg-[hsl(145,80%,42%)]/10 text-[hsl(145,80%,42%)] text-[10px] font-black uppercase tracking-widest rounded-full border border-[hsl(145,80%,42%)]/20">
-                                        Nuevo Lanzamiento
+                                {product.tag1 && (
+                                    <span className="px-3 py-1 bg-[hsl(145,80%,42%)] text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-[0_0_10px_hsl(145_80%_42%_/_0.3)]">
+                                        {product.tag1}
+                                    </span>
+                                )}
+                                {product.tag2 && (
+                                    <span className="px-3 py-1 bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-[0_0_10px_rgba(249,115,22,0.3)]">
+                                        {product.tag2}
                                     </span>
                                 )}
                             </div>

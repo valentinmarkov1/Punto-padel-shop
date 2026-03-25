@@ -27,7 +27,9 @@ const ProductCard = (props: ProductCardProps) => {
     discount,
     discountPercentage,
     level,
-    type
+    type,
+    tag1,
+    tag2
   } = props;
 
   const { addItem } = useCart();
@@ -57,18 +59,19 @@ const ProductCard = (props: ProductCardProps) => {
         />
         {/* Badges */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
-          {isNew && (
-            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-[hsl(145,80%,42%)] text-white rounded-full shadow-[0_0_15px_hsl(145_80%_42%_/_0.4)]">
-              Nuevo
+          {isOffer && (
+            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-destructive text-white rounded-full shadow-[0_0_15px_rgba(239,68,68,0.4)] animate-pulse">
+              OFERTA {discountPercentage ? `-${discountPercentage}%` : ""}
             </span>
           )}
-          {isOffer && discountPercentage && discountPercentage > 0 ? (
-            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-orange-500 text-white rounded-full shadow-[0_0_15px_rgba(249,115,22,0.4)]">
-              SALE -{discountPercentage}%
+          {tag1 && (
+            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-[hsl(145,80%,42%)] text-white rounded-full shadow-[0_0_15px_hsl(145_80%_42%_/_0.4)]">
+              {tag1}
             </span>
-          ) : discount && (
-            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-destructive text-white rounded-full animate-pulse shadow-[0_0_15px_rgba(239,68,68,0.4)]">
-              HOT SALE {discount}
+          )}
+          {tag2 && !isOffer && ( // Only show tag2 if not showing too many badges
+            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-orange-500 text-white rounded-full shadow-[0_0_15px_rgba(249,115,22,0.4)]">
+              {tag2}
             </span>
           )}
         </div>

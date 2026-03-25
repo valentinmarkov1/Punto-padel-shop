@@ -11,6 +11,7 @@ interface SiteSettings {
   promoText: string;
   offerCountdownEnd: string | null;
   offerCountdownEnabled: boolean;
+  categoryTags?: Record<string, string>;
 }
 
 interface AdminContextType {
@@ -33,7 +34,14 @@ const DEFAULT_SETTINGS: SiteSettings = {
   currency: 'ARS',
   promoText: 'Envío gratis en compras superiores a $100.000',
   offerCountdownEnd: null,
-  offerCountdownEnabled: true
+  offerCountdownEnabled: true,
+  categoryTags: {
+    palas: 'MÁS VENDIDO',
+    pelotas: '',
+    bolsos: '',
+    indumentaria: 'NUEVO',
+    accesorios: ''
+  }
 };
 
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
@@ -79,7 +87,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         discountPercentage: p.discount_percentage,
         salesCount: p.sales_count || 0,
         level: p.level,
-        type: p.type
+        type: p.type,
+        tag1: p.tag1,
+        tag2: p.tag2
       }));
       setProducts(formattedProducts);
     }
@@ -145,7 +155,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         discount_percentage: newProduct.discountPercentage,
         sales_count: 0,
         level: newProduct.level,
-        type: newProduct.type
+        type: newProduct.type,
+        tag1: newProduct.tag1,
+        tag2: newProduct.tag2
       }])
       .select();
 
@@ -176,6 +188,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (updatedFields.discountPercentage !== undefined) updateData.discount_percentage = updatedFields.discountPercentage;
     if (updatedFields.level !== undefined) updateData.level = updatedFields.level;
     if (updatedFields.type !== undefined) updateData.type = updatedFields.type;
+    if (updatedFields.tag1 !== undefined) updateData.tag1 = updatedFields.tag1;
+    if (updatedFields.tag2 !== undefined) updateData.tag2 = updatedFields.tag2;
 
     const { error } = await supabase
       .from('products')

@@ -24,6 +24,8 @@ export interface Product {
     salesCount: number;
     offerStartDate?: string;
     offerEndDate?: string;
+    tag1?: string;
+    tag2?: string;
 }
 
 const generateSlug = (name: string) => {

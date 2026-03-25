@@ -13,7 +13,7 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
-import { Save, Bell, Globe, MessageCircle, Truck } from 'lucide-react';
+import { Save, Bell, Globe, MessageCircle, Truck, Tag as TagIcon } from 'lucide-react';
 import { toast } from 'sonner';
 
 const AdminSettings = () => {
@@ -130,6 +130,36 @@ const AdminSettings = () => {
                     </FormItem>
                   )}
                 />
+              </CardContent>
+            </Card>
+
+            <Card className="md:col-span-2 border-border rounded-2xl overflow-hidden shadow-sm">
+              <CardHeader className="bg-secondary/10 border-b border-border">
+                <div className="flex items-center gap-2">
+                  <TagIcon className="w-5 h-5 text-primary" />
+                  <CardTitle className="font-heading font-black text-xl uppercase italic tracking-tighter">Etiquetas de Categorías</CardTitle>
+                </div>
+                <CardDescription className="text-[10px] uppercase font-bold tracking-widest">Etiquetas para las secciones de la home</CardDescription>
+              </CardHeader>
+              <CardContent className="pt-6">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {['palas', 'pelotas', 'bolsos', 'indumentaria', 'accesorios'].map((cat) => (
+                    <FormField
+                      key={cat}
+                      control={form.control}
+                      name={`categoryTags.${cat}`} // Fixed this line
+                      render={({ field }) => (
+                        <FormItem>
+                          <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground capitalize">{cat}</FormLabel>
+                          <FormControl>
+                            <Input {...field} className="bg-secondary/20 h-11 rounded-xl" placeholder="Ej: NUEVO" />
+                          </FormControl>
+                          <FormMessage />
+                        </FormItem>
+                      )}
+                    />
+                  ))}
+                </div>
               </CardContent>
             </Card>
           </div>

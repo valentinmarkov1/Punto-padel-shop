@@ -4,15 +4,29 @@ import productPaleta from "@/assets/product-paleta.jpg";
 import productPelotas from "@/assets/product-pelotas.jpg";
 import productBolso from "@/assets/product-bolso.jpg";
 import productIndumentaria from "@/assets/product-indumentaria.jpg";
+import { useAdmin } from "@/context/AdminContext";
 
-const categories = [
-  { name: "Palas", path: "/productos?categoria=palas", image: productPaleta, count: 48, tag: "MÁS VENDIDO" },
-  { name: "Pelotas", path: "/productos?categoria=pelotas", image: productPelotas, count: 12, tag: null },
-  { name: "Bolsos", path: "/productos?categoria=bolsos", image: productBolso, count: 24, tag: null },
-  { name: "Indumentaria", path: "/productos?categoria=indumentaria", image: productIndumentaria, count: 36, tag: "NUEVO" },
+const categoryMetadata = [
+  { name: "Palas", path: "/productos?categoria=palas", image: productPaleta, tag: "MÁS VENDIDO" },
+  { name: "Pelotas", path: "/productos?categoria=pelotas", image: productPelotas, tag: null },
+  { name: "Bolsos", path: "/productos?categoria=bolsos", image: productBolso, tag: null },
+  { name: "Indumentaria", path: "/productos?categoria=indumentaria", image: productIndumentaria, tag: "NUEVO" },
+  { name: "Accesorios", path: "/productos?categoria=accesorios", image: productIndumentaria, tag: null }, // Placeholder image
 ];
 
 const CategorySection = () => {
+  const { products, settings, loading } = useAdmin();
+
+  if (loading) return null;
+
+  const categoriesWithCounts = categoryMetadata
+    .map(cat => ({
+      ...cat,
+      count: products.filter(p => p.category.toLowerCase() === cat.name.toLowerCase()).length,
+      tag: settings.categoryTags?.[cat.name.toLowerCase()] || cat.tag
+    }));
+
+  if (categoriesWithCounts.length === 0) return null;
   return (
     <section className="py-20 md:py-28 relative overflow-hidden">
       {/* Court lines background */}
@@ -29,7 +43,7 @@ const CategorySection = () => {
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
-          {categories.map((cat, i) => (
+          {categoriesWithCounts.map((cat, i) => (
             <Link
               key={cat.name}
               to={cat.path}
@@ -55,7 +69,9 @@ const CategorySection = () => {
               <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary via-[hsl(145,80%,42%)] to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">
-                <p className="text-xs text-primary font-bold mb-1 uppercase tracking-wider">{cat.count} productos</p>
+                <p className="text-xs text-primary font-bold mb-1 uppercase tracking-wider">
+                  {cat.count > 0 ? `${cat.count} productos` : "Próximamente"}
+                </p>
                 <h3 className="font-heading text-xl md:text-2xl font-black text-white uppercase tracking-tight">{cat.name}</h3>
                 <div className="flex items-center gap-1 mt-3 text-sm text-[hsl(145,80%,42%)] font-bold opacity-0 group-hover:opacity-100 transform translate-y-3 group-hover:translate-y-0 transition-all duration-300 uppercase tracking-wider">
                   Ver todo <ArrowRight className="w-4 h-4" />
