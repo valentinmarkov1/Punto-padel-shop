@@ -12,7 +12,8 @@ import {
   ChevronRight,
   Menu,
   X,
-  Zap
+  Zap,
+  ShoppingBag
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -20,6 +21,7 @@ import AdminProducts from './AdminProducts';
 import AdminSettings from './AdminSettings';
 import AdminOffers from './AdminOffers';
 import AdminFeatured from './AdminFeatured';
+import AdminOrders from './AdminOrders';
 
 const AdminDashboard = () => {
   const { logout } = useAuth();
@@ -29,6 +31,7 @@ const AdminDashboard = () => {
 
   const menuItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin' },
+    { name: 'Pedidos', icon: ShoppingBag, path: '/admin/pedidos' },
     { name: 'Productos', icon: Package, path: '/admin/productos' },
     { name: 'Ofertas', icon: Tag, path: '/admin/ofertas' },
     { name: 'Destacados', icon: Star, path: '/admin/destacados' },
@@ -115,6 +118,7 @@ const AdminDashboard = () => {
           <Routes>
             <Route path="/" element={<Overview />} />
             <Route path="/productos" element={<AdminProducts />} />
+            <Route path="/pedidos" element={<AdminOrders />} />
             <Route path="/ofertas" element={<AdminOffers />} />
             <Route path="/destacados" element={<AdminFeatured />} />
             <Route path="/configuracion" element={<AdminSettings />} />
@@ -128,9 +132,15 @@ const AdminDashboard = () => {
 import { useAdmin } from '@/context/AdminContext';
 
 const Overview = () => {
-  const { products } = useAdmin();
+  const { products, orders } = useAdmin();
   
   const stats = [
+    { 
+      label: 'Pendientes', 
+      value: orders.filter(o => o.status === 'pendiente_de_pago').length.toString(), 
+      icon: ShoppingBag, 
+      color: 'text-orange-500' 
+    },
     { 
       label: 'Productos', 
       value: products.length.toString(), 
@@ -141,7 +151,7 @@ const Overview = () => {
       label: 'En Oferta', 
       value: products.filter(p => p.isOffer).length.toString(), 
       icon: Tag, 
-      color: 'text-orange-500' 
+      color: 'text-emerald-500' 
     },
     { 
       label: 'Destacados', 

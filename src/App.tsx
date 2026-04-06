@@ -10,6 +10,7 @@ import ProductoDetalle from "./pages/ProductoDetalle";
 import Checkout from "./pages/Checkout";
 import Carrito from "./pages/Carrito";
 import { SobreNosotros, Terminos, Envios, Devoluciones, MetodosPago, Contacto } from "./pages/StaticPages";
+import GraciasPorTuCompra from "./pages/GraciasPorTuCompra";
 import NotFound from "./pages/NotFound";
 import WhatsAppWidget from "./components/WhatsAppWidget";
 import ScrollToTop from "./components/ScrollToTop";
@@ -43,6 +44,7 @@ const App = () => (
                 <Route path="/devoluciones" element={<Devoluciones />} />
                 <Route path="/metodos-de-pago" element={<MetodosPago />} />
                 <Route path="/contacto" element={<Contacto />} />
+                <Route path="/gracias-por-tu-compra" element={<GraciasPorTuCompra />} />
                 
                 {/* Admin Routes */}
                 <Route path="/admin-login" element={<AdminLogin />} />

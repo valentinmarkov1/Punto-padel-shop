@@ -25,9 +25,12 @@ import {
     Store,
     Mail,
     ArrowLeft,
-    CheckCircle2
+    CheckCircle2,
+    Loader2
 } from "lucide-react";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
+import { sendEmailNotification } from "@/lib/email-service";
 
 const checkoutSchema = z.object({
     firstName: z.string().min(2, "Mínimo 2 caracteres"),
@@ -48,7 +51,10 @@ const Checkout = () => {
     const navigate = useNavigate();
     const [shippingMethod, setShippingMethod] = useState("domicilio");
     const [paymentMethod, setPaymentMethod] = useState("mercadopago");
+    const [proofFile, setProofFile] = useState<File | null>(null);
+    const [isSubmitting, setIsSubmitting] = useState(false);
     const [orderConfirmed, setOrderConfirmed] = useState(false);
+    const [lastOrderDetails, setLastOrderDetails] = useState<any>(null);
 
     const form = useForm<CheckoutFormValues>({
         resolver: zodResolver(checkoutSchema),
@@ -73,32 +79,85 @@ const Checkout = () => {
         }).format(price).replace("ARS", "$");
     };
 
-    const onSubmit = (values: CheckoutFormValues) => {
-        console.log("Datos de la orden:", { values, shippingMethod, paymentMethod, items, total: total });
-        setOrderConfirmed(true);
-        clearCart();
-        toast.success("¡Pedido confirmado con éxito!");
+    const onSubmit = async (values: CheckoutFormValues) => {
+        setIsSubmitting(true);
+        const orderNumber = `PP-${Math.floor(1000 + Math.random() * 9000)}`;
+        
+        try {
+            let proofUrl = "";
+            let currentStatus = paymentMethod === 'transferencia' ? 'pendiente_de_pago' : 'pendiente_pago_local';
+            
+            // 1. Validaciones y Subida de Comprobante
+            if (paymentMethod === 'transferencia') {
+                if (!proofFile) throw new Error("Por favor adjunta el comprobante de transferencia");
+                
+                // Validar tipo de archivo
+                const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
+                if (!allowedTypes.includes(proofFile.type)) {
+                    throw new Error("Formato no permitido. Solo JPG, PNG o PDF.");
+                }
+
+                // Validar tamaño (5MB)
+                if (proofFile.size > 5 * 1024 * 1024) {
+                    throw new Error("El archivo es demasiado pesado (Máx 5MB).");
+                }
+
+                const fileExt = proofFile.name.split('.').pop();
+                const fileName = `${orderNumber}-${Math.random()}.${fileExt}`;
+                const filePath = `${fileName}`;
+
+                const { error: uploadError } = await supabase.storage
+                    .from('comprovantes')
+                    .upload(filePath, proofFile);
+
+                if (uploadError) throw new Error("Error al subir el comprobante: " + uploadError.message);
+                
+                const { data: { publicUrl } } = supabase.storage
+                    .from('comprovantes')
+                    .getPublicUrl(filePath);
+                
+                proofUrl = publicUrl;
+            }
+
+            // 2. Guardar pedido en DB
+            const orderData = {
+                order_number: orderNumber,
+                customer_name: `${values.firstName} ${values.lastName}`,
+                customer_email: values.email,
+                customer_phone: values.phone,
+                shipping_address: `${values.address}, ${values.city}, ${values.province} (CP: ${values.zipCode})`,
+                items: items,
+                subtotal: subtotal,
+                shipping_cost: shippingCost,
+                total: total,
+                payment_method: paymentMethod,
+                status: currentStatus,
+                proof_url: proofUrl,
+                created_at: new Date().toISOString()
+            };
+
+            const { error: dbError } = await supabase
+                .from('orders')
+                .insert([orderData]);
+
+            if (dbError) throw new Error("Error al procesar el pedido en el servidor. Reintentá.");
+
+            // 3. Notificaciones
+            await sendEmailNotification('order_confirmation', orderData);
+            await sendEmailNotification('admin_notification', orderData);
+
+            // 4. Limpieza y Redirección
+            clearCart();
+            toast.success("¡Compra realizada con éxito!");
+            navigate('/gracias-por-tu-compra', { state: { orderData } });
+        } catch (error: any) {
+            toast.error(error.message || "Hubo un error al procesar tu compra. Intentá nuevamente.");
+            console.error("Error en checkout:", error);
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
-    if (orderConfirmed) {
-        return (
-            <div className="min-h-screen bg-background flex flex-col items-center justify-center p-6 text-center animate-fade-in">
-                <div className="w-20 h-20 bg-primary/10 rounded-full flex items-center justify-center mb-6">
-                    <CheckCircle2 className="w-12 h-12 text-primary" />
-                </div>
-                <h1 className="font-heading font-black text-4xl uppercase tracking-tighter mb-4 italic">¡Gracias por tu compra!</h1>
-                <p className="text-muted-foreground text-lg max-w-[500px] mb-8">
-                    Tu pedido ha sido recibido y está siendo procesado. Te enviamos un mail con todos los detalles.
-                </p>
-                <Button
-                    onClick={() => navigate("/")}
-                    className="font-heading font-bold uppercase tracking-widest rounded-xl h-12 px-8 glow"
-                >
-                    Volver al Inicio
-                </Button>
-            </div>
-        );
-    }
 
     if (items.length === 0) {
         return (
@@ -350,16 +409,78 @@ const Checkout = () => {
                                             <div className="flex items-center space-x-2 border rounded-xl p-4 transition-all cursor-pointer hover:border-primary aria-checked:border-primary aria-checked:bg-primary/5 h-20">
                                                 <RadioGroupItem value="contrapago" id="contrapago" />
                                                 <Label htmlFor="contrapago" className="flex flex-col cursor-pointer flex-1">
-                                                    <span className="font-bold">Contra Entrega</span>
-                                                    <span className="text-[10px] uppercase text-muted-foreground">Pagá al recibir</span>
+                                                    <span className="font-bold">Efectivo</span>
+                                                    <span className="text-[10px] uppercase text-muted-foreground">En el local</span>
                                                 </Label>
                                             </div>
                                         </RadioGroup>
+
+                                        {paymentMethod === 'transferencia' && (
+                                            <div className="mt-6 p-6 border-2 border-dashed border-primary/30 rounded-2xl bg-primary/5 space-y-4 animate-in fade-in slide-in-from-top-4">
+                                                <div className="space-y-2">
+                                                    <h3 className="font-heading font-black text-lg uppercase italic tracking-tighter">Datos Bancarios</h3>
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                                        <div className="space-y-1">
+                                                            <p className="text-[10px] text-muted-foreground uppercase font-black">Banco</p>
+                                                            <p className="font-bold">BRUBANK</p>
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <p className="text-[10px] text-muted-foreground uppercase font-black">Titular</p>
+                                                            <p className="font-bold">Juan Pablo Casasola</p>
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <p className="text-[10px] text-muted-foreground uppercase font-black">CBU</p>
+                                                            <p className="font-bold font-mono">1430001713022116440019</p>
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <p className="text-[10px] text-muted-foreground uppercase font-black">Alias</p>
+                                                            <p className="font-bold text-primary">puntopadelshop</p>
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <p className="text-[10px] text-muted-foreground uppercase font-black">CUIT</p>
+                                                            <p className="font-bold">20-43985752-9</p>
+                                                        </div>
+                                                        <div className="space-y-1">
+                                                            <p className="text-[10px] text-muted-foreground uppercase font-black">Monto a Transferir</p>
+                                                            <p className="font-black text-lg text-primary">{new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(total).replace("ARS", "$")}</p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <div className="pt-4 border-t border-primary/10">
+                                                    <p className="text-[11px] font-bold uppercase tracking-widest mb-3">Adjuntar comprobante (PDF, JPG, PNG)</p>
+                                                    <div className="flex flex-col gap-2">
+                                                        <Input 
+                                                            type="file" 
+                                                            accept="image/*,.pdf" 
+                                                            onChange={(e) => setProofFile(e.target.files ? e.target.files[0] : null)}
+                                                            className="bg-card cursor-pointer"
+                                                        />
+                                                        <p className="text-[10px] text-muted-foreground italic">
+                                                            Una vez realizada la transferencia, por favor adjunte el comprobante. Su pedido será procesado una vez que confirmemos el pago.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        )}
                                     </CardContent>
                                     <CardFooter className="bg-secondary/20 p-6 flex flex-col gap-4">
-                                        <Button type="submit" className="w-full h-14 font-heading font-black text-xl uppercase tracking-widest rounded-xl glow group shadow-lg shadow-primary/20">
-                                            Confirmar Compra
-                                            <ChevronRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                                        <Button 
+                                            type="submit" 
+                                            disabled={isSubmitting}
+                                            className="w-full h-14 font-heading font-black text-xl uppercase tracking-widest rounded-xl glow group shadow-lg shadow-primary/20 bg-primary text-primary-foreground hover:bg-primary/90"
+                                        >
+                                            {isSubmitting ? (
+                                                <div className="flex items-center gap-3">
+                                                    <Loader2 className="w-6 h-6 animate-spin" />
+                                                    <span>Procesando...</span>
+                                                </div>
+                                            ) : (
+                                                <>
+                                                    Confirmar Compra
+                                                    <ChevronRight className="ml-2 w-6 h-6 group-hover:translate-x-1 transition-transform" />
+                                                </>
+                                            )}
                                         </Button>
                                         <p className="text-[10px] text-center text-muted-foreground uppercase tracking-widest flex items-center justify-center gap-2">
                                             <Store className="w-3 h-3" />

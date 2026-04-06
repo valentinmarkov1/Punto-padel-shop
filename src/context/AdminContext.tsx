@@ -14,14 +14,36 @@ interface SiteSettings {
   categoryTags?: Record<string, string>;
 }
 
+export interface Order {
+  id: string;
+  order_number: string;
+  customer_name: string;
+  customer_email: string;
+  customer_phone: string;
+  shipping_address: string;
+  items: any[];
+  subtotal: number;
+  shipping_cost: number;
+  total: number;
+  payment_method: string;
+  status: 'pendiente_de_pago' | 'pagado' | 'rechazado' | 'enviado' | 'entregado';
+  proof_url?: string;
+  tracking_number?: string;
+  receipt_number?: string;
+  created_at: string;
+}
+
 interface AdminContextType {
   products: Product[];
   settings: SiteSettings;
+  orders: Order[];
   loading: boolean;
   addProduct: (product: Omit<Product, 'id' | 'slug' | 'priceFormatted'>) => Promise<void>;
   updateProduct: (id: string, product: Partial<Product>) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
   updateSettings: (settings: Partial<SiteSettings>) => Promise<void>;
+  fetchOrders: () => Promise<void>;
+  updateOrderStatus: (orderId: string, status: Order['status'], extraData?: Partial<Order>) => Promise<void>;
   refreshProducts: () => Promise<void>;
 }
 
@@ -47,6 +69,7 @@ const DEFAULT_SETTINGS: SiteSettings = {
 export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [products, setProducts] = useState<Product[]>([]);
   const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
+  const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
 
   const fetchProducts = async () => {
@@ -116,10 +139,43 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // In a real scenario, we'd also have a 'site_settings' table.
   };
 
+  const fetchOrders = async () => {
+    const { data, error } = await supabase
+      .from('orders')
+      .select('*')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      console.error('Error fetching orders:', error);
+      return;
+    }
+
+    if (data) {
+      setOrders(data as Order[]);
+    }
+  };
+
+  const updateOrderStatus = async (orderId: string, status: Order['status'], extraData?: Partial<Order>) => {
+    const updateData = { status, ...extraData };
+    
+    const { error } = await supabase
+      .from('orders')
+      .update(updateData)
+      .eq('id', orderId);
+
+    if (error) {
+      toast.error('Error al actualizar el estado: ' + error.message);
+      return;
+    }
+
+    toast.success(`Pedido actualizado a ${status}`);
+    await fetchOrders();
+  };
+
   useEffect(() => {
     const loadData = async () => {
       setLoading(true);
-      await Promise.all([fetchProducts(), fetchSettings()]);
+      await Promise.all([fetchProducts(), fetchSettings(), fetchOrders()]);
       setLoading(false);
     };
     loadData();
@@ -249,6 +305,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       updateProduct, 
       deleteProduct, 
       updateSettings,
+      orders,
+      fetchOrders,
+      updateOrderStatus,
       refreshProducts: fetchProducts
     }}>
       {children}
