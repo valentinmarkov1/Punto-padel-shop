@@ -12,7 +12,7 @@ interface CartDrawerProps {
 }
 
 const CartDrawer = ({ open, onOpenChange }: CartDrawerProps) => {
-    const { items, removeItem, updateQuantity, subtotal, itemCount } = useCart();
+    const { items, removeItem, updateQuantity, subtotal, itemCount, shippingCost, total } = useCart();
     const navigate = useNavigate();
 
     const formatPrice = (price: number) => {
@@ -113,12 +113,16 @@ const CartDrawer = ({ open, onOpenChange }: CartDrawerProps) => {
                                 </div>
                                 <div className="flex justify-between text-sm">
                                     <span className="text-muted-foreground">Envío</span>
-                                    <span className="text-[hsl(145,80%,42%)] font-bold">GRATIS</span>
+                                    {shippingCost === 0 ? (
+                                        <span className="text-[hsl(145,80%,42%)] font-bold">GRATIS</span>
+                                    ) : (
+                                        <span className="font-bold">{formatPrice(shippingCost)}</span>
+                                    )}
                                 </div>
                                 <Separator className="my-2" />
                                 <div className="flex justify-between items-end">
                                     <span className="font-heading font-black text-lg uppercase">Total</span>
-                                    <span className="font-heading font-black text-2xl text-primary">{formatPrice(subtotal)}</span>
+                                    <span className="font-heading font-black text-2xl text-primary">{formatPrice(total)}</span>
                                 </div>
                             </div>
 

@@ -18,7 +18,7 @@ import { toast } from 'sonner';
 
 const AdminSettings = () => {
   const { settings, updateSettings } = useAdmin();
-  
+
   const form = useForm({
     defaultValues: settings,
   });
@@ -61,71 +61,6 @@ const AdminSettings = () => {
                         <Input {...field} className="bg-secondary/20 h-11 rounded-xl" />
                       </FormControl>
                       <FormDescription className="text-[9px] uppercase font-bold">Sin símbolos ni espacios (ej: 1138582368)</FormDescription>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-              </CardContent>
-            </Card>
-
-            <Card className="border-border rounded-2xl overflow-hidden shadow-sm">
-              <CardHeader className="bg-secondary/10 border-b border-border">
-                <div className="flex items-center gap-2">
-                  <Truck className="w-5 h-5 text-primary" />
-                  <CardTitle className="font-heading font-black text-xl uppercase italic tracking-tighter">Envíos</CardTitle>
-                </div>
-                <CardDescription className="text-[10px] uppercase font-bold tracking-widest">Costos y beneficios de logística</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-6 space-y-4">
-                <div className="grid grid-cols-2 gap-4">
-                  <FormField
-                    control={form.control}
-                    name="shippingFree"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Envío Gratis desde</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} className="bg-secondary/20 h-11 rounded-xl" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="shippingCost"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Costo de Envío</FormLabel>
-                        <FormControl>
-                          <Input type="number" {...field} className="bg-secondary/20 h-11 rounded-xl" />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="md:col-span-2 border-border rounded-2xl overflow-hidden shadow-sm">
-              <CardHeader className="bg-secondary/10 border-b border-border">
-                <div className="flex items-center gap-2">
-                  <Bell className="w-5 h-5 text-primary" />
-                  <CardTitle className="font-heading font-black text-xl uppercase italic tracking-tighter">Comunicación</CardTitle>
-                </div>
-                <CardDescription className="text-[10px] uppercase font-bold tracking-widest">Textos promocionales y alertas</CardDescription>
-              </CardHeader>
-              <CardContent className="pt-6 space-y-4">
-                <FormField
-                  control={form.control}
-                  name="promoText"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Banner Promocional</FormLabel>
-                      <FormControl>
-                        <Input {...field} className="bg-secondary/20 h-11 rounded-xl" />
-                      </FormControl>
                       <FormMessage />
                     </FormItem>
                   )}

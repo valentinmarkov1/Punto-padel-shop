@@ -13,6 +13,8 @@ interface CartContextType {
     updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
     subtotal: number;
+    shippingCost: number;
+    total: number;
     itemCount: number;
 }
 
@@ -69,6 +71,12 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const subtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
     const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
+    const SHIPPING_THRESHOLD = 200000;
+    const FIXED_SHIPPING_COST = 20000;
+
+    const shippingCost = subtotal >= SHIPPING_THRESHOLD || subtotal === 0 ? 0 : FIXED_SHIPPING_COST;
+    const total = subtotal + shippingCost;
+
     return (
         <CartContext.Provider
             value={{
@@ -78,6 +86,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
                 updateQuantity,
                 clearCart,
                 subtotal,
+                shippingCost,
+                total,
                 itemCount,
             }}
         >

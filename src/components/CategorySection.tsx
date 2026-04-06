@@ -11,7 +11,6 @@ const categoryMetadata = [
   { name: "Pelotas", path: "/productos?categoria=pelotas", image: productPelotas, tag: null },
   { name: "Bolsos", path: "/productos?categoria=bolsos", image: productBolso, tag: null },
   { name: "Indumentaria", path: "/productos?categoria=indumentaria", image: productIndumentaria, tag: "NUEVO" },
-  { name: "Accesorios", path: "/productos?categoria=accesorios", image: productIndumentaria, tag: null }, // Placeholder image
 ];
 
 const CategorySection = () => {

@@ -44,7 +44,7 @@ const checkoutSchema = z.object({
 type CheckoutFormValues = z.infer<typeof checkoutSchema>;
 
 const Checkout = () => {
-    const { items, subtotal, clearCart } = useCart();
+    const { items, subtotal, shippingCost, total, clearCart } = useCart();
     const navigate = useNavigate();
     const [shippingMethod, setShippingMethod] = useState("domicilio");
     const [paymentMethod, setPaymentMethod] = useState("mercadopago");
@@ -74,7 +74,7 @@ const Checkout = () => {
     };
 
     const onSubmit = (values: CheckoutFormValues) => {
-        console.log("Datos de la orden:", { values, shippingMethod, paymentMethod, items, total: subtotal });
+        console.log("Datos de la orden:", { values, shippingMethod, paymentMethod, items, total: total });
         setOrderConfirmed(true);
         clearCart();
         toast.success("¡Pedido confirmado con éxito!");
@@ -239,9 +239,9 @@ const Checkout = () => {
                                                 <RadioGroupItem value="tienda" id="tienda" />
                                                 <Label htmlFor="tienda" className="flex flex-col cursor-pointer flex-1">
                                                     <span className="font-bold flex items-center gap-2">
-                                                        Retiro
+                                                        Coordinar
                                                     </span>
-                                                    <span className="text-[10px] uppercase text-muted-foreground">En tienda</span>
+                                                    <span className="text-[10px] uppercase text-muted-foreground">con el vendedor</span>
                                                 </Label>
                                             </div>
                                             <div className="flex items-center space-x-2 border rounded-xl p-4 transition-all cursor-pointer hover:border-primary aria-checked:border-primary aria-checked:bg-primary/5 h-20">
@@ -257,7 +257,7 @@ const Checkout = () => {
 
                                         {shippingMethod === "tienda" ? (
                                             <div className="p-4 bg-primary/5 border border-primary/20 rounded-xl text-sm font-medium animate-in fade-in slide-in-from-top-2">
-                                                ✅ Podrás retirar tu pedido en <span className="text-primary font-bold">Punto Padel Shop</span> una vez que te avisemos que está listo.
+                                                Este método es válido para <span className="text-primary font-bold">clientes</span> que residen en zonas aledañas a Berazategui.
                                             </div>
                                         ) : (
                                             <div className="space-y-4 animate-in fade-in slide-in-from-top-2">
@@ -344,7 +344,7 @@ const Checkout = () => {
                                                 <RadioGroupItem value="transferencia" id="transferencia" />
                                                 <Label htmlFor="transferencia" className="flex flex-col cursor-pointer flex-1">
                                                     <span className="font-bold">Transferencia</span>
-                                                    <span className="text-[10px] uppercase text-muted-foreground">10% OFF</span>
+                                                    <span className="text-[10px] uppercase text-muted-foreground"></span>
                                                 </Label>
                                             </div>
                                             <div className="flex items-center space-x-2 border rounded-xl p-4 transition-all cursor-pointer hover:border-primary aria-checked:border-primary aria-checked:bg-primary/5 h-20">
@@ -402,7 +402,11 @@ const Checkout = () => {
                                     </div>
                                     <div className="flex justify-between text-sm">
                                         <span className="text-muted-foreground">Envío</span>
-                                        <span className="text-[hsl(145,80%,42%)] font-bold">GRATIS</span>
+                                        {shippingCost === 0 ? (
+                                            <span className="text-[hsl(145,80%,42%)] font-bold">GRATIS</span>
+                                        ) : (
+                                            <span className="font-bold">{formatPrice(shippingCost)}</span>
+                                        )}
                                     </div>
 
                                     <Separator className="my-2" />
@@ -410,7 +414,7 @@ const Checkout = () => {
                                     <div className="flex justify-between items-end">
                                         <span className="font-heading font-black text-lg uppercase italic">Total</span>
                                         <div className="text-right">
-                                            <p className="font-heading font-black text-3xl text-primary leading-none">{formatPrice(subtotal)}</p>
+                                            <p className="font-heading font-black text-3xl text-primary leading-none">{formatPrice(total)}</p>
                                             <p className="text-[9px] uppercase text-muted-foreground tracking-tighter mt-1 italic font-bold">Incluye IVA</p>
                                         </div>
                                     </div>

@@ -1,7 +1,7 @@
 import { Truck, Shield, RefreshCw, Headphones } from "lucide-react";
 
 const features = [
-  { icon: Truck, title: "Envío gratis", desc: "En compras +$50.000" },
+  { icon: Truck, title: "Envío gratis", desc: "En compras +$200.000" },
   { icon: Shield, title: "Garantía oficial", desc: "En todos los productos" },
   { icon: RefreshCw, title: "Cambios gratis", desc: "Hasta 30 días" },
   { icon: Headphones, title: "Soporte 24/7", desc: "Te asesoramos siempre" },

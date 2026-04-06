@@ -16,7 +16,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
 const Carrito = () => {
-    const { items, removeItem, updateQuantity, subtotal, itemCount } = useCart();
+    const { items, removeItem, updateQuantity, subtotal, itemCount, shippingCost, total } = useCart();
     const navigate = useNavigate();
 
     const formatPrice = (price: number) => {
@@ -161,12 +161,16 @@ const Carrito = () => {
                                     </div>
                                     <div className="flex justify-between text-sm">
                                         <span className="text-muted-foreground font-medium uppercase tracking-wider text-[11px]">Envío estimado</span>
-                                        <span className="text-[hsl(145,80%,42%)] font-black uppercase tracking-tighter italic">¡GRATIS!</span>
+                                        {shippingCost === 0 ? (
+                                            <span className="text-[hsl(145,80%,42%)] font-black uppercase tracking-tighter italic">¡GRATIS!</span>
+                                        ) : (
+                                            <span className="font-bold">{formatPrice(shippingCost)}</span>
+                                        )}
                                     </div>
-                                    {subtotal > 100000 && (
+                                    {subtotal >= 200000 && (
                                         <div className="flex items-center gap-2 p-3 bg-destructive/5 text-destructive rounded-xl border border-destructive/10 animate-pulse">
                                             <Zap className="w-4 h-4 fill-current" />
-                                            <span className="text-[10px] font-black uppercase tracking-widest leading-none">¡Tenés un ahorro extra aplicado!</span>
+                                            <span className="text-[10px] font-black uppercase tracking-widest leading-none">¡Tenés envío gratis aplicado!</span>
                                         </div>
                                     )}
                                 </div>
@@ -177,7 +181,7 @@ const Carrito = () => {
                                     <div className="flex justify-between items-end">
                                         <span className="font-heading font-black text-xl uppercase italic">Total final</span>
                                         <div className="text-right">
-                                            <p className="font-heading font-black text-4xl text-primary leading-none tracking-tighter">{formatPrice(subtotal)}</p>
+                                            <p className="font-heading font-black text-4xl text-primary leading-none tracking-tighter">{formatPrice(total)}</p>
                                             <p className="text-[10px] uppercase text-muted-foreground tracking-widest mt-1 italic font-bold">Iva incluido</p>
                                         </div>
                                     </div>

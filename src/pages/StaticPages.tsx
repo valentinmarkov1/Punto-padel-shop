@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
@@ -40,11 +41,15 @@ export const Envios = () => (
             </section>
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Zonas de envío</h2>
-                <p>Contamos con cobertura nacional. Realizamos envíos a todas las provincias y localidades del país a través de los principales operadores logísticos.</p>
+                <p>Contamos con cobertura nacional. Realizamos envíos a todas las provincias y localidades del país.</p>
             </section>
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Costos de envío</h2>
                 <p>El costo se calcula automáticamente al ingresar tu código postal en el carrito de compras. ¡Atención! Ofrecemos <strong>Envío Gratis</strong> en compras superiores al monto indicado en nuestra barra superior.</p>
+            </section>
+            <section>
+                <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Metodos de Envio</h2>
+                <p>Realizamos nuestros envíos a través de correo Correo Argentino, un servicio reconocido por su eficacia y puntualidad en la entrega.</p>
             </section>
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Proceso de despacho</h2>
@@ -62,16 +67,16 @@ export const Devoluciones = () => (
                 <p>Aceptamos cambios de productos por talle o modelo, siempre que el producto se encuentre en las mismas condiciones en que fue entregado (sin uso, con etiquetas y embalaje original).</p>
             </section>
             <section>
-                <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Condiciones de devolución</h2>
-                <p>Las devoluciones por falla de fábrica están cubiertas por nuestra garantía. Para devoluciones por arrepentimiento, el producto debe estar precintado y sin señales de uso.</p>
+                <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Costos de devolución</h2>
+                <p>Los costos de devolución corren por cuenta del comprador.</p>
             </section>
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Plazo para cambios</h2>
-                <p>Disponés de <strong>30 días corridos</strong> desde la recepción del producto para solicitar un cambio o devolución.</p>
+                <p>Disponés de <strong>10 días corridos</strong> desde la recepción del producto para solicitar un cambio o devolución.</p>
             </section>
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Cómo iniciar un proceso</h2>
-                <p>Contactanos vía WhatsApp o correo electrónico indicando tu número de pedido y el motivo del cambio. Nuestro equipo te guiará en los pasos a seguir para el reenvío.</p>
+                <p>Contactanos vía WhatsApp indicando tu número de pedido y el motivo del cambio. Nuestro equipo te guiará en los pasos a seguir para el reenvío.</p>
             </section>
         </div>
     </BasePage>
@@ -80,17 +85,14 @@ export const Devoluciones = () => (
 export const MetodosPago = () => (
     <BasePage title="Métodos de pago">
         <div className="space-y-8">
+            <p>Elegí la forma de pago que prefieras y comprá con total tranquilidad y confianza. En nuestra tienda online, brindamos distintas alternativas de pago para que elijas la que mejor se adapta a tus necesidades. Sabemos lo importante que es comprar con confianza y facilidad, por eso te ofrecemos opciones seguras y descuentos exclusivos</p>
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Medios de pago disponibles</h2>
                 <p>Aceptamos pagos a través de plataformas seguras como Mercado Pago, permitiéndote abonar con saldo en cuenta, tarjetas o efectivo en puntos de pago.</p>
             </section>
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Tarjetas aceptadas</h2>
-                <p>Podés utilizar todas las tarjetas de crédito y débito: Visa, Mastercard, American Express, Cabal, entre otras.</p>
-            </section>
-            <section>
-                <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Pagos en cuotas</h2>
-                <p>Ofrecemos planes de cuotas sin interés en productos seleccionados y promociones bancarias vigentes que verás detalladas al momento de finalizar tu compra.</p>
+                <p>Podés utilizar todas las tarjetas de crédito y débito: Visa, Mastercard, American Express, entre otras.</p>
             </section>
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Seguridad de pago</h2>
@@ -100,43 +102,83 @@ export const MetodosPago = () => (
     </BasePage>
 );
 
-export const Contacto = () => (
-    <BasePage title="Contacto">
-        <div className="grid md:grid-cols-2 gap-12">
-            <div className="space-y-8">
-                <section>
-                    <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Atención al Cliente</h2>
-                    <p className="mb-2">Estamos para ayudarte con cualquier duda o consulta.</p>
-                    <p className="text-foreground font-bold">Email: hola@puntopadel.shop</p>
-                    <p className="text-foreground font-bold">Instagram: @puntopadel.shop</p>
-                </section>
-                <section>
-                    <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">¿Sos un club?</h2>
-                    <p>Si buscás equipamiento corporativo o para tu complejo de pádel, escribinos para acceder a precios mayoristas.</p>
-                </section>
+export const Contacto = () => {
+    const [formData, setFormData] = useState({
+        nombre: '',
+        telefono: '',
+        mensaje: ''
+    });
+
+    const handleSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        const { nombre, telefono, mensaje } = formData;
+
+        if (!nombre || !telefono || !mensaje) return;
+
+        const text = `¡Hola! Me contacto desde la web:\n\n*Nombre:* ${nombre}\n*Teléfono:* ${telefono}\n*Mensaje:* ${mensaje}`;
+        const encodedText = encodeURIComponent(text);
+        const PHONE_NUMBER = '5491138582368'; // Número de WhatsApp configurado en el widget
+
+        window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedText}`, '_blank');
+
+        // Opcional: limpiar el formulario después de enviar
+        setFormData({ nombre: '', telefono: '', mensaje: '' });
+    };
+
+    return (
+        <BasePage title="Contacto">
+            <div className="grid md:grid-cols-2 gap-12">
+                <div className="space-y-8">
+                    <section>
+                        <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Atención al Cliente</h2>
+                        <p className="mb-2">Estamos para ayudarte con cualquier duda o consulta.</p>
+                        <p className="text-foreground font-bold">WhatsApp: 11 3858-2368 - 11 6121-1947</p>
+                        <p className="text-foreground font-bold">Instagram: @puntopadel.shop</p>
+                    </section>
+                </div>
+                <div className="bg-secondary/30 p-8 rounded-3xl border border-border">
+                    <form className="space-y-4" onSubmit={handleSubmit}>
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-wider mb-2">Nombre Completo</label>
+                            <input
+                                type="text"
+                                className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-colors"
+                                placeholder="Tu nombre..."
+                                value={formData.nombre}
+                                onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-wider mb-2">Telefono de Contacto</label>
+                            <input
+                                type="tel"
+                                className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-colors"
+                                placeholder="Tu Telefono"
+                                value={formData.telefono}
+                                onChange={(e) => setFormData({ ...formData, telefono: e.target.value })}
+                                required
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-xs font-bold uppercase tracking-wider mb-2">Mensaje</label>
+                            <textarea
+                                className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-colors min-h-[120px]"
+                                placeholder="¿En qué podemos ayudarte?"
+                                value={formData.mensaje}
+                                onChange={(e) => setFormData({ ...formData, mensaje: e.target.value })}
+                                required
+                            ></textarea>
+                        </div>
+                        <button type="submit" className="w-full bg-primary text-primary-foreground font-heading font-black py-4 rounded-xl uppercase tracking-widest hover:bg-primary/90 transition-colors">
+                            Enviar Mensaje
+                        </button>
+                    </form>
+                </div>
             </div>
-            <div className="bg-secondary/30 p-8 rounded-3xl border border-border">
-                <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-                    <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider mb-2">Nombre Completo</label>
-                        <input type="text" className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-colors" placeholder="Tu nombre..." />
-                    </div>
-                    <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider mb-2">Email</label>
-                        <input type="email" className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-colors" placeholder="tu@email.com" />
-                    </div>
-                    <div>
-                        <label className="block text-xs font-bold uppercase tracking-wider mb-2">Mensaje</label>
-                        <textarea className="w-full bg-background border border-border rounded-xl px-4 py-3 text-sm focus:border-primary outline-none transition-colors min-h-[120px]" placeholder="¿En qué podemos ayudarte?"></textarea>
-                    </div>
-                    <button className="w-full bg-primary text-primary-foreground font-heading font-black py-4 rounded-xl uppercase tracking-widest hover:bg-primary/90 transition-colors">
-                        Enviar Mensaje
-                    </button>
-                </form>
-            </div>
-        </div>
-    </BasePage>
-);
+        </BasePage>
+    );
+};
 
 export const Terminos = () => (
     <BasePage title="Términos y condiciones">
