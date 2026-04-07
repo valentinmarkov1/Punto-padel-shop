@@ -329,12 +329,17 @@ const AdminOrders = () => {
                         </div>
                     </ScrollArea>
                     
-                    <DialogFooter className="p-8 bg-secondary/10 border-t flex items-center justify-between">
+                    <DialogFooter className="p-8 bg-secondary/10 border-t flex flex-wrap items-center justify-between gap-4">
                         <div className="text-left">
                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Total del Pedido</p>
                             <p className="text-3xl font-black text-primary italic tracking-tighter">{selectedOrder && formatPrice(selectedOrder.total)}</p>
                         </div>
-                        <Button onClick={() => setIsDetailsOpen(false)} className="rounded-xl font-heading font-black uppercase tracking-widest h-12 px-8">Cerrar</Button>
+                        <Button 
+                            onClick={() => setIsDetailsOpen(false)} 
+                            className="rounded-xl font-heading font-bold uppercase tracking-widest h-10 px-6 text-xs bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+                        >
+                            Cerrar
+                        </Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
@@ -392,7 +397,7 @@ const AdminOrders = () => {
                     </div>
                     <DialogFooter className="gap-2">
                         <Button variant="ghost" onClick={() => setIsTrackingOpen(false)} className="rounded-xl font-bold uppercase tracking-widest text-[10px]">Cancelar</Button>
-                        <Button onClick={handleTrackingSubmit} className="rounded-xl font-heading font-black uppercase tracking-widest h-12 px-8 glow">Guardar y Notificar</Button>
+                        <Button onClick={handleTrackingSubmit} className="rounded-xl font-heading font-bold uppercase tracking-widest h-10 px-8 text-xs bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/10 glow">Guardar y Notificar</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>

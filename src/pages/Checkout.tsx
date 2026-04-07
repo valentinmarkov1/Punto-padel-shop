@@ -38,10 +38,10 @@ const checkoutSchema = z.object({
     email: z.string().email("Email inválido"),
     phone: z.string().min(8, "Teléfono inválido"),
     dni: z.string().optional(),
-    address: z.string().min(5, "Dirección inválida"),
-    city: z.string().min(3, "Ciudad inválida"),
-    zipCode: z.string().min(4, "CP inválido"),
-    province: z.string().min(3, "Provincia inválida"),
+    address: z.string().optional(),
+    city: z.string().optional(),
+    zipCode: z.string().optional(),
+    province: z.string().optional(),
 });
 
 type CheckoutFormValues = z.infer<typeof checkoutSchema>;
@@ -50,7 +50,7 @@ const Checkout = () => {
     const { items, subtotal, shippingCost, total, clearCart } = useCart();
     const navigate = useNavigate();
     const [shippingMethod, setShippingMethod] = useState("domicilio");
-    const [paymentMethod, setPaymentMethod] = useState("mercadopago");
+    const [paymentMethod, setPaymentMethod] = useState("transferencia");
     const [proofFile, setProofFile] = useState<File | null>(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [orderConfirmed, setOrderConfirmed] = useState(false);
@@ -71,6 +71,13 @@ const Checkout = () => {
         },
     });
 
+    // Debug: Loguear errores de validación si el botón parece no funcionar
+    React.useEffect(() => {
+        if (Object.keys(form.formState.errors).length > 0) {
+            console.log("Errores de validación:", form.formState.errors);
+        }
+    }, [form.formState.errors]);
+
     const formatPrice = (price: number) => {
         return new Intl.NumberFormat("es-AR", {
             style: "currency",
@@ -80,6 +87,8 @@ const Checkout = () => {
     };
 
     const onSubmit = async (values: CheckoutFormValues) => {
+        console.log("Inicio de onSubmit - Valores:", values);
+        console.log("Método Pago:", paymentMethod, "Método Envío:", shippingMethod);
         setIsSubmitting(true);
         const orderNumber = `PP-${Math.floor(1000 + Math.random() * 9000)}`;
         
@@ -91,13 +100,11 @@ const Checkout = () => {
             if (paymentMethod === 'transferencia') {
                 if (!proofFile) throw new Error("Por favor adjunta el comprobante de transferencia");
                 
-                // Validar tipo de archivo
                 const allowedTypes = ['image/jpeg', 'image/png', 'application/pdf'];
                 if (!allowedTypes.includes(proofFile.type)) {
                     throw new Error("Formato no permitido. Solo JPG, PNG o PDF.");
                 }
 
-                // Validar tamaño (5MB)
                 if (proofFile.size > 5 * 1024 * 1024) {
                     throw new Error("El archivo es demasiado pesado (Máx 5MB).");
                 }
@@ -107,13 +114,13 @@ const Checkout = () => {
                 const filePath = `${fileName}`;
 
                 const { error: uploadError } = await supabase.storage
-                    .from('comprovantes')
+                    .from('comprobantes')
                     .upload(filePath, proofFile);
 
                 if (uploadError) throw new Error("Error al subir el comprobante: " + uploadError.message);
                 
                 const { data: { publicUrl } } = supabase.storage
-                    .from('comprovantes')
+                    .from('comprobantes')
                     .getPublicUrl(filePath);
                 
                 proofUrl = publicUrl;
@@ -125,7 +132,9 @@ const Checkout = () => {
                 customer_name: `${values.firstName} ${values.lastName}`,
                 customer_email: values.email,
                 customer_phone: values.phone,
-                shipping_address: `${values.address}, ${values.city}, ${values.province} (CP: ${values.zipCode})`,
+                shipping_address: shippingMethod === 'tienda' 
+                    ? "Retiro en tienda / Coordinar con vendedor" 
+                    : `${values.address}, ${values.city}, ${values.province} (CP: ${values.zipCode})`,
                 items: items,
                 subtotal: subtotal,
                 shipping_cost: shippingCost,
@@ -157,7 +166,6 @@ const Checkout = () => {
             setIsSubmitting(false);
         }
     };
-
 
     if (items.length === 0) {
         return (
@@ -191,7 +199,16 @@ const Checkout = () => {
                     {/* Formulario a la izquierda */}
                     <div className="lg:col-span-2 space-y-8">
                         <Form {...form}>
-                            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+                            <form 
+                                onSubmit={(e) => {
+                                    console.log("Form submit intercalado");
+                                    form.handleSubmit(onSubmit, (errors) => {
+                                        console.log("Errores detectados por Zod:", errors);
+                                        toast.error("Faltan completar campos obligatorios.");
+                                    })(e);
+                                }} 
+                                className="space-y-8"
+                            >
                                 <Card className="border-border shadow-md overflow-hidden bg-card">
                                     <CardHeader className="bg-secondary/50 border-b">
                                         <CardTitle className="font-heading uppercase italic text-lg flex items-center gap-2">
@@ -393,13 +410,6 @@ const Checkout = () => {
                                             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4"
                                         >
                                             <div className="flex items-center space-x-2 border rounded-xl p-4 transition-all cursor-pointer hover:border-primary aria-checked:border-primary aria-checked:bg-primary/5 h-20">
-                                                <RadioGroupItem value="mercadopago" id="mercadopago" />
-                                                <Label htmlFor="mercadopago" className="flex flex-col cursor-pointer flex-1">
-                                                    <span className="font-bold">Mercado Pago</span>
-                                                    <span className="text-[10px] uppercase text-muted-foreground">Tarjetas o Dinero en cuenta</span>
-                                                </Label>
-                                            </div>
-                                            <div className="flex items-center space-x-2 border rounded-xl p-4 transition-all cursor-pointer hover:border-primary aria-checked:border-primary aria-checked:bg-primary/5 h-20">
                                                 <RadioGroupItem value="transferencia" id="transferencia" />
                                                 <Label htmlFor="transferencia" className="flex flex-col cursor-pointer flex-1">
                                                     <span className="font-bold">Transferencia</span>
@@ -442,7 +452,7 @@ const Checkout = () => {
                                                         </div>
                                                         <div className="space-y-1">
                                                             <p className="text-[10px] text-muted-foreground uppercase font-black">Monto a Transferir</p>
-                                                            <p className="font-black text-lg text-primary">{new Intl.NumberFormat("es-AR", { style: "currency", currency: "ARS", minimumFractionDigits: 0 }).format(total).replace("ARS", "$")}</p>
+                                                            <p className="font-black text-lg text-primary">{formatPrice(total)}</p>
                                                         </div>
                                                     </div>
                                                 </div>
