@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useAdmin } from '@/context/AdminContext';
 import { Button } from '@/components/ui/button';
-import { Tag as TagIcon, Plus, MoreVertical, Edit, Search, Save, Clock, Trash2 } from 'lucide-react';
+import { Tag as TagIcon, Plus, MoreVertical, Edit, Search, Save, Clock, Trash2, AlertCircle } from 'lucide-react';
+import { isOfferExpired } from '@/lib/offer-utils';
 import { Input } from '@/components/ui/input';
 import { Switch } from '@/components/ui/switch';
 import { toast } from 'sonner';
@@ -55,6 +56,27 @@ const AdminOffers = () => {
           <p className="text-muted-foreground text-sm uppercase font-bold tracking-widest mt-1">Gestiona promociones y descuentos</p>
         </div>
       </div>
+
+      {settings.offerCountdownEnabled && isOfferExpired(settings.offerCountdownEnd, true) && (
+        <div className="bg-orange-500/10 border border-orange-500/20 rounded-2xl p-6 flex flex-col md:flex-row items-center gap-4 animate-in fade-in slide-in-from-top-4">
+          <div className="bg-orange-500/20 p-3 rounded-xl">
+            <AlertCircle className="w-6 h-6 text-orange-500" />
+          </div>
+          <div className="flex-1 text-center md:text-left">
+            <h3 className="font-heading font-black text-lg uppercase italic tracking-tighter text-orange-600">Ofertas Finalizadas</h3>
+            <p className="text-xs font-medium text-orange-600/80 uppercase tracking-wider">
+              El contador ha llegado a cero. El sistema ha desactivado automáticamente las etiquetas de oferta en toda la tienda.
+            </p>
+          </div>
+          <Button 
+            variant="outline" 
+            onClick={handleResetCountdown}
+            className="rounded-xl font-bold uppercase text-[10px] tracking-widest border-orange-500/20 text-orange-600 hover:bg-orange-500/10"
+          >
+            Limpiar y Resetear Contador
+          </Button>
+        </div>
+      )}
 
       <Card className="border-border rounded-2xl overflow-hidden shadow-sm mb-8 bg-card">
         <CardHeader className="bg-secondary/10 border-b border-border">

@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Product } from '@/data/products';
 import { toast } from 'sonner';
+import { isOfferExpired } from '@/lib/offer-utils';
 
 interface SiteSettings {
   whatsapp: string;
@@ -86,37 +87,97 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
 
     if (data) {
-      const formattedProducts: Product[] = data.map(p => ({
-        id: p.id,
-        name: p.name,
-        slug: p.slug,
-        description: p.description || '',
-        price: p.price,
-        originalPrice: p.original_price,
-        priceFormatted: new Intl.NumberFormat("es-AR", {
-          style: "currency",
-          currency: "ARS",
-          minimumFractionDigits: 0,
-        }).format(p.price).replace("ARS", "$"),
-        originalPriceFormatted: (p.is_offer && p.original_price && p.original_price > p.price) ? new Intl.NumberFormat("es-AR", {
-          style: "currency",
-          currency: "ARS",
-          minimumFractionDigits: 0,
-        }).format(p.original_price).replace("ARS", "$") : undefined,
-        category: p.category,
-        image: p.image_url,
-        images: p.images || [p.image_url],
-        isNew: p.is_new,
-        isOffer: p.is_offer,
-        discount: p.discount,
-        discountPercentage: p.discount_percentage,
-        salesCount: p.sales_count || 0,
-        level: p.level,
-        type: p.type,
-        tag1: p.tag1,
-        tag2: p.tag2
-      }));
+      const expired = isOfferExpired(settings.offerCountdownEnd, settings.offerCountdownEnabled);
+      const formattedProducts: Product[] = data.map(p => {
+        // Si las ofertas expiraron, forzamos isOffer a false reactivamente
+        const isCurrentlyOffer = expired ? false : p.is_offer;
+        
+        // Si ya no es oferta (porque expiró), mostramos el precio original como precio actual
+        const effectivePrice = isCurrentlyOffer ? p.price : (p.original_price || p.price);
+        
+        return {
+          id: p.id,
+          name: p.name,
+          slug: p.slug,
+          description: p.description || '',
+          price: effectivePrice,
+          originalPrice: p.original_price,
+          priceFormatted: new Intl.NumberFormat("es-AR", {
+            style: "currency",
+            currency: "ARS",
+            minimumFractionDigits: 0,
+          }).format(effectivePrice).replace("ARS", "$"),
+          originalPriceFormatted: (isCurrentlyOffer && p.original_price && p.original_price > p.price) ? new Intl.NumberFormat("es-AR", {
+            style: "currency",
+            currency: "ARS",
+            minimumFractionDigits: 0,
+          }).format(p.original_price).replace("ARS", "$") : undefined,
+          category: p.category,
+          image: p.image_url,
+          images: p.images || [p.image_url],
+          isNew: p.is_new,
+          isOffer: isCurrentlyOffer,
+          discount: p.discount,
+          discountPercentage: p.discount_percentage,
+          salesCount: p.sales_count || 0,
+          level: p.level,
+          type: p.type,
+          tag1: p.tag1,
+          tag2: p.tag2
+        };
+      });
       setProducts(formattedProducts);
+    }
+  };
+
+  const checkAndCleanExpiredOffers = async () => {
+    // Solo actuamos si el contador está habilitado y ha expirado
+    if (settings.offerCountdownEnabled && isOfferExpired(settings.offerCountdownEnd, true)) {
+      console.log("[AdminContext] Ofertas expiradas detectadas. Iniciando limpieza en la base de datos...");
+      
+      try {
+        // 1. Obtener productos que están actualmente marcados como oferta
+        const { data: offerProducts, error: fetchError } = await supabase
+          .from('products')
+          .select('id, original_price')
+          .eq('is_offer', true);
+
+        if (fetchError) throw fetchError;
+
+        if (offerProducts && offerProducts.length > 0) {
+          console.log(`[AdminContext] Revirtiendo precios de ${offerProducts.length} productos...`);
+          
+          // 2. Actualizar cada producto: price = original_price y is_offer = false
+          const updatePromises = offerProducts.map(p => 
+            supabase.from('products')
+              .update({ 
+                price: p.original_price || null, // Se asume que original_price es el correcto
+                is_offer: false, 
+                discount: null, 
+                discount_percentage: null 
+              })
+              .eq('id', p.id)
+          );
+          
+          await Promise.all(updatePromises);
+        }
+        
+        // 3. Desactivar contador en settings (DB)
+        const { error: settingsError } = await supabase
+          .from('offers')
+          .update({ active: false })
+          .eq('active', true);
+          
+        if (settingsError) throw settingsError;
+        
+        console.log("[AdminContext] Limpieza completa: precios revertidos y contador desactivado.");
+        toast.info("Ofertas finalizadas: los precios han vuelto a su valor original.");
+        
+        // 4. Recargar todo para asegurar consistencia
+        await Promise.all([fetchProducts(), fetchSettings()]);
+      } catch (err) {
+        console.error("[AdminContext] Error en la limpieza automática de ofertas:", err);
+      }
     }
   };
 
@@ -201,6 +262,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     };
     loadData();
   }, []);
+
+  // Efecto para monitorear la expiración de ofertas
+  useEffect(() => {
+    if (!loading) {
+      checkAndCleanExpiredOffers();
+    }
+  }, [settings.offerCountdownEnd, settings.offerCountdownEnabled, loading]);
 
   const generateSlug = (name: string) => {
     return name

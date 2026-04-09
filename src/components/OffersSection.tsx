@@ -5,22 +5,7 @@ import { Link } from "react-router-dom";
 import ProductCard from "./ProductCard";
 // Import removal
 import { useAdmin } from "@/context/AdminContext";
-
-const getTimeLeft = (targetDate: string | null) => {
-  if (!targetDate) return { days: 0, hours: 0, minutes: 0, isExpired: true };
-  const now = new Date();
-  const end = new Date(targetDate);
-  const diff = end.getTime() - now.getTime();
-  
-  if (diff <= 0) {
-    return { days: 0, hours: 0, minutes: 0, isExpired: true };
-  }
-  
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  return { days, hours, minutes, isExpired: false };
-};
+import { getTimeLeft } from "@/lib/offer-utils";
 
 const OffersSection = () => {
   const { products, settings, loading } = useAdmin();
@@ -29,7 +14,7 @@ const OffersSection = () => {
 
   useEffect(() => {
     setTime(getTimeLeft(settings.offerCountdownEnd));
-    const interval = setInterval(() => setTime(getTimeLeft(settings.offerCountdownEnd)), 60000); // Actualizar cada minuto
+    const interval = setInterval(() => setTime(getTimeLeft(settings.offerCountdownEnd)), 10000); // Mantenemos una actualización más frecuente (10s)
     return () => clearInterval(interval);
   }, [settings.offerCountdownEnd]);
 
