@@ -1,19 +1,18 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useLocation } from 'react-router-dom';
 import { X, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const PHONE_NUMBER = '5491138582368';
 
 const WhatsAppWidget = () => {
-    const location = useLocation();
     const [isOpen, setIsOpen] = useState(false);
     const [message, setMessage] = useState('');
     const [showNotification, setShowNotification] = useState(false);
     const chatRef = useRef<HTMLDivElement>(null);
 
-    // No mostrar en el panel de administración
-    if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/admin-login')) {
+    // No mostrar en el panel de administración - Usamos window.location.pathname para evitar errores de ruteo
+    const pathname = window.location.pathname;
+    if (pathname.startsWith('/admin') || pathname.startsWith('/admin-login')) {
         return null;
     }
 
