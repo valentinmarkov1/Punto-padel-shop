@@ -17,8 +17,12 @@ import {
     CreditCard,
     FileText,
     Package,
-    Banknote
+    Banknote,
+    Download,
+    Trash2
 } from 'lucide-react';
+// @ts-ignore
+import html2pdf from 'html2pdf.js';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { 
@@ -38,19 +42,31 @@ import {
     DialogTitle,
     DialogFooter
 } from '@/components/ui/dialog';
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { Separator } from '@/components/ui/separator';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { sendEmailNotification } from '@/lib/email-service';
 import { toast } from 'sonner';
 
 const AdminOrders = () => {
-    const { orders, updateOrderStatus, loading, fetchOrders } = useAdmin();
+    const { orders, updateOrderStatus, deleteOrder, loading, fetchOrders } = useAdmin();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('todos');
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
     const [isDetailsOpen, setIsDetailsOpen] = useState(false);
     const [isProofOpen, setIsProofOpen] = useState(false);
     const [isTrackingOpen, setIsTrackingOpen] = useState(false);
+    const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+    const [orderToDelete, setOrderToDelete] = useState<string | null>(null);
     const [trackingNumber, setTrackingNumber] = useState('');
 
     const formatPrice = (price: number) => {
@@ -66,7 +82,7 @@ const AdminOrders = () => {
             case 'pendiente_de_pago': return <Badge variant="outline" className="bg-orange-50 text-orange-600 border-orange-200 uppercase text-[10px] font-black italic">Pendiente de Pago</Badge>;
             case 'pendiente_pago_local': return <Badge variant="outline" className="bg-yellow-50 text-yellow-600 border-yellow-200 uppercase text-[10px] font-black italic">Pendiente de Pago Efectivo</Badge>;
             case 'pagado': return <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200 uppercase text-[10px] font-black italic">Pagado</Badge>;
-            case 'rechazado': return <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200 uppercase text-[10px] font-black italic">Rechazado</Badge>;
+            case 'rechazado': return <Badge variant="outline" className="bg-red-600 text-white border-none uppercase text-[10px] font-black italic shadow-[0_0_10px_rgba(220,38,38,0.3)] px-3 py-1">Rechazado</Badge>;
             case 'enviado': return <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 uppercase text-[10px] font-black italic">Enviado</Badge>;
             case 'entregado': return <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 uppercase text-[10px] font-black italic">Entregado</Badge>;
             default: return <Badge variant="outline" className="uppercase text-[10px] font-black italic">{status.replace(/_/g, ' ')}</Badge>;
@@ -127,6 +143,53 @@ const AdminOrders = () => {
             console.error("Error en handleTrackingSubmit:", error);
             toast.error("Error al actualizar seguimiento.");
         }
+    };
+
+    const handleExportPDF = () => {
+        if (!selectedOrder) return;
+        
+        const element = document.getElementById('order-details-content');
+        if (!element) return;
+        
+        const opt = {
+            margin: 10,
+            filename: `Pedido_${selectedOrder.order_number}.pdf`,
+            image: { type: 'jpeg' as const, quality: 0.98 },
+            html2canvas: { 
+                scale: 2, 
+                useCORS: true, 
+                letterRendering: true,
+                backgroundColor: '#ffffff',
+                onclone: (clonedDoc: any) => {
+                    // Quitamos las restricciones de scroll para que capture todo el contenido
+                    const scrollArea = clonedDoc.querySelector('.pdf-scroll-area');
+                    // Aseguramos que el contenedor de exportación tenga un fondo blanco limpio y márgenes seguros
+                    const content = clonedDoc.getElementById('order-details-content');
+                    if (content) {
+                        content.style.width = '700px'; // Ancho fijo tipo A4 para evitar variaciones
+                        content.style.margin = '0 auto';
+                        content.style.paddingLeft = '40px';
+                        content.style.paddingRight = '40px';
+                        content.style.paddingBottom = '60px';
+                        
+                        // Ocultamos el badge de estado para el PDF
+                        const statusBadge = clonedDoc.getElementById('pdf-status-badge');
+                        if (statusBadge) {
+                            statusBadge.style.display = 'none';
+                        }
+                    }
+                }
+            },
+            jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' as const }
+        };
+
+        // Clonamos el elemento para aplicar estilos específicos de PDF si fuera necesario
+        // pero html2pdf ya captura el estado actual.
+        toast.promise(html2pdf().set(opt).from(element).save(), {
+            loading: 'Generando PDF...',
+            success: 'PDF descargado con éxito',
+            error: 'Error al generar el PDF'
+        });
     };
 
     if (loading) {
@@ -266,6 +329,18 @@ const AdminOrders = () => {
                                                         <span className="font-bold text-xs uppercase tracking-wider">Marcar como Entregado</span>
                                                     </DropdownMenuItem>
                                                 )}
+
+                                                <DropdownMenuSeparator />
+                                                <DropdownMenuItem 
+                                                    className="p-3 cursor-pointer text-red-600 focus:text-red-600 focus:bg-red-50" 
+                                                    onClick={() => {
+                                                        setOrderToDelete(order.id);
+                                                        setIsDeleteDialogOpen(true);
+                                                    }}
+                                                >
+                                                    <Trash2 className="w-4 h-4 mr-2" />
+                                                    <span className="font-bold text-xs uppercase tracking-wider">Eliminar Pedido</span>
+                                                </DropdownMenuItem>
                                             </DropdownMenuContent>
                                         </DropdownMenu>
                                     </td>
@@ -278,18 +353,26 @@ const AdminOrders = () => {
 
             {/* Modals... */}
             <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-                <DialogContent className="max-w-2xl bg-card border-border rounded-3xl p-0 overflow-hidden">
-                    <DialogHeader className="p-8 bg-secondary/30 border-b">
+                <DialogContent className="max-w-2xl bg-card border-border rounded-3xl p-0 overflow-hidden border-none shadow-none">
+                    <div id="order-details-content" className="bg-white text-black p-0 relative">
+                        {/* Marca amarilla de la tienda - Más prominente */}
+                        <div className="h-6 w-full bg-primary flex items-center justify-center">
+                            <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary-foreground">Punto Padel Shop &bull; Detalle de Pedido Oficial</span>
+                        </div>
+                        
+                        <DialogHeader className="p-8 bg-secondary/30 border-b">
                         <div className="flex justify-between items-center">
                             <div>
                                 <DialogTitle className="font-heading font-black text-3xl uppercase italic tracking-tighter">Pedido #{selectedOrder?.order_number}</DialogTitle>
                                 <DialogDescription className="text-xs uppercase font-bold tracking-widest mt-1">Realizado el {selectedOrder && new Date(selectedOrder.created_at).toLocaleString()}</DialogDescription>
                             </div>
-                            {selectedOrder && getStatusBadge(selectedOrder.status)}
+                            <div id="pdf-status-badge">
+                                {selectedOrder && getStatusBadge(selectedOrder.status)}
+                            </div>
                         </div>
                     </DialogHeader>
                     
-                    <ScrollArea className="max-h-[60vh] p-8">
+                    <ScrollArea className="max-h-[60vh] p-8 pdf-scroll-area">
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                             <div className="space-y-6">
                                 <div>
@@ -355,7 +438,7 @@ const AdminOrders = () => {
                                         {selectedOrder?.items.map((item: any, i: number) => (
                                             <div key={i} className="flex justify-between items-center bg-card border border-border p-3 rounded-xl">
                                                 <div className="flex-1 min-w-0 pr-4">
-                                                    <p className="text-xs font-black uppercase tracking-tight truncate">{item.name}</p>
+                                                    <p className="text-[10px] font-black uppercase tracking-tight leading-tight">{item.name}</p>
                                                     <p className="text-[10px] text-muted-foreground">Cant: {item.quantity}</p>
                                                 </div>
                                                 <span className="text-xs font-bold">{formatPrice(item.price * item.quantity)}</span>
@@ -365,19 +448,40 @@ const AdminOrders = () => {
                                 </div>
                             </div>
                         </div>
+
+                        {/* Total integrado para el PDF - DISEÑO CENTRADO PARA EVITAR CORTES */}
+                        <div className="mt-12 pt-8 border-t border-dashed border-border flex flex-col items-center text-center space-y-6">
+                            <div className="space-y-1">
+                                <p className="text-xs text-primary font-black uppercase tracking-[0.2em]">Gracias por tu compra</p>
+                                <p className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest italic">Punto Padel Shop</p>
+                            </div>
+                        </div>
                     </ScrollArea>
+                    </div>
                     
                     <DialogFooter className="p-8 bg-secondary/10 border-t flex flex-wrap items-center justify-between gap-4">
                         <div className="text-left">
                             <p className="text-[10px] font-black text-muted-foreground uppercase tracking-widest">Total del Pedido</p>
                             <p className="text-3xl font-black text-primary italic tracking-tighter">{selectedOrder && formatPrice(selectedOrder.total)}</p>
                         </div>
-                        <Button 
-                            onClick={() => setIsDetailsOpen(false)} 
-                            className="rounded-xl font-heading font-bold uppercase tracking-widest h-10 px-6 text-xs bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
-                        >
-                            Cerrar
-                        </Button>
+                        <div className="flex gap-3">
+                            <Button 
+                                onClick={handleExportPDF} 
+                                variant="outline"
+                                size="sm"
+                                className="rounded-xl font-heading font-bold uppercase tracking-widest h-8 px-4 text-[9px] border-primary/20 text-primary hover:bg-primary/5"
+                            >
+                                <Download className="mr-2 w-3 h-3" />
+                                Exportar PDF
+                            </Button>
+                            <Button 
+                                onClick={() => setIsDetailsOpen(false)} 
+                                size="sm"
+                                className="rounded-xl font-heading font-bold uppercase tracking-widest h-8 px-4 text-[9px] bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm"
+                            >
+                                Cerrar
+                            </Button>
+                        </div>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
@@ -429,6 +533,37 @@ const AdminOrders = () => {
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
+
+            {/* Confirmation Dialog for Deletion */}
+            <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
+                <AlertDialogContent className="bg-card border-border rounded-3xl p-8">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle className="font-heading font-black text-2xl uppercase tracking-tighter text-red-600 italic">
+                            ¿Eliminar definitivamente?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="text-sm font-medium text-muted-foreground uppercase tracking-tight">
+                            Esta acción no se puede deshacer. Se borrará permanentemente la información del pedido de la base de datos.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter className="mt-6 gap-3">
+                        <AlertDialogCancel className="rounded-xl font-bold uppercase tracking-widest text-[10px] border-border hover:bg-secondary/20">
+                            Cancelar
+                        </AlertDialogCancel>
+                        <AlertDialogAction 
+                            className="rounded-xl font-heading font-bold uppercase tracking-widest h-10 px-8 text-xs bg-red-600 text-white hover:bg-red-700 shadow-lg"
+                            onClick={async () => {
+                                if (orderToDelete) {
+                                    await deleteOrder(orderToDelete);
+                                    setOrderToDelete(null);
+                                    setIsDeleteDialogOpen(false);
+                                }
+                            }}
+                        >
+                            Confirmar Eliminación
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     );
 };

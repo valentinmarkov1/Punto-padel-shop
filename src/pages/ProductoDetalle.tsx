@@ -111,8 +111,20 @@ const ProductoDetalle = () => {
                             </div>
                         </div>
 
-                        <div className="prose prose-sm text-muted-foreground max-w-none mb-10">
-                            <p className="text-lg leading-relaxed">{product.description}</p>
+                        <div className="max-w-none mb-10 space-y-6">
+                            {product.description.split(/\n|(?=\d+\.)/).map((paragraph, index) => {
+                                const trimmed = paragraph.trim();
+                                if (!trimmed) return null;
+                                return (
+                                    <p 
+                                        key={index} 
+                                        className="text-[15px] md:text-base leading-[1.8] text-foreground/70 font-medium tracking-wide animate-in fade-in slide-in-from-left-2"
+                                        style={{ animationDelay: `${index * 50}ms` }}
+                                    >
+                                        {trimmed}
+                                    </p>
+                                );
+                            })}
                         </div>
 
                         {/* Attributes for Palas */}

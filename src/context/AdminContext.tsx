@@ -47,6 +47,7 @@ interface AdminContextType {
   updateSettings: (settings: Partial<SiteSettings>) => Promise<void>;
   fetchOrders: () => Promise<void>;
   updateOrderStatus: (orderId: string, status: OrderStatus, extraData?: Partial<Order>) => Promise<void>;
+  deleteOrder: (orderId: string) => Promise<void>;
   refreshProducts: () => Promise<void>;
 }
 
@@ -242,11 +243,13 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         return;
       }
 
+      // Actualizar localmente para respuesta inmediata
+      setOrders(prev => prev.map(o => o.id === orderId ? { ...o, ...updateData } : o));
+
       console.log('[AdminContext] Actualización exitosa:', data);
       toast.success(`Pedido actualizado a ${status.replace(/_/g, ' ')}`);
       
-      // Refrescar la lista de pedidos localmente
-      await fetchOrders();
+      // Ya no llamamos a fetchOrders() aquí para evitar que el lag de la DB revierta el cambio local
     } catch (err) {
       console.error('[AdminContext] Excepción en actualización:', err);
       toast.error('Ocurrió un error inesperado al actualizar.');
@@ -365,6 +368,37 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     await fetchProducts();
   };
 
+  const deleteOrder = async (orderId: string) => {
+    try {
+      console.log(`[AdminContext] Eliminando pedido ${orderId}`);
+      const { data, error } = await supabase
+        .from('orders')
+        .delete()
+        .eq('id', orderId)
+        .select();
+
+      if (error) {
+        console.error('[AdminContext] Error eliminando pedido:', error);
+        toast.error('Error al eliminar el pedido: ' + error.message);
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        console.warn('[AdminContext] No se borró ninguna fila (posible RLS).');
+      }
+
+      // Actualizar localmente para respuesta inmediata
+      setOrders(prev => prev.filter(o => o.id !== orderId));
+      
+      toast.success('Pedido eliminado correctamente');
+      // No llamamos a fetchOrders() inmediatamente para evitar que vuelva a aparecer por lag de DB
+    } catch (err) {
+      console.error('[AdminContext] Excepción en eliminación de pedido:', err);
+      toast.error('Ocurrió un error al intentar eliminar el pedido.');
+      throw err;
+    }
+  };
+
   const updateSettings = async (newSettings: Partial<SiteSettings>) => {
     if (newSettings.offerCountdownEnd !== undefined || newSettings.offerCountdownEnabled !== undefined) {
       const { data: currentOffer } = await supabase.from('offers').select('id').limit(1).maybeSingle();
@@ -396,6 +430,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       orders,
       fetchOrders,
       updateOrderStatus,
+      deleteOrder,
       refreshProducts: fetchProducts
     }}>
       {children}
