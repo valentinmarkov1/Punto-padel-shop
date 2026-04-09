@@ -14,6 +14,8 @@ interface SiteSettings {
   categoryTags?: Record<string, string>;
 }
 
+export type OrderStatus = 'pendiente_de_pago' | 'pendiente_pago_local' | 'pagado' | 'rechazado' | 'enviado' | 'entregado';
+
 export interface Order {
   id: string;
   order_number: string;
@@ -26,7 +28,7 @@ export interface Order {
   shipping_cost: number;
   total: number;
   payment_method: string;
-  status: 'pendiente_de_pago' | 'pagado' | 'rechazado' | 'enviado' | 'entregado';
+  status: OrderStatus;
   proof_url?: string;
   tracking_number?: string;
   receipt_number?: string;
@@ -43,7 +45,7 @@ interface AdminContextType {
   deleteProduct: (id: string) => Promise<void>;
   updateSettings: (settings: Partial<SiteSettings>) => Promise<void>;
   fetchOrders: () => Promise<void>;
-  updateOrderStatus: (orderId: string, status: Order['status'], extraData?: Partial<Order>) => Promise<void>;
+  updateOrderStatus: (orderId: string, status: OrderStatus, extraData?: Partial<Order>) => Promise<void>;
   refreshProducts: () => Promise<void>;
 }
 
@@ -119,14 +121,11 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const fetchSettings = async () => {
-    // We'll use the 'offers' table for the countdown and a 'settings' table or similar for the rest.
-    // Given the constraints, let's assume 'offers' table stores the countdown and maybe others.
-    // For now, let's try to fetch specifically the countdown from 'offers'.
     const { data: offersData, error: offersError } = await supabase
-      .from('offers')
-      .select('*')
-      .limit(1)
-      .maybeSingle();
+        .from('offers')
+        .select('*')
+        .limit(1)
+        .maybeSingle();
 
     if (!offersError && offersData) {
       setSettings(prev => ({
@@ -135,8 +134,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         offerCountdownEnabled: offersData.active
       }));
     }
-    
-    // In a real scenario, we'd also have a 'site_settings' table.
   };
 
   const fetchOrders = async () => {
@@ -155,21 +152,45 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  const updateOrderStatus = async (orderId: string, status: Order['status'], extraData?: Partial<Order>) => {
-    const updateData = { status, ...extraData };
-    
-    const { error } = await supabase
-      .from('orders')
-      .update(updateData)
-      .eq('id', orderId);
+  const updateOrderStatus = async (orderId: string, status: OrderStatus, extraData?: Partial<Order>) => {
+    try {
+      console.log(`[AdminContext] Actualizando pedido ${orderId} a estado: ${status}`);
+      
+      // Construir objeto de actualización limpio
+      const updateData: any = { status };
+      if (extraData?.tracking_number !== undefined) updateData.tracking_number = extraData.tracking_number;
+      if (extraData?.receipt_number !== undefined) updateData.receipt_number = extraData.receipt_number;
 
-    if (error) {
-      toast.error('Error al actualizar el estado: ' + error.message);
-      return;
+      console.log(`[AdminContext] Datos enviados a Supabase:`, updateData);
+      
+      const { data, error } = await supabase
+        .from('orders')
+        .update(updateData)
+        .eq('id', orderId)
+        .select();
+
+      if (error) {
+        console.error('[AdminContext] Error de Supabase:', error);
+        toast.error('Error al actualizar en la base de datos: ' + error.message);
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        console.error('[AdminContext] No se actualizó ninguna fila. Verificá políticas RLS.');
+        toast.error('No se pudo guardar: Error de permisos (RLS).');
+        return;
+      }
+
+      console.log('[AdminContext] Actualización exitosa:', data);
+      toast.success(`Pedido actualizado a ${status.replace(/_/g, ' ')}`);
+      
+      // Refrescar la lista de pedidos localmente
+      await fetchOrders();
+    } catch (err) {
+      console.error('[AdminContext] Excepción en actualización:', err);
+      toast.error('Ocurrió un error inesperado al actualizar.');
+      throw err;
     }
-
-    toast.success(`Pedido actualizado a ${status}`);
-    await fetchOrders();
   };
 
   useEffect(() => {
@@ -277,7 +298,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const updateSettings = async (newSettings: Partial<SiteSettings>) => {
-    // If offer countdown is being updated
     if (newSettings.offerCountdownEnd !== undefined || newSettings.offerCountdownEnabled !== undefined) {
       const { data: currentOffer } = await supabase.from('offers').select('id').limit(1).maybeSingle();
       

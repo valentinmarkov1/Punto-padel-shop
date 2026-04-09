@@ -16,7 +16,8 @@ import {
     MapPin,
     CreditCard,
     FileText,
-    Package
+    Package,
+    Banknote
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,7 +44,7 @@ import { sendEmailNotification } from '@/lib/email-service';
 import { toast } from 'sonner';
 
 const AdminOrders = () => {
-    const { orders, updateOrderStatus, loading } = useAdmin();
+    const { orders, updateOrderStatus, loading, fetchOrders } = useAdmin();
     const [searchTerm, setSearchTerm] = useState('');
     const [statusFilter, setStatusFilter] = useState<string>('todos');
     const [selectedOrder, setSelectedOrder] = useState<Order | null>(null);
@@ -60,14 +61,15 @@ const AdminOrders = () => {
         }).format(price).replace("ARS", "$");
     };
 
-    const getStatusBadge = (status: Order['status']) => {
+    const getStatusBadge = (status: string) => {
         switch (status) {
-            case 'pendiente_de_pago': return <Badge variant="outline" className="bg-orange-50 text-orange-600 border-orange-200 uppercase text-[10px] font-black">Pendiente de Pago</Badge>;
-            case 'pagado': return <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200 uppercase text-[10px] font-black">Pagado</Badge>;
-            case 'rechazado': return <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200 uppercase text-[10px] font-black">Rechazado</Badge>;
-            case 'enviado': return <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 uppercase text-[10px] font-black">Enviado</Badge>;
-            case 'entregado': return <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 uppercase text-[10px] font-black">Entregado</Badge>;
-            default: return <Badge variant="outline" className="uppercase text-[10px] font-black">{status}</Badge>;
+            case 'pendiente_de_pago': return <Badge variant="outline" className="bg-orange-50 text-orange-600 border-orange-200 uppercase text-[10px] font-black italic">Pendiente de Pago</Badge>;
+            case 'pendiente_pago_local': return <Badge variant="outline" className="bg-yellow-50 text-yellow-600 border-yellow-200 uppercase text-[10px] font-black italic">Pendiente de Pago Efectivo</Badge>;
+            case 'pagado': return <Badge variant="outline" className="bg-green-50 text-green-600 border-green-200 uppercase text-[10px] font-black italic">Pagado</Badge>;
+            case 'rechazado': return <Badge variant="outline" className="bg-red-50 text-red-600 border-red-200 uppercase text-[10px] font-black italic">Rechazado</Badge>;
+            case 'enviado': return <Badge variant="outline" className="bg-blue-50 text-blue-600 border-blue-200 uppercase text-[10px] font-black italic">Enviado</Badge>;
+            case 'entregado': return <Badge variant="outline" className="bg-slate-50 text-slate-600 border-slate-200 uppercase text-[10px] font-black italic">Entregado</Badge>;
+            default: return <Badge variant="outline" className="uppercase text-[10px] font-black italic">{status.replace(/_/g, ' ')}</Badge>;
         }
     };
 
@@ -83,25 +85,48 @@ const AdminOrders = () => {
     });
 
     const handleApprove = async (order: Order) => {
-        const receiptNumber = `REC-${Math.floor(100000 + Math.random() * 900000)}`;
-        await updateOrderStatus(order.id, 'pagado', { receipt_number: receiptNumber });
-        
-        // Enviar email de confirmación de pago
-        await sendEmailNotification('payment_received', { ...order, status: 'pagado', receipt_number: receiptNumber });
-        toast.success(`Pago aprobado. Recibo generado: ${receiptNumber}`);
+        try {
+            console.log("Intentando aprobar pedido:", order.id);
+            const receiptNumber = `REC-${Math.floor(100000 + Math.random() * 900000)}`;
+            
+            // 1. Actualizar estado en DB
+            await updateOrderStatus(order.id, 'pagado', { receipt_number: receiptNumber });
+            
+            // 2. Notificación Email
+            try {
+                await sendEmailNotification('payment_received', { ...order, status: 'pagado', receipt_number: receiptNumber });
+            } catch (emailError) {
+                console.error("Error enviando email:", emailError);
+                toast.error("Pago aprobado pero falló el envío del email.");
+            }
+            
+            toast.success(`Pago aprobado satisfactoriamente.`);
+        } catch (error: any) {
+            console.error("Error en handleApprove:", error);
+            toast.error("Error al aprobar el pago: " + (error.message || "Error desconocido"));
+        }
     };
 
     const handleTrackingSubmit = async () => {
         if (!selectedOrder || !trackingNumber) return;
         
-        await updateOrderStatus(selectedOrder.id, 'enviado', { tracking_number: trackingNumber });
-        
-        // Enviar email con seguimiento opcionalmente
-        await sendEmailNotification('payment_received', { ...selectedOrder, status: 'enviado', tracking_number: trackingNumber });
-        
-        setIsTrackingOpen(false);
-        setTrackingNumber('');
-        toast.success(`Número de seguimiento guardado: ${trackingNumber}`);
+        try {
+            console.log("Intentando marcar como enviado:", selectedOrder.id);
+            await updateOrderStatus(selectedOrder.id, 'enviado', { tracking_number: trackingNumber });
+            
+            try {
+                await sendEmailNotification('payment_received', { ...selectedOrder, status: 'enviado', tracking_number: trackingNumber });
+            } catch (emailError) {
+                console.error("Error enviando notification de envío:", emailError);
+            }
+            
+            setIsTrackingOpen(false);
+            setTrackingNumber('');
+            toast.success(`Pedido marcado como ENVIADO.`);
+        } catch (error: any) {
+            console.error("Error en handleTrackingSubmit:", error);
+            toast.error("Error al actualizar seguimiento.");
+        }
     };
 
     if (loading) {
@@ -134,11 +159,13 @@ const AdminOrders = () => {
                             value={statusFilter}
                             onChange={(e) => setStatusFilter(e.target.value)}
                         >
-                            <option value="todos">TODOS</option>
-                            <option value="pendiente_de_pago">PENDIENTES</option>
-                            <option value="pagado">PAGADOS</option>
-                            <option value="enviado">ENVIADOS</option>
-                            <option value="rechazado">RECHAZADOS</option>
+                             <option value="todos">TODOS</option>
+                             <option value="pendiente_de_pago">PENDIENTES TRF</option>
+                             <option value="pendiente_pago_local">PENDIENTES EFECTIVO</option>
+                             <option value="pagado">PAGADOS</option>
+                             <option value="enviado">ENVIADOS</option>
+                             <option value="entregado">ENTREGADOS</option>
+                             <option value="rechazado">RECHAZADOS</option>
                         </select>
                     </div>
                 </div>
@@ -167,8 +194,8 @@ const AdminOrders = () => {
                                     <td className="p-4">
                                         <div className="flex flex-col">
                                             <span className="font-black text-sm uppercase italic">#{order.order_number}</span>
-                                            <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter">
-                                                {order.payment_method === 'transferencia' ? '🏦 Transferencia' : '💳 Mercado Pago'}
+                                            <span className="text-[10px] text-muted-foreground uppercase font-bold tracking-tighter flex items-center gap-1">
+                                                {order.payment_method === 'transferencia' ? '🏦 Transferencia' : '💵 Efectivo'}
                                             </span>
                                         </div>
                                     </td>
@@ -209,23 +236,34 @@ const AdminOrders = () => {
                                                     </DropdownMenuItem>
                                                 )}
 
-                                                {order.status === 'pendiente_de_pago' && (
+                                                {['pendiente_de_pago', 'pendiente_pago_local'].includes(order.status) && (
                                                     <>
                                                         <DropdownMenuItem className="p-3 cursor-pointer text-green-600" onClick={() => handleApprove(order)}>
                                                             <CheckCircle className="w-4 h-4 mr-2" />
                                                             <span className="font-bold text-xs uppercase tracking-wider">Aprobar Pago</span>
                                                         </DropdownMenuItem>
-                                                        <DropdownMenuItem className="p-3 cursor-pointer text-red-600" onClick={() => updateOrderStatus(order.id, 'rechazado')}>
+                                                        <DropdownMenuItem className="p-3 cursor-pointer text-red-600" onClick={() => {
+                                                            updateOrderStatus(order.id, 'rechazado').catch(err => toast.error("Error al rechazar"));
+                                                        }}>
                                                             <XCircle className="w-4 h-4 mr-2" />
                                                             <span className="font-bold text-xs uppercase tracking-wider">Rechazar Pago</span>
                                                         </DropdownMenuItem>
                                                     </>
                                                 )}
-
+                                                
                                                 {order.status === 'pagado' && (
                                                     <DropdownMenuItem className="p-3 cursor-pointer text-blue-600" onClick={() => { setSelectedOrder(order); setIsTrackingOpen(true); }}>
                                                         <Truck className="w-4 h-4 mr-2" />
-                                                        <span className="font-bold text-xs uppercase tracking-wider">Cargar Seguimiento</span>
+                                                        <span className="font-bold text-xs uppercase tracking-wider">Marcar como Enviado</span>
+                                                    </DropdownMenuItem>
+                                                )}
+
+                                                {order.status === 'enviado' && (
+                                                    <DropdownMenuItem className="p-3 cursor-pointer text-purple-600" onClick={() => {
+                                                        updateOrderStatus(order.id, 'entregado').catch(err => toast.error("Error al marcar entregado"));
+                                                    }}>
+                                                        <Package className="w-4 h-4 mr-2" />
+                                                        <span className="font-bold text-xs uppercase tracking-wider">Marcar como Entregado</span>
                                                     </DropdownMenuItem>
                                                 )}
                                             </DropdownMenuContent>
@@ -238,7 +276,7 @@ const AdminOrders = () => {
                 </table>
             </div>
 
-            {/* Modal Detalles */}
+            {/* Modals... */}
             <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
                 <DialogContent className="max-w-2xl bg-card border-border rounded-3xl p-0 overflow-hidden">
                     <DialogHeader className="p-8 bg-secondary/30 border-b">
@@ -344,7 +382,6 @@ const AdminOrders = () => {
                 </DialogContent>
             </Dialog>
 
-            {/* Modal Comprobante */}
             <Dialog open={isProofOpen} onOpenChange={setIsProofOpen}>
                 <DialogContent className="max-w-xl bg-card border-border rounded-3xl p-6">
                     <DialogHeader>
@@ -363,12 +400,7 @@ const AdminOrders = () => {
                         ) : (
                             <img src={selectedOrder?.proof_url} alt="Comprobante" className="w-full h-full object-contain p-2" />
                         )}
-                        <Button 
-                            asChild 
-                            variant="secondary" 
-                            size="sm" 
-                            className="absolute bottom-4 right-4 rounded-full shadow-lg"
-                        >
+                        <Button asChild variant="secondary" size="sm" className="absolute bottom-4 right-4 rounded-full shadow-lg">
                             <a href={selectedOrder?.proof_url} target="_blank" rel="noopener noreferrer">
                                 <ExternalLink className="w-4 h-4 mr-2" /> Ampliar
                             </a>
@@ -377,7 +409,6 @@ const AdminOrders = () => {
                 </DialogContent>
             </Dialog>
 
-            {/* Modal Seguimiento */}
             <Dialog open={isTrackingOpen} onOpenChange={setIsTrackingOpen}>
                 <DialogContent className="max-w-md bg-card border-border rounded-3xl p-8">
                     <DialogHeader>
@@ -385,19 +416,16 @@ const AdminOrders = () => {
                         <DialogDescription className="text-xs uppercase font-bold tracking-widest">Pedido #{selectedOrder?.order_number}</DialogDescription>
                     </DialogHeader>
                     <div className="space-y-4 py-4">
-                        <div className="space-y-2">
-                            <label className="text-[11px] font-black uppercase tracking-widest text-muted-foreground">Número de Guía / Seguimiento</label>
-                            <Input 
-                                placeholder="Ej: AR123456789" 
-                                value={trackingNumber}
-                                onChange={(e) => setTrackingNumber(e.target.value)}
-                                className="h-12 rounded-xl bg-secondary/20 border-border font-bold uppercase"
-                            />
-                        </div>
+                        <Input 
+                            placeholder="Número de Guía / Seguimiento" 
+                            value={trackingNumber}
+                            onChange={(e) => setTrackingNumber(e.target.value)}
+                            className="h-12 rounded-xl bg-secondary/20 border-border font-bold uppercase"
+                        />
                     </div>
                     <DialogFooter className="gap-2">
                         <Button variant="ghost" onClick={() => setIsTrackingOpen(false)} className="rounded-xl font-bold uppercase tracking-widest text-[10px]">Cancelar</Button>
-                        <Button onClick={handleTrackingSubmit} className="rounded-xl font-heading font-bold uppercase tracking-widest h-10 px-8 text-xs bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg shadow-primary/10 glow">Guardar y Notificar</Button>
+                        <Button onClick={handleTrackingSubmit} className="rounded-xl font-heading font-bold uppercase tracking-widest h-10 px-8 text-xs bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg glow">Guardar y Marcar Enviado</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
