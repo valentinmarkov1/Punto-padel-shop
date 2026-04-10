@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { X, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
-
-const PHONE_NUMBER = '5491138582368';
+import { useAdmin } from '@/context/AdminContext';
 
 const WhatsAppWidget = () => {
+    const { settings } = useAdmin();
+    const PHONE_NUMBER = settings.whatsapp ? `549${settings.whatsapp}` : '5491138582368';
     const [isOpen, setIsOpen] = useState(false);
     const [message, setMessage] = useState('');
     const [showNotification, setShowNotification] = useState(false);

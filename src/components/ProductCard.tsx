@@ -28,8 +28,7 @@ const ProductCard = (props: ProductCardProps) => {
     discountPercentage,
     level,
     type,
-    tag1,
-    tag2
+    tag1
   } = props;
 
   const { addItem } = useCart();
@@ -67,11 +66,6 @@ const ProductCard = (props: ProductCardProps) => {
           {tag1 && (
             <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-[hsl(145,80%,42%)] text-white rounded-full shadow-[0_0_15px_hsl(145_80%_42%_/_0.4)]">
               {tag1}
-            </span>
-          )}
-          {tag2 && !isOffer && ( // Only show tag2 if not showing too many badges
-            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-orange-500 text-white rounded-full shadow-[0_0_15px_rgba(249,115,22,0.4)]">
-              {tag2}
             </span>
           )}
         </div>

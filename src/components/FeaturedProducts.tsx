@@ -6,7 +6,7 @@ import { useAdmin } from "@/context/AdminContext";
 
 const FeaturedProducts = () => {
   const { products, loading } = useAdmin();
-  const featured = products.filter(p => !p.isOffer).slice(0, 8); // Just take the first 8 for home
+  const featured = products.filter(p => p.isNew).slice(0, 8); // Only take products marked as isNew (Featured)
 
   if (loading) {
     return (
@@ -17,6 +17,10 @@ const FeaturedProducts = () => {
         </div>
       </section>
     );
+  }
+
+  if (featured.length === 0) {
+    return null;
   }
 
   return (

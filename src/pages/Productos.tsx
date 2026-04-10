@@ -29,6 +29,14 @@ const categories = ["Palas", "Pelotas", "Bolsos", "Indumentaria", "Accesorios"];
 const levels = ["Principiante", "Intermedio", "Avanzado", "Profesional"];
 const types = ["Control", "Potencia", "Polivalente"];
 
+const SUBCATEGORIES = {
+  "palas": [],
+  "pelotas": [],
+  "bolsos": ["Mochilas", "Bolsos paleteros", "Fundas"],
+  "indumentaria": ["Remeras", "Shorts"],
+  "accesorios": ["Muñequeras", "Cubre grip", "Protectores", "Correas"],
+};
+
 const Productos = () => {
     const { products, loading } = useAdmin();
     const [searchParams, setSearchParams] = useSearchParams();
@@ -42,6 +50,7 @@ const Productos = () => {
     const typeFilter = searchParams.get("tipo");
     const minPrice = searchParams.get("minPrice") ? Number(searchParams.get("minPrice")) : null;
     const maxPrice = searchParams.get("maxPrice") ? Number(searchParams.get("maxPrice")) : null;
+    const subcategoryFilter = searchParams.get("subcategoria");
     const sortBy = searchParams.get("sort") || "featured";
 
     const filteredProducts = useMemo(() => {
@@ -53,6 +62,7 @@ const Productos = () => {
             if (searchFilter && !product.name.toLowerCase().includes(searchFilter.toLowerCase())) return false;
             if (minPrice !== null && product.price < minPrice) return false;
             if (maxPrice !== null && product.price > maxPrice) return false;
+            if (subcategoryFilter && product.subcategory?.toLowerCase() !== subcategoryFilter.toLowerCase()) return false;
             return true;
         }).sort((a, b) => {
             if (sortBy === "price-asc") return a.price - b.price;
@@ -60,7 +70,7 @@ const Productos = () => {
             if (sortBy === "best-sellers") return b.salesCount - a.salesCount;
             return 0; // featured/default
         });
-    }, [products, categoryFilter, offerFilter, searchFilter, levelFilter, typeFilter, minPrice, maxPrice, sortBy]);
+    }, [products, categoryFilter, offerFilter, searchFilter, levelFilter, typeFilter, minPrice, maxPrice, subcategoryFilter, sortBy]);
 
     const updateFilters = (key: string, value: string | null) => {
         const newParams = new URLSearchParams(searchParams);
@@ -118,6 +128,25 @@ const Productos = () => {
                                 ))}
                             </div>
                         </div>
+
+                        {categoryFilter && SUBCATEGORIES[categoryFilter as keyof typeof SUBCATEGORIES]?.length > 0 && (
+                            <div>
+                                <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                                    Subcategorías
+                                </h3>
+                                <div className="space-y-2">
+                                    {SUBCATEGORIES[categoryFilter as keyof typeof SUBCATEGORIES].map((sub) => (
+                                        <button
+                                            key={sub}
+                                            onClick={() => updateFilters("subcategoria", subcategoryFilter === sub ? null : sub)}
+                                            className={`block text-sm font-medium transition-colors hover:text-primary ${subcategoryFilter === sub ? 'text-primary' : 'text-foreground/70'}`}
+                                        >
+                                            {sub}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         <div>
                             <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
@@ -194,7 +223,7 @@ const Productos = () => {
                             </>
                         )}
 
-                        {(categoryFilter || offerFilter || levelFilter || typeFilter || searchFilter) && (
+                        {(categoryFilter || offerFilter || levelFilter || typeFilter || searchFilter || subcategoryFilter) && (
                             <Button
                                 variant="ghost"
                                 size="sm"
@@ -266,6 +295,12 @@ const Productos = () => {
                                             <span className="inline-flex items-center gap-1 px-3 py-1 bg-secondary text-foreground text-xs font-bold rounded-full border border-border">
                                                 Busca: {searchFilter}
                                                 <button onClick={() => updateFilters("search", null)}><X className="w-3 h-3" /></button>
+                                            </span>
+                                        )}
+                                        {subcategoryFilter && (
+                                            <span className="inline-flex items-center gap-1 px-3 py-1 bg-primary/20 text-primary text-xs font-bold rounded-full border border-primary/40">
+                                                {subcategoryFilter}
+                                                <button onClick={() => updateFilters("subcategoria", null)}><X className="w-3 h-3" /></button>
                                             </span>
                                         )}
                                     </div>

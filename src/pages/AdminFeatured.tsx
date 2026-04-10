@@ -14,7 +14,7 @@ const AdminFeatured = () => {
   // La interfaz permitirá marcar/desmarcar.
   
   const filteredProducts = products.filter(p => 
-    p.name.toLowerCase().includes(searchTerm.toLowerCase())
+    p.isNew && p.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (

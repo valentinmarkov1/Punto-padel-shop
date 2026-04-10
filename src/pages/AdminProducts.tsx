@@ -164,7 +164,7 @@ const AdminProducts = () => {
                       </div>
                     )}
                     {product.isNew && (
-                      <Badge className="bg-blue-500 text-[8px] px-1 h-4">NEW</Badge>
+                      <Badge className="bg-primary text-[8px] px-1 h-4 font-black">DESTACADO</Badge>
                     )}
                   </div>
                 </TableCell>

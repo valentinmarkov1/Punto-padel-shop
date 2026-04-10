@@ -20,17 +20,17 @@ const categories = [
     name: "Bolsos",
     path: "/productos?categoria=bolsos",
     subcategories: [
-      { name: "Mochilas", path: "/productos?categoria=bolsos" },
-      { name: "Bolsos paleteros", path: "/productos?categoria=bolsos" },
-      { name: "Fundas", path: "/productos?categoria=bolsos" },
+      { name: "Mochilas", path: "/productos?categoria=bolsos&subcategoria=Mochilas" },
+      { name: "Bolsos paleteros", path: "/productos?categoria=bolsos&subcategoria=Bolsos paleteros" },
+      { name: "Fundas", path: "/productos?categoria=bolsos&subcategoria=Fundas" },
     ],
   },
   {
     name: "Indumentaria",
     path: "/productos?categoria=indumentaria",
     subcategories: [
-      { name: "Remeras", path: "/productos?categoria=indumentaria" },
-      { name: "Shorts", path: "/productos?categoria=indumentaria" },
+      { name: "Remeras", path: "/productos?categoria=indumentaria&subcategoria=Remeras" },
+      { name: "Shorts", path: "/productos?categoria=indumentaria&subcategoria=Shorts" },
     ],
   },
   {
@@ -38,10 +38,10 @@ const categories = [
     path: "/productos?categoria=accesorios",
     subcategories: [
       { name: "Pelotas", path: "/productos?categoria=pelotas" },
-      { name: "Muñequeras", path: "/productos?categoria=accesorios" },
-      { name: "Cubre grip", path: "/productos?categoria=accesorios" },
-      { name: "Protectores", path: "/productos?categoria=accesorios" },
-      { name: "Correas", path: "/productos?categoria=accesorios" },
+      { name: "Muñequeras", path: "/productos?categoria=accesorios&subcategoria=Muñequeras" },
+      { name: "Cubre grip", path: "/productos?categoria=accesorios&subcategoria=Cubre grip" },
+      { name: "Protectores", path: "/productos?categoria=accesorios&subcategoria=Protectores" },
+      { name: "Correas", path: "/productos?categoria=accesorios&subcategoria=Correas" },
     ],
   },
 ];

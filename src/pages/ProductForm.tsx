@@ -28,6 +28,14 @@ import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
 
+const SUBCATEGORIES = {
+  "Palas": [],
+  "Pelotas": [],
+  "Bolsos": ["Mochilas", "Bolsos paleteros", "Fundas"],
+  "Indumentaria": ["Remeras", "Shorts"],
+  "Accesorios": ["Muñequeras", "Cubre grip", "Protectores", "Correas"],
+};
+
 const productSchema = z.object({
   name: z.string().min(3, 'El nombre debe tener al menos 3 caracteres'),
   description: z.string().min(10, 'La descripción debe tener al menos 10 caracteres'),
@@ -42,7 +50,7 @@ const productSchema = z.object({
   level: z.string().optional(),
   type: z.string().optional(),
   tag1: z.string().optional(),
-  tag2: z.string().optional(),
+  subcategory: z.string().optional(),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -71,7 +79,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
       level: product?.level || '',
       type: product?.type || '',
       tag1: product?.tag1 || '',
-      tag2: product?.tag2 || '',
+      subcategory: product?.subcategory || '',
     },
   });
 
@@ -219,6 +227,35 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
                 )}
               />
 
+              {SUBCATEGORIES[category as keyof typeof SUBCATEGORIES]?.length > 0 && (
+                <FormField
+                  control={form.control}
+                  name="subcategory"
+                  render={({ field }) => (
+                    <FormItem className="animate-in slide-in-from-top-2 duration-300">
+                      <FormLabel className="uppercase text-[10px] font-black tracking-widest text-muted-foreground">Subcategoría</FormLabel>
+                      <Select 
+                        onValueChange={field.onChange} 
+                        value={field.value}
+                        defaultValue={field.value}
+                      >
+                        <FormControl>
+                          <SelectTrigger className="bg-secondary/20 h-11 rounded-xl">
+                            <SelectValue placeholder="Seleccionar" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent className="rounded-xl border-border">
+                          {SUBCATEGORIES[category as keyof typeof SUBCATEGORIES].map((sub) => (
+                            <SelectItem key={sub} value={sub}>{sub}</SelectItem>
+                          ))}
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              )}
+
               {category === 'Palas' && (
                 <div className="grid grid-cols-2 gap-4 col-span-2 animate-in slide-in-from-top-2 duration-300">
                   <FormField
@@ -336,25 +373,13 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
                 <TagIcon className="w-5 h-5 text-muted-foreground" />
                 <FormLabel className="uppercase text-[10px] font-black tracking-widest leading-none">Etiquetas Personalizadas (Opcional)</FormLabel>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 gap-4">
                 <FormField
                   control={form.control}
                   name="tag1"
                   render={({ field }) => (
                     <FormItem>
-                      <FormLabel className="text-[9px] font-black uppercase tracking-widest opacity-60">Etiqueta 1 (Ej: MÁS VENDIDO)</FormLabel>
-                      <FormControl>
-                        <Input {...field} placeholder="Texto de la etiqueta" className="bg-background h-10 rounded-lg" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                <FormField
-                  control={form.control}
-                  name="tag2"
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel className="text-[9px] font-black uppercase tracking-widest opacity-60">Etiqueta 2 (Ej: NUEVO)</FormLabel>
+                      <FormLabel className="text-[9px] font-black uppercase tracking-widest opacity-60">Etiqueta del Producto (Ej: MÁS VENDIDO, NUEVO, etc)</FormLabel>
                       <FormControl>
                         <Input {...field} placeholder="Texto de la etiqueta" className="bg-background h-10 rounded-lg" />
                       </FormControl>

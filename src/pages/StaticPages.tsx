@@ -1,6 +1,7 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useAdmin } from "@/context/AdminContext";
 
 interface PageProps {
     title: string;
@@ -103,6 +104,7 @@ export const MetodosPago = () => (
 );
 
 export const Contacto = () => {
+    const { settings } = useAdmin();
     const [formData, setFormData] = useState({
         nombre: '',
         telefono: '',
@@ -117,9 +119,9 @@ export const Contacto = () => {
 
         const text = `¡Hola! Me contacto desde la web:\n\n*Nombre:* ${nombre}\n*Teléfono:* ${telefono}\n*Mensaje:* ${mensaje}`;
         const encodedText = encodeURIComponent(text);
-        const PHONE_NUMBER = '5491138582368'; // Número de WhatsApp configurado en el widget
+        const PHONE_NUMBER = settings.whatsapp || '1138582368'; 
 
-        window.open(`https://wa.me/${PHONE_NUMBER}?text=${encodedText}`, '_blank');
+        window.open(`https://wa.me/549${PHONE_NUMBER}?text=${encodedText}`, '_blank');
 
         // Opcional: limpiar el formulario después de enviar
         setFormData({ nombre: '', telefono: '', mensaje: '' });
@@ -132,7 +134,7 @@ export const Contacto = () => {
                     <section>
                         <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Atención al Cliente</h2>
                         <p className="mb-2">Estamos para ayudarte con cualquier duda o consulta.</p>
-                        <p className="text-foreground font-bold">WhatsApp: 11 3858-2368 - 11 6121-1947</p>
+                        <p className="text-foreground font-bold">WhatsApp: {settings.whatsapp || '11 3858-2368'}</p>
                         <p className="text-foreground font-bold">Instagram: @puntopadel.shop</p>
                     </section>
                 </div>

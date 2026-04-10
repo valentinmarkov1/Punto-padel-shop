@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { supabase } from '@/lib/supabase';
 import { Product } from '@/data/products';
 import { toast } from 'sonner';
@@ -75,6 +75,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   const [settings, setSettings] = useState<SiteSettings>(DEFAULT_SETTINGS);
   const [orders, setOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
+  const isCleaningRef = useRef(false);
 
   const fetchProducts = async () => {
     const { data, error } = await supabase
@@ -124,7 +125,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           level: p.level,
           type: p.type,
           tag1: p.tag1,
-          tag2: p.tag2
+          subcategory: p.subcategory
         };
       });
       setProducts(formattedProducts);
@@ -132,8 +133,9 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
   };
 
   const checkAndCleanExpiredOffers = async () => {
-    // Solo actuamos si el contador está habilitado y ha expirado
-    if (settings.offerCountdownEnabled && isOfferExpired(settings.offerCountdownEnd, true)) {
+    // Solo actuamos si el contador está habilitado, ha expirado y no hay otra limpieza en curso
+    if (settings.offerCountdownEnabled && isOfferExpired(settings.offerCountdownEnd, true) && !isCleaningRef.current) {
+      isCleaningRef.current = true;
       console.log("[AdminContext] Ofertas expiradas detectadas. Iniciando limpieza en la base de datos...");
       
       try {
@@ -174,10 +176,15 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         console.log("[AdminContext] Limpieza completa: precios revertidos y contador desactivado.");
         toast.info("Ofertas finalizadas: los precios han vuelto a su valor original.");
         
-        // 4. Recargar todo para asegurar consistencia
-        await Promise.all([fetchProducts(), fetchSettings()]);
+        // 4. Actualizar estado local inmediatamente para detener el bucle antes del fetch
+        setSettings(prev => ({ ...prev, offerCountdownEnabled: false }));
+        
+        // 5. Recargar productos para reflejar el cambio en la UI
+        await fetchProducts();
       } catch (err) {
         console.error("[AdminContext] Error en la limpieza automática de ofertas:", err);
+      } finally {
+        isCleaningRef.current = false;
       }
     }
   };
@@ -194,6 +201,21 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         ...prev,
         offerCountdownEnd: offersData.end_date,
         offerCountdownEnabled: offersData.active
+      }));
+    }
+
+    // Fetch site settings (whatsapp, tags)
+    const { data: siteData, error: siteError } = await supabase
+        .from('site_settings')
+        .select('*')
+        .eq('id', 1)
+        .maybeSingle();
+
+    if (!siteError && siteData) {
+      setSettings(prev => ({
+        ...prev,
+        whatsapp: siteData.whatsapp || prev.whatsapp,
+        categoryTags: siteData.category_tags || prev.categoryTags
       }));
     }
   };
@@ -305,7 +327,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         level: newProduct.level,
         type: newProduct.type,
         tag1: newProduct.tag1,
-        tag2: newProduct.tag2
+        subcategory: newProduct.subcategory
       }])
       .select();
 
@@ -337,7 +359,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (updatedFields.level !== undefined) updateData.level = updatedFields.level;
     if (updatedFields.type !== undefined) updateData.type = updatedFields.type;
     if (updatedFields.tag1 !== undefined) updateData.tag1 = updatedFields.tag1;
-    if (updatedFields.tag2 !== undefined) updateData.tag2 = updatedFields.tag2;
+    if (updatedFields.subcategory !== undefined) updateData.subcategory = updatedFields.subcategory;
 
     const { error } = await supabase
       .from('products')
@@ -413,6 +435,18 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       } else {
         await supabase.from('offers').insert([offerData]);
       }
+    }
+
+    // Persist site config (whatsapp, tags)
+    if (newSettings.whatsapp !== undefined || newSettings.categoryTags !== undefined) {
+      const siteConfigData: any = {};
+      if (newSettings.whatsapp !== undefined) siteConfigData.whatsapp = newSettings.whatsapp;
+      if (newSettings.categoryTags !== undefined) siteConfigData.category_tags = newSettings.categoryTags;
+
+      await supabase
+        .from('site_settings')
+        .update(siteConfigData)
+        .eq('id', 1);
     }
 
     setSettings({ ...settings, ...newSettings });

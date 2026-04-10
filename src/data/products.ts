@@ -25,7 +25,7 @@ export interface Product {
     offerStartDate?: string;
     offerEndDate?: string;
     tag1?: string;
-    tag2?: string;
+    subcategory?: string;
 }
 
 const generateSlug = (name: string) => {
@@ -89,6 +89,7 @@ export const products: Product[] = [
         description: "Mochila técnica con compartimento térmico para paletas y espacio ventilado para calzado. Diseño ergonómico y resistente.",
         isOffer: true,
         salesCount: 450,
+        subcategory: "Mochilas",
     },
     {
         id: "4",
@@ -102,6 +103,7 @@ export const products: Product[] = [
         isNew: true,
         description: "Remera técnica con tecnología Dry-Fit que absorbe el sudor para mantenerte seco y cómodo durante el juego.",
         salesCount: 300,
+        subcategory: "Remeras",
     },
     {
         id: "5",
