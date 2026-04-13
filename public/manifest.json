@@ -1,0 +1,22 @@
+{
+  "name": "Punto Padel Admin",
+  "short_name": "Admin Panel",
+  "description": "Sistema de gestión privado para Punto Padel Shop",
+  "start_url": "/admin",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#000000",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/logo-corona.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/logo-corona.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
