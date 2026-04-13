@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { X, Send } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { useAdmin } from '@/context/AdminContext';
+import { useLocation } from 'react-router-dom';
 
 const WhatsAppWidget = () => {
     const { settings } = useAdmin();
@@ -10,12 +11,7 @@ const WhatsAppWidget = () => {
     const [message, setMessage] = useState('');
     const [showNotification, setShowNotification] = useState(false);
     const chatRef = useRef<HTMLDivElement>(null);
-
-    // No mostrar en el panel de administración - Usamos window.location.pathname para evitar errores de ruteo
-    const pathname = window.location.pathname;
-    if (pathname.startsWith('/admin') || pathname.startsWith('/admin-login')) {
-        return null;
-    }
+    const location = useLocation();
 
     useEffect(() => {
         // Mostrar mensaje automático después de 8 segundos solo una vez por sesión
@@ -64,6 +60,11 @@ const WhatsAppWidget = () => {
         { id: 2, text: ' ¿Qué productos están en oferta?' },
         { id: 3, text: ' Consultas sobre envíos y pagos' },
     ];
+
+    // No mostrar en el panel de administración
+    if (location.pathname.startsWith('/admin') || location.pathname.startsWith('/admin-login')) {
+        return null;
+    }
 
     return (
         <div className="whatsapp-container" ref={chatRef}>
