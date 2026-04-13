@@ -133,7 +133,7 @@ const AdminOffers = () => {
         />
       </div>
 
-      <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-card border border-border rounded-2xl overflow-hidden overflow-x-auto shadow-sm">
         <Table>
           <TableHeader className="bg-secondary/30">
             <TableRow>

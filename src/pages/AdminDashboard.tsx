@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
+import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
 import AdminProducts from './AdminProducts';
 import AdminSettings from './AdminSettings';
 import AdminOffers from './AdminOffers';
@@ -43,78 +44,94 @@ const AdminDashboard = () => {
     navigate('/');
   };
 
+  const SidebarContent = () => (
+    <>
+      <div className="p-6 flex items-center justify-between">
+        {sidebarOpen && (
+          <Link to="/admin" className="font-heading font-black text-xl italic tracking-tighter">
+            ADMIN <span className="text-primary">CENTER</span>
+          </Link>
+        )}
+        <Button 
+          variant="ghost" 
+          size="icon" 
+          onClick={() => setSidebarOpen(!sidebarOpen)}
+          className="text-muted-foreground hidden md:flex"
+        >
+          {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+        </Button>
+      </div>
+
+      <nav className="flex-1 px-4 py-4 space-y-2 overflow-y-auto">
+        {menuItems.map((item) => {
+          const active = location.pathname === item.path || (item.path !== '/admin' && location.pathname.startsWith(item.path));
+          return (
+            <Link 
+              key={item.name} 
+              to={item.path}
+              className={`flex items-center gap-3 p-3 rounded-xl transition-all group ${
+                active 
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' 
+                  : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground'
+              }`}
+            >
+              <item.icon className={`w-5 h-5 ${active ? 'animate-pulse' : ''}`} />
+              {sidebarOpen && <span className="font-bold uppercase text-xs tracking-widest">{item.name}</span>}
+              {sidebarOpen && active && <ChevronRight className="ml-auto w-4 h-4 opacity-50 hidden md:block" />}
+            </Link>
+          );
+        })}
+      </nav>
+
+      <div className="p-4 border-t border-border mt-auto">
+        <Button 
+          variant="ghost" 
+          onClick={handleLogout}
+          className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl p-3"
+        >
+          <LogOut className="w-5 h-5" />
+          {sidebarOpen && <span className="font-bold uppercase text-xs tracking-widest">Salir</span>}
+        </Button>
+      </div>
+    </>
+  );
+
   return (
     <div className="min-h-screen bg-secondary/10 flex">
-      {/* Sidebar */}
+      {/* Desktop Sidebar */}
       <aside 
         className={`${
           sidebarOpen ? 'w-64' : 'w-20'
-        } bg-card border-r border-border transition-all duration-300 flex flex-col z-50`}
+        } bg-card border-r border-border transition-all duration-300 hidden md:flex flex-col z-50`}
       >
-        <div className="p-6 flex items-center justify-between">
-          {sidebarOpen && (
-            <Link to="/admin" className="font-heading font-black text-xl italic tracking-tighter">
-              ADMIN <span className="text-primary">CENTER</span>
-            </Link>
-          )}
-          <Button 
-            variant="ghost" 
-            size="icon" 
-            onClick={() => setSidebarOpen(!sidebarOpen)}
-            className="text-muted-foreground"
-          >
-            {sidebarOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </Button>
-        </div>
-
-        <nav className="flex-1 px-4 py-4 space-y-2">
-          {menuItems.map((item) => {
-            const active = location.pathname === item.path || (item.path !== '/admin' && location.pathname.startsWith(item.path));
-            return (
-              <Link 
-                key={item.name} 
-                to={item.path}
-                className={`flex items-center gap-3 p-3 rounded-xl transition-all group ${
-                  active 
-                    ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' 
-                    : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground'
-                }`}
-              >
-                <item.icon className={`w-5 h-5 ${active ? 'animate-pulse' : ''}`} />
-                {sidebarOpen && <span className="font-bold uppercase text-xs tracking-widest">{item.name}</span>}
-                {sidebarOpen && active && <ChevronRight className="ml-auto w-4 h-4 opacity-50" />}
-              </Link>
-            );
-          })}
-        </nav>
-
-        <div className="p-4 border-t border-border">
-          <Button 
-            variant="ghost" 
-            onClick={handleLogout}
-            className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl p-3"
-          >
-            <LogOut className="w-5 h-5" />
-            {sidebarOpen && <span className="font-bold uppercase text-xs tracking-widest">Salir</span>}
-          </Button>
-        </div>
+        <SidebarContent />
       </aside>
 
       {/* Main Content */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
-        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-8 sticky top-0 z-40">
+        <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 md:px-8 sticky top-0 z-40">
           <div className="flex items-center gap-2">
-            <Zap className="w-4 h-4 text-primary" />
-            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground italic">Punto Padel Shop &bull; Gestión en vivo</span>
+            <Sheet>
+              <SheetTrigger asChild>
+                <Button variant="ghost" size="icon" className="md:hidden mr-2">
+                  <Menu className="w-5 h-5" />
+                </Button>
+              </SheetTrigger>
+              <SheetContent side="left" className="w-[280px] p-0 flex flex-col pt-10">
+                <SidebarContent />
+              </SheetContent>
+            </Sheet>
+            <Zap className="w-4 h-4 text-primary hidden sm:block" />
+            <span className="text-[10px] font-black uppercase tracking-widest text-muted-foreground italic truncate max-w-[150px] sm:max-w-none">Gestión en vivo</span>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 md:gap-4">
             <Button variant="outline" size="sm" className="rounded-xl font-bold uppercase text-[10px] tracking-widest" onClick={() => navigate('/')}>
               Ver Tienda
             </Button>
           </div>
         </header>
 
-        <div className="flex-1 overflow-y-auto p-8">
+        <div className="flex-1 overflow-x-hidden overflow-y-auto p-4 md:p-8">
           <Routes>
             <Route path="/" element={<Overview />} />
             <Route path="/productos" element={<AdminProducts />} />

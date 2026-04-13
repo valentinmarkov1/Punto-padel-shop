@@ -204,8 +204,8 @@ const AdminOrders = () => {
                     <p className="text-muted-foreground text-sm uppercase font-bold tracking-widest mt-1">Gestión de ventas y pagos</p>
                 </div>
                 
-                <div className="flex flex-wrap gap-3">
-                    <div className="relative w-64">
+                <div className="flex flex-col md:flex-row flex-wrap gap-3">
+                    <div className="relative w-full md:w-64">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
                         <Input 
                             placeholder="Buscar pedido, cliente..." 
@@ -215,7 +215,7 @@ const AdminOrders = () => {
                         />
                     </div>
                     
-                    <div className="flex items-center gap-2 bg-card border border-border px-3 rounded-xl">
+                    <div className="flex items-center w-full md:w-auto gap-2 bg-card border border-border px-3 rounded-xl overflow-hidden">
                         <Filter className="w-4 h-4 text-muted-foreground" />
                         <select 
                             className="bg-transparent border-none text-xs font-bold uppercase tracking-widest focus:ring-0 p-2 cursor-pointer"
@@ -353,8 +353,8 @@ const AdminOrders = () => {
 
             {/* Modals... */}
             <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
-                <DialogContent className="max-w-2xl bg-card border-border rounded-3xl p-0 overflow-hidden border-none shadow-none">
-                    <div id="order-details-content" className="bg-white text-black p-0 relative">
+                <DialogContent className="max-w-2xl w-[95vw] sm:w-full max-h-[90vh] flex flex-col bg-card border-border rounded-3xl p-0 overflow-hidden border-none shadow-none">
+                    <div id="order-details-content" className="bg-white text-black p-0 relative flex-1 overflow-y-auto">
                         {/* Marca amarilla de la tienda - Más prominente */}
                         <div className="h-6 w-full bg-primary flex items-center justify-center">
                             <span className="text-[8px] font-black uppercase tracking-[0.3em] text-primary-foreground">Punto Padel Shop &bull; Detalle de Pedido Oficial</span>
@@ -487,7 +487,7 @@ const AdminOrders = () => {
             </Dialog>
 
             <Dialog open={isProofOpen} onOpenChange={setIsProofOpen}>
-                <DialogContent className="max-w-xl bg-card border-border rounded-3xl p-6">
+                <DialogContent className="max-w-xl w-[95vw] sm:w-full max-h-[90vh] overflow-y-auto bg-card border-border rounded-3xl p-4 sm:p-6">
                     <DialogHeader>
                         <DialogTitle className="font-heading font-black text-2xl uppercase tracking-tighter">Comprobante de Pago</DialogTitle>
                         <DialogDescription className="text-xs uppercase font-bold tracking-widest">Pedido #{selectedOrder?.order_number}</DialogDescription>
@@ -514,7 +514,7 @@ const AdminOrders = () => {
             </Dialog>
 
             <Dialog open={isTrackingOpen} onOpenChange={setIsTrackingOpen}>
-                <DialogContent className="max-w-md bg-card border-border rounded-3xl p-8">
+                <DialogContent className="max-w-md w-[95vw] sm:w-full bg-card border-border rounded-3xl p-4 sm:p-8">
                     <DialogHeader>
                         <DialogTitle className="font-heading font-black text-2xl uppercase tracking-tighter">Cargar Seguimiento</DialogTitle>
                         <DialogDescription className="text-xs uppercase font-bold tracking-widest">Pedido #{selectedOrder?.order_number}</DialogDescription>

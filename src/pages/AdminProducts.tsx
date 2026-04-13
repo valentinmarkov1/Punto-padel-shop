@@ -118,7 +118,7 @@ const AdminProducts = () => {
         </Button>
       </div>
 
-      <div className="bg-card border border-border rounded-2xl overflow-hidden shadow-sm">
+      <div className="bg-card border border-border rounded-2xl overflow-hidden overflow-x-auto shadow-sm">
         <Table>
           <TableHeader className="bg-secondary/30">
             <TableRow>
@@ -212,7 +212,7 @@ const AdminProducts = () => {
       </div>
 
       <Dialog open={isEditing} onOpenChange={setIsEditing}>
-        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto rounded-3xl border-border p-8">
+        <DialogContent className="max-w-4xl max-h-[90vh] w-[95vw] overflow-y-auto rounded-3xl border-border p-4 sm:p-8">
           <DialogHeader>
             <DialogTitle className="font-heading font-black text-3xl uppercase italic tracking-tighter">
               {editingProduct ? 'Editar Producto' : 'Nuevo Producto'}
