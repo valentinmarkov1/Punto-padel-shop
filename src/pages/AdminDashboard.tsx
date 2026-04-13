@@ -1,13 +1,13 @@
 import React from 'react';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
-import { 
-  LayoutDashboard, 
-  Package, 
-  Tag, 
-  Star, 
-  Database, 
-  Settings, 
+import {
+  LayoutDashboard,
+  Package,
+  Tag,
+  Star,
+  Database,
+  Settings,
   LogOut,
   ChevronRight,
   Menu,
@@ -53,9 +53,9 @@ const AdminDashboard = () => {
             ADMIN <span className="text-primary">CENTER</span>
           </Link>
         )}
-        <Button 
-          variant="ghost" 
-          size="icon" 
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={() => setSidebarOpen(!sidebarOpen)}
           className="text-muted-foreground hidden md:flex"
         >
@@ -67,14 +67,13 @@ const AdminDashboard = () => {
         {menuItems.map((item) => {
           const active = location.pathname === item.path || (item.path !== '/admin' && location.pathname.startsWith(item.path));
           return (
-            <Link 
-              key={item.name} 
+            <Link
+              key={item.name}
               to={item.path}
-              className={`flex items-center gap-3 p-3 rounded-xl transition-all group ${
-                active 
-                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20' 
+              className={`flex items-center gap-3 p-3 rounded-xl transition-all group ${active
+                  ? 'bg-primary text-primary-foreground shadow-lg shadow-primary/20'
                   : 'text-muted-foreground hover:bg-secondary/50 hover:text-foreground'
-              }`}
+                }`}
             >
               <item.icon className={`w-5 h-5 ${active ? 'animate-pulse' : ''}`} />
               {sidebarOpen && <span className="font-bold uppercase text-xs tracking-widest">{item.name}</span>}
@@ -85,8 +84,8 @@ const AdminDashboard = () => {
       </nav>
 
       <div className="p-4 border-t border-border mt-auto">
-        <Button 
-          variant="ghost" 
+        <Button
+          variant="ghost"
           onClick={handleLogout}
           className="w-full justify-start gap-3 text-muted-foreground hover:text-destructive hover:bg-destructive/5 rounded-xl p-3"
         >
@@ -100,10 +99,9 @@ const AdminDashboard = () => {
   return (
     <div className="min-h-screen bg-secondary/10 flex">
       {/* Desktop Sidebar */}
-      <aside 
-        className={`${
-          sidebarOpen ? 'w-64' : 'w-20'
-        } bg-card border-r border-border transition-all duration-300 hidden md:flex flex-col z-50`}
+      <aside
+        className={`${sidebarOpen ? 'w-64' : 'w-20'
+          } bg-card border-r border-border transition-all duration-300 hidden md:flex flex-col z-50`}
       >
         <SidebarContent />
       </aside>
@@ -163,11 +161,11 @@ const Overview = () => {
   const handleInstallPWA = async () => {
     const promptEvent = (window as any).deferredPWAInstallPrompt;
     if (!promptEvent) return;
-    
+
     // Mostrar el cartel nativo de instalación
     promptEvent.prompt();
     const result = await promptEvent.userChoice;
-    
+
     if (result.outcome === 'accepted') {
       setIsInstallable(false);
       console.log('Admin PWA instalada');
@@ -175,31 +173,31 @@ const Overview = () => {
     // El evento prompt() solo se puede usar una vez
     (window as any).deferredPWAInstallPrompt = null;
   };
-  
+
   const stats = [
-    { 
-      label: 'Pendientes', 
-      value: orders.filter(o => o.status === 'pendiente_de_pago').length.toString(), 
-      icon: ShoppingBag, 
-      color: 'text-orange-500' 
+    {
+      label: 'Pendientes',
+      value: orders.filter(o => o.status === 'pendiente_de_pago').length.toString(),
+      icon: ShoppingBag,
+      color: 'text-orange-500'
     },
-    { 
-      label: 'Productos', 
-      value: products.length.toString(), 
-      icon: Package, 
-      color: 'text-blue-500' 
+    {
+      label: 'Productos',
+      value: products.length.toString(),
+      icon: Package,
+      color: 'text-blue-500'
     },
-    { 
-      label: 'En Oferta', 
-      value: products.filter(p => p.isOffer).length.toString(), 
-      icon: Tag, 
-      color: 'text-emerald-500' 
+    {
+      label: 'En Oferta',
+      value: products.filter(p => p.isOffer).length.toString(),
+      icon: Tag,
+      color: 'text-emerald-500'
     },
-    { 
-      label: 'Destacados', 
-      value: products.filter(p => p.isNew).length.toString(), 
-      icon: Star, 
-      color: 'text-yellow-500' 
+    {
+      label: 'Destacados',
+      value: products.filter(p => p.isNew).length.toString(),
+      icon: Star,
+      color: 'text-yellow-500'
     },
   ];
 
@@ -213,12 +211,10 @@ const Overview = () => {
             </div>
             <div className="text-left">
               <h3 className="font-heading font-black text-xl uppercase italic tracking-tighter text-foreground">Instalar Admin Center</h3>
-              <p className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
-                Obtené la app en tu celular para acceso directo y pantalla completa.
-              </p>
+
             </div>
           </div>
-          <Button 
+          <Button
             onClick={handleInstallPWA}
             className="rounded-xl font-heading font-bold uppercase tracking-widest glow h-12 w-full md:w-auto px-8"
           >
