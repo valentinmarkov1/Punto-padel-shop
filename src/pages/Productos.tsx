@@ -24,6 +24,13 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
+import {
+    Sheet,
+    SheetContent,
+    SheetHeader,
+    SheetTitle,
+} from "@/components/ui/sheet";
+
 
 const categories = ["Palas", "Pelotas", "Bolsos", "Indumentaria", "Accesorios"];
 const levels = ["Principiante", "Intermedio", "Avanzado", "Profesional"];
@@ -86,6 +93,138 @@ const Productos = () => {
         setSearchParams(new URLSearchParams());
     };
 
+    const FilterContent = () => (
+        <div className="space-y-8">
+            <div>
+                <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <LayoutGrid className="w-3 h-3" /> Categorías
+                </h3>
+                <div className="space-y-2">
+                    <button
+                        onClick={() => updateFilters("categoria", null)}
+                        className={`block text-sm font-medium transition-colors hover:text-primary ${!categoryFilter ? 'text-primary' : 'text-foreground/70'}`}
+                    >
+                        Todas
+                    </button>
+                    {categories.map((cat) => (
+                        <button
+                            key={cat}
+                            onClick={() => updateFilters("categoria", cat.toLowerCase())}
+                            className={`block text-sm font-medium transition-colors hover:text-primary ${categoryFilter === cat.toLowerCase() ? 'text-primary' : 'text-foreground/70'}`}
+                        >
+                            {cat}
+                        </button>
+                    ))}
+                </div>
+            </div>
+
+            {categoryFilter && SUBCATEGORIES[categoryFilter as keyof typeof SUBCATEGORIES]?.length > 0 && (
+                <div>
+                    <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                        Subcategorías
+                    </h3>
+                    <div className="space-y-2">
+                        {SUBCATEGORIES[categoryFilter as keyof typeof SUBCATEGORIES].map((sub) => (
+                            <button
+                                key={sub}
+                                onClick={() => updateFilters("subcategoria", subcategoryFilter === sub ? null : sub)}
+                                className={`block text-sm font-medium transition-colors hover:text-primary ${subcategoryFilter === sub ? 'text-primary' : 'text-foreground/70'}`}
+                            >
+                                {sub}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+            )}
+
+            <div>
+                <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <Zap className="w-3 h-3 text-primary" /> Especiales
+                </h3>
+                <button
+                    onClick={() => updateFilters("ofertas", offerFilter ? null : "true")}
+                    className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-destructive ${offerFilter ? 'text-destructive' : 'text-foreground/70'}`}
+                >
+                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${offerFilter ? 'bg-destructive border-destructive text-white' : 'border-border'}`}>
+                        {offerFilter && <X className="w-3 h-3" />}
+                    </div>
+                    Solo Ofertas
+                </button>
+            </div>
+
+            <div>
+                <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                    <Tag className="w-3 h-3" /> Rango de precio
+                </h3>
+                <div className="flex items-center gap-2">
+                    <input
+                        type="number"
+                        placeholder="Min"
+                        value={minPrice || ""}
+                        onChange={(e) => updateFilters("minPrice", e.target.value)}
+                        className="w-full bg-secondary border border-border rounded-lg px-2 py-1.5 text-xs font-bold focus:outline-none focus:border-primary transition-colors"
+                    />
+                    <span className="text-muted-foreground text-xs">-</span>
+                    <input
+                        type="number"
+                        placeholder="Max"
+                        value={maxPrice || ""}
+                        onChange={(e) => updateFilters("maxPrice", e.target.value)}
+                        className="w-full bg-secondary border border-border rounded-lg px-2 py-1.5 text-xs font-bold focus:outline-none focus:border-primary transition-colors"
+                    />
+                </div>
+            </div>
+
+            {categoryFilter === "palas" && (
+                <>
+                    <div>
+                        <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                            Nivel
+                        </h3>
+                        <div className="space-y-2">
+                            {levels.map((lvl) => (
+                                <button
+                                    key={lvl}
+                                    onClick={() => updateFilters("nivel", levelFilter === lvl ? null : lvl)}
+                                    className={`block text-sm font-medium transition-colors hover:text-primary ${levelFilter === lvl ? 'text-primary' : 'text-foreground/70'}`}
+                                >
+                                    {lvl}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                    <div>
+                        <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
+                            Tipo de juego
+                        </h3>
+                        <div className="space-y-2">
+                            {types.map((t) => (
+                                <button
+                                    key={t}
+                                    onClick={() => updateFilters("tipo", typeFilter === t ? null : t)}
+                                    className={`block text-sm font-medium transition-colors hover:text-primary ${typeFilter === t ? 'text-primary' : 'text-foreground/70'}`}
+                                >
+                                    {t}
+                                </button>
+                            ))}
+                        </div>
+                    </div>
+                </>
+            )}
+
+            {(categoryFilter || offerFilter || levelFilter || typeFilter || searchFilter || subcategoryFilter) && (
+                <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={clearFilters}
+                    className="w-full justify-start text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground p-0"
+                >
+                    <X className="w-3 h-3 mr-2" /> Limpiar filtros
+                </Button>
+            )}
+        </div>
+    );
+
     return (
         <div className="min-h-screen bg-background">
             <Header />
@@ -105,134 +244,8 @@ const Productos = () => {
 
                 <div className="flex flex-col lg:flex-row gap-8">
                     {/* Desktop Filters Sidebar */}
-                    <aside className="hidden lg:block w-64 space-y-8">
-                        <div>
-                            <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <LayoutGrid className="w-3 h-3" /> Categorías
-                            </h3>
-                            <div className="space-y-2">
-                                <button
-                                    onClick={() => updateFilters("categoria", null)}
-                                    className={`block text-sm font-medium transition-colors hover:text-primary ${!categoryFilter ? 'text-primary' : 'text-foreground/70'}`}
-                                >
-                                    Todas
-                                </button>
-                                {categories.map((cat) => (
-                                    <button
-                                        key={cat}
-                                        onClick={() => updateFilters("categoria", cat.toLowerCase())}
-                                        className={`block text-sm font-medium transition-colors hover:text-primary ${categoryFilter === cat.toLowerCase() ? 'text-primary' : 'text-foreground/70'}`}
-                                    >
-                                        {cat}
-                                    </button>
-                                ))}
-                            </div>
-                        </div>
-
-                        {categoryFilter && SUBCATEGORIES[categoryFilter as keyof typeof SUBCATEGORIES]?.length > 0 && (
-                            <div>
-                                <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
-                                    Subcategorías
-                                </h3>
-                                <div className="space-y-2">
-                                    {SUBCATEGORIES[categoryFilter as keyof typeof SUBCATEGORIES].map((sub) => (
-                                        <button
-                                            key={sub}
-                                            onClick={() => updateFilters("subcategoria", subcategoryFilter === sub ? null : sub)}
-                                            className={`block text-sm font-medium transition-colors hover:text-primary ${subcategoryFilter === sub ? 'text-primary' : 'text-foreground/70'}`}
-                                        >
-                                            {sub}
-                                        </button>
-                                    ))}
-                                </div>
-                            </div>
-                        )}
-
-                        <div>
-                            <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <Zap className="w-3 h-3 text-primary" /> Especiales
-                            </h3>
-                            <button
-                                onClick={() => updateFilters("ofertas", offerFilter ? null : "true")}
-                                className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-destructive ${offerFilter ? 'text-destructive' : 'text-foreground/70'}`}
-                            >
-                                <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${offerFilter ? 'bg-destructive border-destructive text-white' : 'border-border'}`}>
-                                    {offerFilter && <X className="w-3 h-3" />}
-                                </div>
-                                Solo Ofertas
-                            </button>
-                        </div>
-
-                        <div>
-                            <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
-                                <Tag className="w-3 h-3" /> Rango de precio
-                            </h3>
-                            <div className="flex items-center gap-2">
-                                <input
-                                    type="number"
-                                    placeholder="Min"
-                                    value={minPrice || ""}
-                                    onChange={(e) => updateFilters("minPrice", e.target.value)}
-                                    className="w-full bg-secondary border border-border rounded-lg px-2 py-1.5 text-xs font-bold focus:outline-none focus:border-primary transition-colors"
-                                />
-                                <span className="text-muted-foreground text-xs">-</span>
-                                <input
-                                    type="number"
-                                    placeholder="Max"
-                                    value={maxPrice || ""}
-                                    onChange={(e) => updateFilters("maxPrice", e.target.value)}
-                                    className="w-full bg-secondary border border-border rounded-lg px-2 py-1.5 text-xs font-bold focus:outline-none focus:border-primary transition-colors"
-                                />
-                            </div>
-                        </div>
-
-                        {categoryFilter === "palas" && (
-                            <>
-                                <div>
-                                    <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
-                                        Nivel
-                                    </h3>
-                                    <div className="space-y-2">
-                                        {levels.map((lvl) => (
-                                            <button
-                                                key={lvl}
-                                                onClick={() => updateFilters("nivel", levelFilter === lvl ? null : lvl)}
-                                                className={`block text-sm font-medium transition-colors hover:text-primary ${levelFilter === lvl ? 'text-primary' : 'text-foreground/70'}`}
-                                            >
-                                                {lvl}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                                <div>
-                                    <h3 className="font-heading font-black text-xs uppercase tracking-widest mb-4 flex items-center gap-2">
-                                        Tipo de juego
-                                    </h3>
-                                    <div className="space-y-2">
-                                        {types.map((t) => (
-                                            <button
-                                                key={t}
-                                                onClick={() => updateFilters("tipo", typeFilter === t ? null : t)}
-                                                className={`block text-sm font-medium transition-colors hover:text-primary ${typeFilter === t ? 'text-primary' : 'text-foreground/70'}`}
-                                            >
-                                                {t}
-                                            </button>
-                                        ))}
-                                    </div>
-                                </div>
-                            </>
-                        )}
-
-                        {(categoryFilter || offerFilter || levelFilter || typeFilter || searchFilter || subcategoryFilter) && (
-                            <Button
-                                variant="ghost"
-                                size="sm"
-                                onClick={clearFilters}
-                                className="w-full justify-start text-xs font-bold uppercase tracking-wider text-muted-foreground hover:text-foreground p-0"
-                            >
-                                <X className="w-3 h-3 mr-2" /> Limpiar filtros
-                            </Button>
-                        )}
+                    <aside className="hidden lg:block w-64 flex-shrink-0">
+                        <FilterContent />
                     </aside>
 
                     {/* Main Content Area */}
@@ -332,6 +345,16 @@ const Productos = () => {
             </main>
 
             <Footer />
+
+            {/* Mobile Filters Drawer */}
+            <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
+                <SheetContent side="left" className="w-[300px] sm:w-[350px] overflow-y-auto">
+                    <SheetHeader className="mb-6">
+                        <SheetTitle className="font-heading font-black text-xl uppercase italic">Filtros</SheetTitle>
+                    </SheetHeader>
+                    <FilterContent />
+                </SheetContent>
+            </Sheet>
         </div>
     );
 };

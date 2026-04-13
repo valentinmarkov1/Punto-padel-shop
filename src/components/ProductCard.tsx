@@ -69,8 +69,17 @@ const ProductCard = (props: ProductCardProps) => {
             </span>
           )}
         </div>
-        {/* Hover Actions */}
-        <div className="absolute inset-0 bg-foreground/70 opacity-0 group-hover:opacity-100 transition-all duration-300 flex items-center justify-center gap-4">
+        {/* Mobile Quick Add (Permanent on small screens) */}
+        <Button
+          size="icon"
+          onClick={handleAddToCart}
+          className="absolute bottom-3 right-3 rounded-full w-10 h-10 glow md:hidden z-10 shadow-lg"
+        >
+          <ShoppingCart className="w-4 h-4" />
+        </Button>
+
+        {/* Hover Actions (Desktop only) */}
+        <div className="absolute inset-0 bg-foreground/70 opacity-0 md:group-hover:opacity-100 transition-all duration-300 hidden md:flex items-center justify-center gap-4">
           <Button
             size="icon"
             variant="secondary"
@@ -94,12 +103,12 @@ const ProductCard = (props: ProductCardProps) => {
         <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-primary via-[hsl(145,80%,42%)] to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
-      {/* Info */}
-      <div className="p-5 space-y-2">
-        <p className="text-[11px] text-[hsl(145,80%,42%)] font-bold uppercase tracking-widest">{category}</p>
-        <h3 className="font-heading font-bold text-foreground text-sm leading-tight line-clamp-2">{name}</h3>
-        <div className="flex items-center gap-2 pt-1">
-          <span className="font-heading font-black text-xl text-foreground">{priceFormatted || displayPrice}</span>
+    {/* Info */}
+    <div className="p-4 md:p-5 space-y-2">
+      <p className="text-[11px] text-[hsl(145,80%,42%)] font-bold uppercase tracking-widest">{category}</p>
+      <h3 className="font-heading font-bold text-foreground text-sm md:text-base leading-tight line-clamp-2">{name}</h3>
+      <div className="flex items-center gap-2 pt-1">
+        <span className="font-heading font-black text-lg md:text-xl text-foreground">{priceFormatted || displayPrice}</span>
           {isOffer && displayOriginalPrice && (
             <span className="text-sm text-muted-foreground line-through">{displayOriginalPrice}</span>
           )}

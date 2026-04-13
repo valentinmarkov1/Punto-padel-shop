@@ -170,7 +170,7 @@ const Header = () => {
                   <Search className="w-5 h-5" />
                 </button>
                 {searchOpen && (
-                  <div className="absolute right-0 top-full mt-2 w-80 md:w-96 bg-popover border border-border rounded-xl shadow-2xl z-50 overflow-hidden animate-scale-in">
+                  <div className="absolute right-0 top-full mt-2 w-[300px] sm:w-80 md:w-96 max-w-[calc(100vw-2rem)] bg-popover border border-border rounded-xl shadow-2xl z-50 overflow-hidden animate-scale-in">
                     <form onSubmit={handleSearchSubmit} className="flex items-center border-b border-border px-4">
                       <Search className="w-4 h-4 text-muted-foreground" />
                       <input

@@ -57,7 +57,7 @@ const HeroSection = () => {
               Equipamiento de élite 2026
             </span>
           </div>
-          <h1 className="font-heading text-6xl sm:text-7xl md:text-[5rem] font-black leading-[0.85] tracking-[-0.04em] text-white animate-slide-up" style={{ animationDelay: "0.2s" }}>
+          <h1 className="font-heading text-5xl sm:text-6xl md:text-[5rem] font-black leading-[0.85] tracking-[-0.04em] text-white animate-slide-up" style={{ animationDelay: "0.2s" }}>
             POTENCIA
             <br />
             <span className="text-white">PRECISIÓN</span>
@@ -67,15 +67,15 @@ const HeroSection = () => {
           <p className="text-white/60 text-lg md:text-xl max-w-lg animate-slide-up leading-relaxed" style={{ animationDelay: "0.3s" }}>
             Todo lo necesario para jugadores que no vinieron a participar. Vinieron a ganar.
           </p>
-          <div className="flex flex-wrap items-center gap-4 animate-slide-up" style={{ animationDelay: "0.4s" }}>
-            <Button size="lg" asChild className="font-heading font-black text-base uppercase tracking-wider animate-pulse-glow px-10 h-16 text-lg rounded-xl">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 animate-slide-up" style={{ animationDelay: "0.4s" }}>
+            <Button size="lg" asChild className="font-heading font-black text-base uppercase tracking-wider animate-pulse-glow w-full sm:w-auto px-10 h-14 md:h-16 text-lg rounded-xl">
               <Link to="/productos">
                 <Trophy className="mr-2 w-5 h-5" />
                 Ver Productos
                 <ArrowRight className="ml-2 w-5 h-5" />
               </Link>
             </Button>
-            <Button size="lg" asChild className="font-heading font-bold text-base uppercase tracking-wider bg-[hsl(145,80%,42%)] text-white hover:bg-[hsl(145,80%,42%)]/90 px-7 h-16 rounded-xl border border-[hsl(145,80%,42%)]/50">
+            <Button size="lg" asChild className="font-heading font-bold text-base uppercase tracking-wider bg-[hsl(145,80%,42%)] text-white hover:bg-[hsl(145,80%,42%)]/90 w-full sm:w-auto px-7 h-14 md:h-16 rounded-xl border border-[hsl(145,80%,42%)]/50">
               <Link to="/productos?ofertas=true">
                 Ofertas
               </Link>
