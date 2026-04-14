@@ -23,7 +23,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { ImagePlus, X, Save, Upload, Info, Plus, Tag as TagIcon } from 'lucide-react';
+import { ImagePlus, X, Save, Upload, Info, Plus, Tag as TagIcon, Package } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { supabase } from '@/lib/supabase';
 import { toast } from 'sonner';
@@ -51,6 +51,7 @@ const productSchema = z.object({
   type: z.string().optional(),
   tag1: z.string().optional(),
   subcategory: z.string().optional(),
+  stock: z.coerce.number().min(0, 'El stock no puede ser negativo').default(0),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -80,6 +81,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
       type: product?.type || '',
       tag1: product?.tag1 || '',
       subcategory: product?.subcategory || '',
+      stock: product?.stock || 0,
     },
   });
 
@@ -366,6 +368,27 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
                   />
                 )}
               </div>
+            </div>
+
+            <div className="p-4 rounded-2xl border border-border bg-secondary/5 space-y-4">
+              <div className="flex items-center gap-2 mb-2">
+                <Package className="w-5 h-5 text-muted-foreground" />
+                <FormLabel className="uppercase text-[10px] font-black tracking-widest leading-none">Control de Inventario</FormLabel>
+              </div>
+              <FormField
+                control={form.control}
+                name="stock"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel className="text-[9px] font-black uppercase tracking-widest opacity-60">Stock Disponible (Unidades)</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} className="bg-background h-10 rounded-lg" min="0" />
+                    </FormControl>
+                    <FormDescription className="text-[9px]">Este valor disminuirá automáticamente con cada compra.</FormDescription>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
             </div>
 
             <div className="p-4 rounded-2xl border border-border bg-secondary/5 space-y-4">

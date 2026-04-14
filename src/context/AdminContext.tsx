@@ -126,7 +126,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           type: p.type,
           tag1: p.tag1,
           tag2: p.tag2,
-          subcategory: p.subcategory
+          subcategory: p.subcategory,
+          stock: p.stock ?? 0
         };
       });
       setProducts(formattedProducts);
@@ -328,7 +329,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         level: newProduct.level,
         type: newProduct.type,
         tag1: newProduct.tag1,
-        subcategory: newProduct.subcategory
+        subcategory: newProduct.subcategory,
+        stock: (newProduct as any).stock ?? 0
       }])
       .select();
 
@@ -361,6 +363,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (updatedFields.type !== undefined) updateData.type = updatedFields.type;
     if (updatedFields.tag1 !== undefined) updateData.tag1 = updatedFields.tag1;
     if (updatedFields.subcategory !== undefined) updateData.subcategory = updatedFields.subcategory;
+    if (updatedFields.stock !== undefined) updateData.stock = updatedFields.stock;
 
     const { error } = await supabase
       .from('products')

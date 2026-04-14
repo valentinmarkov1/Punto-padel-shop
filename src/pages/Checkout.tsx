@@ -151,6 +151,36 @@ const Checkout = () => {
 
             if (dbError) throw new Error("Error al procesar el pedido en el servidor. Reintentá.");
 
+            // 2.5 Descontar stock de los productos
+            console.log("[Checkout] Iniciando descuento de stock...");
+            const stockUpdatePromises = items.map(async (item) => {
+                // Obtener el stock actual primero para evitar inconsistencias
+                const { data: currentProduct, error: fetchError } = await supabase
+                    .from('products')
+                    .select('stock')
+                    .eq('id', item.id)
+                    .single();
+
+                if (fetchError || !currentProduct) {
+                    console.error(`Error al obtener stock del producto ${item.id}:`, fetchError);
+                    return;
+                }
+
+                const newStock = Math.max(0, (currentProduct.stock || 0) - item.quantity);
+                
+                const { error: updateError } = await supabase
+                    .from('products')
+                    .update({ stock: newStock })
+                    .eq('id', item.id);
+
+                if (updateError) {
+                    console.error(`Error al actualizar stock del producto ${item.id}:`, updateError);
+                }
+            });
+
+            await Promise.all(stockUpdatePromises);
+            console.log("[Checkout] Stock actualizado correctamente.");
+
             // 3. Notificaciones
             await sendEmailNotification('order_confirmation', orderData);
             await sendEmailNotification('admin_notification', orderData);

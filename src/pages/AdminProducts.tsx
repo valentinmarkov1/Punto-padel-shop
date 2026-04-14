@@ -125,6 +125,7 @@ const AdminProducts = () => {
               <TableHead className="uppercase text-[10px] font-black tracking-widest">Producto</TableHead>
               <TableHead className="uppercase text-[10px] font-black tracking-widest">Categoría</TableHead>
               <TableHead className="uppercase text-[10px] font-black tracking-widest">Precio</TableHead>
+              <TableHead className="uppercase text-[10px] font-black tracking-widest text-center">Stock</TableHead>
               <TableHead className="uppercase text-[10px] font-black tracking-widest">Estado</TableHead>
               <TableHead className="text-right uppercase text-[10px] font-black tracking-widest">Acciones</TableHead>
             </TableRow>
@@ -154,6 +155,14 @@ const AdminProducts = () => {
                     {product.isOffer && product.originalPrice && (
                       <span className="text-[10px] text-muted-foreground line-through font-bold">{product.originalPriceFormatted}</span>
                     )}
+                  </div>
+                </TableCell>
+                <TableCell>
+                  <div className="flex flex-col items-center">
+                    <span className={`font-black text-sm ${product.stock !== undefined && product.stock <= 0 ? 'text-destructive' : 'text-primary'}`}>
+                      {product.stock ?? 0}
+                    </span>
+                    <span className="text-[8px] font-bold uppercase text-muted-foreground">unidades</span>
                   </div>
                 </TableCell>
                 <TableCell>

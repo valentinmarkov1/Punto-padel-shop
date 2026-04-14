@@ -27,6 +27,7 @@ export interface Product {
     tag1?: string;
     tag2?: string;
     subcategory?: string;
+    stock?: number;
 }
 
 const generateSlug = (name: string) => {

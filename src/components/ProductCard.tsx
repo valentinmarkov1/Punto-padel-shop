@@ -28,15 +28,16 @@ const ProductCard = (props: ProductCardProps) => {
     discountPercentage,
     level,
     type,
-    tag1
+    tag1,
+    stock
   } = props;
 
   const { addItem } = useCart();
   const navigate = useNavigate();
 
   const handleAddToCart = (e: React.MouseEvent) => {
-    e.preventDefault();
     e.stopPropagation();
+    if (stock !== undefined && stock <= 0) return;
     // Reconstruct product object if needed or use props directly if it matches Product
     addItem(props as Product);
   };
@@ -68,12 +69,18 @@ const ProductCard = (props: ProductCardProps) => {
               {tag1}
             </span>
           )}
+          {stock !== undefined && stock <= 0 && (
+            <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-zinc-500 text-white rounded-full shadow-[0_0_15px_rgba(113,113,122,0.4)]">
+              SIN STOCK
+            </span>
+          )}
         </div>
         {/* Mobile Quick Add (Permanent on small screens) */}
         <Button
           size="icon"
           onClick={handleAddToCart}
-          className="absolute bottom-3 right-3 rounded-full w-10 h-10 glow md:hidden z-10 shadow-lg"
+          disabled={stock !== undefined && stock <= 0}
+          className={`absolute bottom-3 right-3 rounded-full w-10 h-10 glow md:hidden z-10 shadow-lg ${stock !== undefined && stock <= 0 ? 'bg-zinc-400 opacity-50' : ''}`}
         >
           <ShoppingCart className="w-4 h-4" />
         </Button>
@@ -95,6 +102,7 @@ const ProductCard = (props: ProductCardProps) => {
             size="icon"
             className="rounded-full w-12 h-12 glow"
             onClick={handleAddToCart}
+            disabled={stock !== undefined && stock <= 0}
           >
             <ShoppingCart className="w-5 h-5" />
           </Button>

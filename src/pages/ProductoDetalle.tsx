@@ -22,6 +22,7 @@ const ProductoDetalle = () => {
     const { addItem } = useCart();
     const { products, loading } = useAdmin();
     const [quantity, setQuantity] = useState(1);
+    const { settings } = useAdmin();
 
     const product = products.find((p) => p.slug === slug);
 
@@ -127,6 +128,11 @@ const ProductoDetalle = () => {
                                         {product.tag2}
                                     </span>
                                 )}
+                                {product.stock !== undefined && product.stock <= 0 && (
+                                    <span className="px-3 py-1 bg-zinc-500 text-white text-[10px] font-black uppercase tracking-widest rounded-full shadow-[0_0_10px_rgba(113,113,122,0.3)]">
+                                        Sin Stock
+                                    </span>
+                                )}
                             </div>
                             <h1 className="font-heading text-4xl md:text-5xl lg:text-6xl font-black tracking-tighter uppercase leading-none">
                                 {product.name}
@@ -191,14 +197,30 @@ const ProductoDetalle = () => {
                                     </button>
                                 </div>
 
-                                <Button
-                                    onClick={handleAddToCart}
-                                    size="lg"
-                                    className="flex-1 h-14 font-heading font-black text-lg uppercase tracking-wider rounded-xl glow"
-                                >
-                                    <ShoppingCart className="mr-2 w-6 h-6" />
-                                    Agregar al carrito
-                                </Button>
+                                {product.stock !== undefined && product.stock <= 0 ? (
+                                    <Button
+                                        asChild
+                                        size="lg"
+                                        className="flex-1 h-14 font-heading font-black text-lg uppercase tracking-wider rounded-xl bg-zinc-500 hover:bg-zinc-600 border-none shadow-lg shadow-zinc-500/20"
+                                    >
+                                        <a 
+                                            href={`https://wa.me/${settings.whatsapp}?text=Hola! Me interesa el producto ${product.name} pero veo que no hay stock actualmente. ¿Me informarías cuando vuelvan a tener?`}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                        >
+                                            Consultar
+                                        </a>
+                                    </Button>
+                                ) : (
+                                    <Button
+                                        onClick={handleAddToCart}
+                                        size="lg"
+                                        className="flex-1 h-14 font-heading font-black text-lg uppercase tracking-wider rounded-xl glow"
+                                    >
+                                        <ShoppingCart className="mr-2 w-6 h-6" />
+                                        Agregar al carrito
+                                    </Button>
+                                )}
                             </div>
                         </div>
                     </div>
