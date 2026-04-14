@@ -5,6 +5,7 @@ import { useAdmin } from "@/context/AdminContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import ProductCard from "@/components/ProductCard";
+import SEO from "@/components/SEO";
 import {
     Search,
     SlidersHorizontal,
@@ -225,8 +226,17 @@ const Productos = () => {
         </div>
     );
 
+    const categoryTitle = categoryFilter ? `${categoryFilter.charAt(0).toUpperCase() + categoryFilter.slice(1)} de Pádel` : "Todos los Productos";
+    const categoryDesc = categoryFilter 
+        ? `Explorá nuestra colección de ${categoryFilter} profesionales. Calidad garantizada en Punto Pádel.` 
+        : "Explorá todo nuestro catálogo de equipamiento profesional para pádel. Palas, bolsos, zapatillas y más.";
+
     return (
         <div className="min-h-screen bg-background">
+            <SEO 
+                title={categoryTitle}
+                description={categoryDesc}
+            />
             <Header />
 
             <main className="container mx-auto px-4 py-8 md:py-12">

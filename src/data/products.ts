@@ -25,6 +25,7 @@ export interface Product {
     offerStartDate?: string;
     offerEndDate?: string;
     tag1?: string;
+    tag2?: string;
     subcategory?: string;
 }
 

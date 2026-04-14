@@ -1,15 +1,18 @@
 import { useState } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import { useAdmin } from "@/context/AdminContext";
 
 interface PageProps {
     title: string;
+    description?: string;
     children: React.ReactNode;
 }
 
-const BasePage = ({ title, children }: PageProps) => (
+const BasePage = ({ title, description, children }: PageProps) => (
     <div className="min-h-screen bg-background">
+        <SEO title={title} description={description} />
         <Header />
         <main className="container mx-auto px-4 py-16 md:py-24">
             <h1 className="font-heading text-4xl md:text-6xl font-black tracking-tighter uppercase mb-12">
@@ -24,7 +27,10 @@ const BasePage = ({ title, children }: PageProps) => (
 );
 
 export const SobreNosotros = () => (
-    <BasePage title="Sobre nosotros">
+    <BasePage 
+        title="Sobre nosotros"
+        description="Conocé Punto Pádel, la tienda de equipamiento profesional. Descubrí nuestra misión y visión enfocada en mejorar tu rendimiento en la cancha."
+    >
         <div className="space-y-6 text-lg">
             <p>En <span className="text-primary font-bold">Punto Pádel</span>, no solo vendemos equipamiento; vivimos el deporte.</p>
             <p>Nuestra misión es proporcionar a cada jugador, desde el principiante hasta el profesional, las herramientas necesarias para dominar la cancha. Seleccionamos cuidadosamente cada producto de nuestro catálogo para asegurar los más altos estándares de calidad y rendimiento.</p>
@@ -34,7 +40,10 @@ export const SobreNosotros = () => (
 );
 
 export const Envios = () => (
-    <BasePage title="Envíos">
+    <BasePage 
+        title="Envíos"
+        description="Información detallada sobre costos, zonas y tiempos de envío de Punto Pádel para toda la República Argentina."
+    >
         <div className="space-y-8">
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Tiempos de envío</h2>
@@ -61,7 +70,10 @@ export const Envios = () => (
 );
 
 export const Devoluciones = () => (
-    <BasePage title="Devoluciones">
+    <BasePage 
+        title="Devoluciones"
+        description="Política de devoluciones y cambios de Punto Pádel. Comprá con tranquilidad, te explicamos cómo gestionar cambios de talles o modelos."
+    >
         <div className="space-y-8">
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Política de cambios</h2>
@@ -84,7 +96,10 @@ export const Devoluciones = () => (
 );
 
 export const MetodosPago = () => (
-    <BasePage title="Métodos de pago">
+    <BasePage 
+        title="Métodos de pago"
+        description="Aceptamos todas las tarjetas de crédito, débito, transferencia y Mercado Pago. Aprovechá nuestras cuotas y descuentos exclusivos."
+    >
         <div className="space-y-8">
             <p>Elegí la forma de pago que prefieras y comprá con total tranquilidad y confianza. En nuestra tienda online, brindamos distintas alternativas de pago para que elijas la que mejor se adapta a tus necesidades. Sabemos lo importante que es comprar con confianza y facilidad, por eso te ofrecemos opciones seguras y descuentos exclusivos</p>
             <section>

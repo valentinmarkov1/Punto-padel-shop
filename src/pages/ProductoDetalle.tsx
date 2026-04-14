@@ -3,6 +3,7 @@ import { useAdmin } from "@/context/AdminContext";
 import { useCart } from "@/context/CartContext";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import SEO from "@/components/SEO";
 import {
     ShoppingCart,
     ArrowLeft,
@@ -56,8 +57,35 @@ const ProductoDetalle = () => {
         }
     };
 
+    const schema = {
+        "@context": "https://schema.org/",
+        "@type": "Product",
+        "name": product.name,
+        "image": product.images,
+        "description": product.description,
+        "brand": {
+            "@type": "Brand",
+            "name": "Punto Pádel"
+        },
+        "offers": {
+            "@type": "Offer",
+            "url": window.location.href,
+            "priceCurrency": "ARS",
+            "price": product.price,
+            "availability": "https://schema.org/InStock",
+            "itemCondition": "https://schema.org/NewCondition"
+        }
+    };
+
     return (
         <div className="min-h-screen bg-background">
+            <SEO 
+                title={product.name}
+                description={product.description.substring(0, 160)}
+                image={product.image}
+                type="product"
+                schema={schema}
+            />
             <Header />
 
             <main className="container mx-auto px-4 py-8 md:py-16 lg:py-24">

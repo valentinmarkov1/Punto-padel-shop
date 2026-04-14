@@ -13,8 +13,7 @@ import {
   Menu,
   X,
   Zap,
-  ShoppingBag,
-  Smartphone
+  ShoppingBag
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
@@ -149,30 +148,6 @@ import { useAdmin } from '@/context/AdminContext';
 
 const Overview = () => {
   const { products, orders } = useAdmin();
-  const [isInstallable, setIsInstallable] = React.useState(!!(window as any).deferredPWAInstallPrompt);
-
-  React.useEffect(() => {
-    // Escuchar el evento que configuramos en index.html
-    const handleInstallable = () => setIsInstallable(true);
-    window.addEventListener('pwa-installable', handleInstallable);
-    return () => window.removeEventListener('pwa-installable', handleInstallable);
-  }, []);
-
-  const handleInstallPWA = async () => {
-    const promptEvent = (window as any).deferredPWAInstallPrompt;
-    if (!promptEvent) return;
-
-    // Mostrar el cartel nativo de instalación
-    promptEvent.prompt();
-    const result = await promptEvent.userChoice;
-
-    if (result.outcome === 'accepted') {
-      setIsInstallable(false);
-      console.log('Admin PWA instalada');
-    }
-    // El evento prompt() solo se puede usar una vez
-    (window as any).deferredPWAInstallPrompt = null;
-  };
 
   const stats = [
     {
@@ -203,25 +178,6 @@ const Overview = () => {
 
   return (
     <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4">
-      {isInstallable && (
-        <div className="bg-gradient-to-r from-primary/20 via-primary/10 to-transparent border border-primary/30 rounded-2xl p-6 flex flex-col md:flex-row items-center justify-between gap-4 animate-in fade-in slide-in-from-top-4">
-          <div className="flex items-center gap-4">
-            <div className="w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
-              <Smartphone className="w-6 h-6 text-primary" />
-            </div>
-            <div className="text-left">
-              <h3 className="font-heading font-black text-xl uppercase italic tracking-tighter text-foreground">Instalar Admin Center</h3>
-
-            </div>
-          </div>
-          <Button
-            onClick={handleInstallPWA}
-            className="rounded-xl font-heading font-bold uppercase tracking-widest glow h-12 w-full md:w-auto px-8"
-          >
-            Descargar Aplicación
-          </Button>
-        </div>
-      )}
 
       <div>
         <h1 className="font-heading font-black text-4xl uppercase italic tracking-tighter">Resumen General</h1>

@@ -125,6 +125,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           level: p.level,
           type: p.type,
           tag1: p.tag1,
+          tag2: p.tag2,
           subcategory: p.subcategory
         };
       });

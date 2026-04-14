@@ -9,9 +9,6 @@
     <meta name="author" content="Punto Pádel" />
 
     <link rel="icon" type="image/jpeg" href="/logo.jpeg" />
-    <link rel="manifest" href="/manifest.json" />
-    <meta name="theme-color" content="#000000" />
-    <link rel="apple-touch-icon" href="/logo-corona.png" />
 
     <meta property="og:title" content="Punto Pádel - Tienda Online de Pádel" />
     <meta property="og:description" content="Equipamiento profesional de pádel. Palas, bolsos, indumentaria y accesorios." />
@@ -25,31 +22,6 @@
 
   <body>
     <div id="root"></div>
-    <script>
-      // 1. Evitar que a los clientes de la tienda les salga el popup de "Instalar App"
-      window.deferredPWAInstallPrompt = null;
-      
-      window.addEventListener('beforeinstallprompt', (e) => {
-        // Previene que aparezca la mini-barra de instalación en celulares
-        e.preventDefault();
-        // Guarda el evento para que la Gerencia pueda usarlo pulsando el botón privado
-        window.deferredPWAInstallPrompt = e;
-        
-        // Disparar un evento custom para que React detecte que la app ya puede ser instalada
-        window.dispatchEvent(new Event('pwa-installable'));
-      });
-
-      // 2. Registrar el Service Worker necesario para certificar la PWA
-      if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').then((registration) => {
-            console.log('Admin PWA ServiceWorker registrado.');
-          }).catch((err) => {
-            console.log('Admin PWA ServiceWorker error: ', err);
-          });
-        });
-      }
-    </script>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

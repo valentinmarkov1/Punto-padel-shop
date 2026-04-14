@@ -68,7 +68,7 @@ const ProductGallery = ({ images, name }: ProductGalleryProps) => {
                     : "border-transparent opacity-60 hover:opacity-100"
                 )}
               >
-                <img src={img} alt={`${name} ${i}`} className="w-full h-full object-cover" />
+                <img src={img} alt={`Vista miniatura ${i + 1} de ${name}`} className="w-full h-full object-cover" />
               </button>
             ))}
           </div>
@@ -87,7 +87,7 @@ const ProductGallery = ({ images, name }: ProductGalleryProps) => {
           >
              <img 
               src={images[activeIndex]} 
-              alt={name} 
+              alt={`Fotografía principal de ${name}`} 
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
             {/* Zoom Overlay */}
@@ -178,7 +178,7 @@ const ProductGallery = ({ images, name }: ProductGalleryProps) => {
                     activeIndex === i ? "border-primary" : "border-transparent opacity-50"
                   )}
                 >
-                  <img src={img} alt="" className="w-full h-full object-cover" />
+                  <img src={img} alt={`Miniatura ampliada ${i + 1} de ${name}`} className="w-full h-full object-cover" />
                 </button>
               ))}
             </div>
