@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
+import ReCAPTCHA from "react-google-recaptcha";
 import { useCart } from "@/context/CartContext";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
@@ -55,6 +56,10 @@ const Checkout = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [orderConfirmed, setOrderConfirmed] = useState(false);
     const [lastOrderDetails, setLastOrderDetails] = useState<any>(null);
+    const [captchaToken, setCaptchaToken] = useState<string | null>(null);
+    const captchaRef = useRef<ReCAPTCHA>(null);
+
+    const RECAPTCHA_SITE_KEY = import.meta.env.VITE_RECAPTCHA_SITE_KEY || "";
 
     const form = useForm<CheckoutFormValues>({
         resolver: zodResolver(checkoutSchema),
@@ -88,6 +93,13 @@ const Checkout = () => {
 
     const onSubmit = async (values: CheckoutFormValues) => {
         console.log("Inicio de onSubmit - Valores:", values);
+        
+        // 0. Validar reCAPTCHA
+        if (!captchaToken) {
+            toast.error("Por favor, completa el captcha 'No soy un robot'.");
+            return;
+        }
+
         console.log("Método Pago:", paymentMethod, "Método Envío:", shippingMethod);
         setIsSubmitting(true);
         const orderNumber = `PP-${Math.floor(1000 + Math.random() * 9000)}`;
@@ -184,6 +196,10 @@ const Checkout = () => {
             // 3. Notificaciones
             await sendEmailNotification('order_confirmation', orderData);
             await sendEmailNotification('admin_notification', orderData);
+
+            // 3.5 Resetear captcha tras éxito
+            setCaptchaToken(null);
+            captchaRef.current?.reset();
 
             // 4. Limpieza y Redirección
             clearCart();
@@ -522,6 +538,23 @@ const Checkout = () => {
                                                 </>
                                             )}
                                         </Button>
+
+                                        {/* Google reCAPTCHA v2 */}
+                                        <div className="flex flex-col items-center gap-4 py-2 bg-secondary/10 rounded-xl border border-dashed border-border">
+                                            <p className="text-[10px] uppercase font-black tracking-widest text-muted-foreground">Verificación de seguridad</p>
+                                            <ReCAPTCHA
+                                                ref={captchaRef}
+                                                sitekey={RECAPTCHA_SITE_KEY}
+                                                onChange={(token) => setCaptchaToken(token)}
+                                                onExpired={() => setCaptchaToken(null)}
+                                            />
+                                            {RECAPTCHA_SITE_KEY === "PEGA_AQUI_TU_SITE_KEY" && (
+                                                <p className="text-[9px] text-destructive font-bold uppercase animate-pulse text-center px-4">
+                                                    Error: Configuración de reCAPTCHA incompleta. <br/>Añadí tu Site Key en el archivo .env
+                                                </p>
+                                            )}
+                                        </div>
+
                                         <p className="text-[10px] text-center text-muted-foreground uppercase tracking-widest flex items-center justify-center gap-2">
                                             <Store className="w-3 h-3" />
                                             Compra 100% segura y protegida

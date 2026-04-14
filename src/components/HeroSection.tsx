@@ -57,7 +57,7 @@ const HeroSection = () => {
               Equipamiento de élite 2026
             </span>
           </div>
-          <h1 className="font-heading text-5xl sm:text-6xl md:text-[5rem] font-black leading-[0.85] tracking-[-0.04em] text-white animate-slide-up" style={{ animationDelay: "0.2s" }}>
+          <h1 className="font-heading text-5xl sm:text-6xl md:text-[5rem] font-black leading-none md:leading-[0.85] tracking-[-0.04em] text-white animate-slide-up" style={{ animationDelay: "0.2s" }}>
             POTENCIA
             <br />
             <span className="text-white">PRECISIÓN</span>

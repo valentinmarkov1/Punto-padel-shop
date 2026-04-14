@@ -68,6 +68,7 @@ const Header = () => {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const searchRef = useRef<HTMLDivElement>(null);
+  const mobileMenuRef = useRef<HTMLDivElement>(null);
   const { itemCount } = useCart();
   const navigate = useNavigate();
 
@@ -80,8 +81,10 @@ const Header = () => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
         setSearchOpen(false);
       }
+      
+      // Close desktop dropdowns if clicking outside desktop nav
       const nav = document.querySelector('nav');
-      if (nav && !nav.contains(e.target as Node)) {
+      if (nav && !nav.contains(e.target as Node) && !mobileMenuRef.current?.contains(e.target as Node)) {
         setActiveDropdown(null);
       }
     };
@@ -245,36 +248,45 @@ const Header = () => {
 
         {/* Mobile Menu */}
         {mobileMenuOpen && (
-          <div className="lg:hidden bg-background border-t border-border animate-fade-in">
+          <div ref={mobileMenuRef} className="lg:hidden bg-background border-t border-border animate-fade-in shadow-2xl">
             <div className="container mx-auto px-4 py-4 space-y-1">
               {categories.map((cat) => (
                 <div key={cat.name}>
-                  <div className="flex items-center justify-between w-full py-3">
-                    <Link
-                      to={cat.path}
-                      className="text-sm font-bold text-foreground/90 uppercase tracking-wide"
-                      onClick={() => setMobileMenuOpen(false)}
-                    >
-                      {cat.name}
-                    </Link>
-                    <button
+                    <div 
+                      className="flex items-center justify-between w-full py-3 cursor-pointer"
                       onClick={() => setActiveDropdown(activeDropdown === cat.name ? null : cat.name)}
                     >
+                      <span className="text-sm font-bold text-foreground/90 uppercase tracking-wide">
+                        {cat.name}
+                      </span>
                       <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === cat.name ? 'rotate-180' : ''}`} />
-                    </button>
-                  </div>
+                    </div>
                   {activeDropdown === cat.name && (
                     <div className="pl-4 space-y-1 pb-2">
                       {cat.subcategories.map((sub) => (
                         <Link
                           key={sub.name}
                           to={sub.path}
-                          className="block py-2 text-sm text-muted-foreground hover:text-primary transition-colors"
-                          onClick={() => setMobileMenuOpen(false)}
+                          className="block py-2.5 text-sm text-muted-foreground hover:text-primary transition-colors font-medium border-l border-border pl-4"
+                          onClick={() => {
+                            setMobileMenuOpen(false);
+                            setActiveDropdown(null);
+                          }}
                         >
                           {sub.name}
                         </Link>
                       ))}
+                      {/* Enlace a "Ver todo" para la categoría principal en mobile */}
+                      <Link
+                        to={cat.path}
+                        className="block py-2.5 text-sm font-bold text-primary transition-colors border-l border-primary/30 pl-4"
+                        onClick={() => {
+                          setMobileMenuOpen(false);
+                          setActiveDropdown(null);
+                        }}
+                      >
+                        Ver todo {cat.name}
+                      </Link>
                     </div>
                   )}
                 </div>
