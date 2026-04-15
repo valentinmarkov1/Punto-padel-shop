@@ -53,9 +53,7 @@ const ProductoDetalle = () => {
     }
 
     const handleAddToCart = () => {
-        for (let i = 0; i < quantity; i++) {
-            addItem(product);
-        }
+        addItem(product, quantity);
     };
 
     const schema = {
@@ -190,8 +188,9 @@ const ProductoDetalle = () => {
                                     </button>
                                     <span className="w-12 text-center font-heading font-bold text-lg">{quantity}</span>
                                     <button
-                                        onClick={() => setQuantity(q => q + 1)}
-                                        className="w-12 h-full flex items-center justify-center hover:text-primary transition-colors"
+                                        onClick={() => setQuantity(q => Math.min(product.stock ?? 1, q + 1))}
+                                        className="w-12 h-full flex items-center justify-center hover:text-primary transition-colors disabled:opacity-30"
+                                        disabled={quantity >= (product.stock ?? 1)}
                                     >
                                         <Plus className="w-4 h-4" />
                                     </button>

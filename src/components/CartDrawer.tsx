@@ -90,7 +90,8 @@ const CartDrawer = ({ open, onOpenChange }: CartDrawerProps) => {
                                                     <span className="text-sm font-bold w-8 text-center">{item.quantity}</span>
                                                     <button
                                                         onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                                                        className="p-1 px-2 hover:text-primary transition-colors"
+                                                        className="p-1 px-2 hover:text-primary transition-colors disabled:opacity-30"
+                                                        disabled={item.quantity >= (item.stock ?? 0)}
                                                     >
                                                         <Plus className="w-3 h-3" />
                                                     </button>

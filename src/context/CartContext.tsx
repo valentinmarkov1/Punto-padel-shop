@@ -8,7 +8,7 @@ interface CartItem extends Product {
 
 interface CartContextType {
     items: CartItem[];
-    addItem: (product: Product) => void;
+    addItem: (product: Product, quantity?: number) => void;
     removeItem: (productId: string) => void;
     updateQuantity: (productId: string, quantity: number) => void;
     clearCart: () => void;
@@ -30,17 +30,25 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
         localStorage.setItem("cart", JSON.stringify(items));
     }, [items]);
 
-    const addItem = (product: Product) => {
+    const addItem = (product: Product, quantityToAdd: number = 1) => {
         setItems((prevItems) => {
             const existingItem = prevItems.find((item) => item.id === product.id);
+            const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
+            const stockAvailable = product.stock ?? 0;
+
+            if (currentQuantityInCart + quantityToAdd > stockAvailable) {
+                toast.error(`Lo sentimos, solo quedan ${stockAvailable} unidades disponibles de ${product.name}`);
+                return prevItems;
+            }
+
             if (existingItem) {
                 toast.success(`Se aumentó la cantidad de ${product.name}`);
                 return prevItems.map((item) =>
-                    item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
+                    item.id === product.id ? { ...item, quantity: item.quantity + quantityToAdd } : item
                 );
             }
             toast.success(`${product.name} agregado al carrito`);
-            return [...prevItems, { ...product, quantity: 1 }];
+            return [...prevItems, { ...product, quantity: quantityToAdd }];
         });
     };
 
@@ -56,11 +64,16 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
     const updateQuantity = (productId: string, quantity: number) => {
         if (quantity < 1) return;
-        setItems((prevItems) =>
-            prevItems.map((item) =>
+        setItems((prevItems) => {
+            const item = prevItems.find((i) => i.id === productId);
+            if (item && quantity > (item.stock ?? 0)) {
+                toast.error(`Solo hay ${item.stock} unidades disponibles`);
+                return prevItems;
+            }
+            return prevItems.map((item) =>
                 item.id === productId ? { ...item, quantity } : item
-            )
-        );
+            );
+        });
     };
 
     const clearCart = () => {

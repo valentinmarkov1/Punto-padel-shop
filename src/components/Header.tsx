@@ -39,6 +39,7 @@ const categories = [
     subcategories: [
       { name: "Pelotas", path: "/productos?categoria=pelotas" },
       { name: "Muñequeras", path: "/productos?categoria=accesorios&subcategoria=Muñequeras" },
+      { name: "Medias", path: "/productos?categoria=accesorios&subcategoria=Medias" },
       { name: "Cubre grip", path: "/productos?categoria=accesorios&subcategoria=Cubre grip" },
       { name: "Protectores", path: "/productos?categoria=accesorios&subcategoria=Protectores" },
       { name: "Correas", path: "/productos?categoria=accesorios&subcategoria=Correas" },

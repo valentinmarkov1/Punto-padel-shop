@@ -42,7 +42,7 @@ const SUBCATEGORIES = {
   "pelotas": [],
   "bolsos": ["Mochilas", "Bolsos paleteros", "Fundas"],
   "indumentaria": ["Remeras", "Shorts"],
-  "accesorios": ["Muñequeras", "Cubre grip", "Protectores", "Correas"],
+  "accesorios": ["Muñequeras", "Medias", "Cubre grip", "Protectores", "Correas"],
 };
 
 const Productos = () => {

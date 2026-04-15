@@ -33,7 +33,7 @@ const SUBCATEGORIES = {
   "Pelotas": [],
   "Bolsos": ["Mochilas", "Bolsos paleteros", "Fundas"],
   "Indumentaria": ["Remeras", "Shorts"],
-  "Accesorios": ["Muñequeras", "Cubre grip", "Protectores", "Correas"],
+  "Accesorios": ["Muñequeras", "Medias", "Cubre grip", "Protectores", "Correas"],
 };
 
 const productSchema = z.object({
