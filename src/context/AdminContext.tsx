@@ -138,7 +138,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     // Solo actuamos si el contador está habilitado, ha expirado y no hay otra limpieza en curso
     if (settings.offerCountdownEnabled && isOfferExpired(settings.offerCountdownEnd, true) && !isCleaningRef.current) {
       isCleaningRef.current = true;
-      console.log("[AdminContext] Ofertas expiradas detectadas. Iniciando limpieza en la base de datos...");
       
       try {
         // 1. Obtener productos que están actualmente marcados como oferta
@@ -240,14 +239,12 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   const updateOrderStatus = async (orderId: string, status: OrderStatus, extraData?: Partial<Order>) => {
     try {
-      console.log(`[AdminContext] Actualizando pedido ${orderId} a estado: ${status}`);
       
       // Construir objeto de actualización limpio
       const updateData: any = { status };
       if (extraData?.tracking_number !== undefined) updateData.tracking_number = extraData.tracking_number;
       if (extraData?.receipt_number !== undefined) updateData.receipt_number = extraData.receipt_number;
 
-      console.log(`[AdminContext] Datos enviados a Supabase:`, updateData);
       
       const { data, error } = await supabase
         .from('orders')
@@ -270,7 +267,6 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       // Actualizar localmente para respuesta inmediata
       setOrders(prev => prev.map(o => o.id === orderId ? { ...o, ...updateData } : o));
 
-      console.log('[AdminContext] Actualización exitosa:', data);
       toast.success(`Pedido actualizado a ${status.replace(/_/g, ' ')}`);
       
       // Ya no llamamos a fetchOrders() aquí para evitar que el lag de la DB revierta el cambio local

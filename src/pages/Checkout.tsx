@@ -100,7 +100,6 @@ const Checkout = () => {
             return;
         }
 
-        console.log("Método Pago:", paymentMethod, "Método Envío:", shippingMethod);
         setIsSubmitting(true);
         const orderNumber = `PP-${Math.floor(1000 + Math.random() * 9000)}`;
         
@@ -164,7 +163,6 @@ const Checkout = () => {
             if (dbError) throw new Error("Error al procesar el pedido en el servidor. Reintentá.");
 
             // 2.5 Descontar stock de los productos
-            console.log("[Checkout] Iniciando descuento de stock...");
             const stockUpdatePromises = items.map(async (item) => {
                 // Obtener el stock actual primero para evitar inconsistencias
                 const { data: currentProduct, error: fetchError } = await supabase
@@ -191,7 +189,6 @@ const Checkout = () => {
             });
 
             await Promise.all(stockUpdatePromises);
-            console.log("[Checkout] Stock actualizado correctamente.");
 
             // 3. Notificaciones
             await sendEmailNotification('order_confirmation', orderData);
