@@ -101,9 +101,19 @@ const Checkout = () => {
         }
 
         setIsSubmitting(true);
-        const orderNumber = `PP-${Math.floor(1000 + Math.random() * 9000)}`;
         
         try {
+            // Verificar captcha vía Supabase Edge Function
+            const { data: verifyData, error: verifyError } = await supabase.functions.invoke('verify-captcha', {
+                body: { token: captchaToken }
+            });
+
+            if (verifyError || !verifyData?.success) {
+                console.error("Error validación captcha:", verifyError);
+                throw new Error("La verificación de seguridad falló. Por favor reintentá.");
+            }
+
+            const orderNumber = `PP-${Math.floor(1000 + Math.random() * 9000)}`;
             let proofUrl = "";
             let currentStatus = paymentMethod === 'transferencia' ? 'pendiente_de_pago' : 'pendiente_pago_local';
             
