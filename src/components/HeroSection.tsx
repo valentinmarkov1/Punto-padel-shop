@@ -60,7 +60,7 @@ const HeroSection = () => {
           <h1 className="font-heading text-5xl sm:text-6xl md:text-[5.5rem] font-extrabold leading-[1.1] tracking-[-0.02em] text-white animate-slide-up" style={{ animationDelay: "0.2s" }}>
             EQUIPAMIENTO
             <br />
-            <span className="text-primary">PROFESIONAL</span>
+            <span className="text-white">PROFESIONAL</span>
             <br />
             <span className="text-white">DE PÁDEL</span>
           </h1>
