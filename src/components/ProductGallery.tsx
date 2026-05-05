@@ -15,7 +15,7 @@ const ProductGallery = ({ images, name }: ProductGalleryProps) => {
   const [isLightboxOpen, setIsLightboxOpen] = useState(false);
   const [zoomStyle, setZoomStyle] = useState({ display: "none", transformOrigin: "0% 0%" });
 
-  // Embla for Mobile
+  // Embla para Móvil
   const [emblaRef, emblaApi] = useEmblaCarousel({ loop: true });
   const [selectedIndex, setSelectedIndex] = useState(0);
 
@@ -36,7 +36,7 @@ const ProductGallery = ({ images, name }: ProductGalleryProps) => {
     if (emblaApi) emblaApi.scrollTo(index);
   };
 
-  // Hover Zoom Logic
+  // Lógica de Zoom al pasar el mouse
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
     const x = ((e.pageX - left - window.scrollX) / width) * 100;
@@ -53,7 +53,7 @@ const ProductGallery = ({ images, name }: ProductGalleryProps) => {
 
   return (
     <div className="flex flex-col lg:flex-row gap-6">
-      {/* Desktop Thumbnails (Left) */}
+      {/* Miniaturas de escritorio (Izquierda) */}
       <div className="hidden lg:block w-24 flex-shrink-0">
         <ScrollArea className="h-[500px] pr-3">
           <div className="flex flex-col gap-4">
@@ -75,9 +75,9 @@ const ProductGallery = ({ images, name }: ProductGalleryProps) => {
         </ScrollArea>
       </div>
 
-      {/* Main Image Container */}
+      {/* Contenedor de imagen principal */}
       <div className="flex-1 space-y-4">
-        {/* Desktop Main (with Hover Zoom) */}
+        {/* Imagen principal de escritorio (con Zoom) */}
         <div className="hidden lg:block relative group aspect-[4/5] rounded-[32px] overflow-hidden bg-secondary border border-border cursor-crosshair">
           <div 
             className="w-full h-full overflow-hidden"
@@ -90,7 +90,7 @@ const ProductGallery = ({ images, name }: ProductGalleryProps) => {
               alt={`Fotografía principal de ${name}`} 
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
             />
-            {/* Zoom Overlay */}
+            {/* Superposición de Zoom */}
             <div 
               className="absolute inset-0 pointer-events-none transition-opacity duration-300 opacity-0 group-hover:opacity-100 z-10"
               style={{
@@ -110,7 +110,7 @@ const ProductGallery = ({ images, name }: ProductGalleryProps) => {
           </button>
         </div>
 
-        {/* Mobile Gallery (Embla) */}
+        {/* Galería móvil (Embla) */}
         <div className="lg:hidden relative">
           <div className="overflow-hidden rounded-3xl bg-secondary border border-border" ref={emblaRef}>
             <div className="flex">
@@ -122,7 +122,7 @@ const ProductGallery = ({ images, name }: ProductGalleryProps) => {
             </div>
           </div>
           
-          {/* Mobile UI Indicators */}
+          {/* Indicadores de interfaz móvil */}
           <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
             {images.map((_, i) => (
               <div 
@@ -144,7 +144,7 @@ const ProductGallery = ({ images, name }: ProductGalleryProps) => {
       <Dialog open={isLightboxOpen} onOpenChange={setIsLightboxOpen}>
         <DialogContent className="max-w-[95vw] max-h-[95vh] p-0 bg-transparent border-none flex items-center justify-center">
           <div className="relative w-full h-full flex items-center justify-center group/modal">
-             {/* Navigation Buttons */}
+             {/* Botones de navegación */}
              {images.length > 1 && (
                <>
                 <button 

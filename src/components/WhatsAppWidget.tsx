@@ -68,14 +68,14 @@ const WhatsAppWidget = () => {
 
     return (
         <div className="whatsapp-container" ref={chatRef}>
-            {/* Chat Modal */}
+            {/* Modal del Chat */}
             <div
                 className={cn(
                     "bg-white w-[350px] max-w-[90vw] rounded-2xl shadow-2xl overflow-hidden transition-all duration-300 transform origin-bottom-right pointer-events-auto",
                     isOpen ? "scale-100 opacity-100 translate-y-0" : "scale-90 opacity-0 translate-y-10 pointer-events-none"
                 )}
             >
-                {/* Header Style WhatsApp */}
+                {/* Encabezado Estilo WhatsApp */}
                 <div className="bg-[#25D366] p-4 flex items-center justify-between">
                     <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-white flex items-center justify-center overflow-hidden border-2 border-white shadow-sm">
@@ -94,7 +94,7 @@ const WhatsAppWidget = () => {
                     </button>
                 </div>
 
-                {/* Chat Body */}
+                {/* Cuerpo del Chat */}
                 <div className="p-4 bg-gray-50 max-h-[400px] overflow-y-auto">
                     <div className="bg-white rounded-2xl p-4 mb-6 shadow-sm relative text-sm text-gray-700 leading-relaxed border border-gray-100">
                         <span className="block font-semibold text-[#25D366] mb-1">Punto Padel Shop</span>
@@ -115,7 +115,7 @@ const WhatsAppWidget = () => {
                     </div>
                 </div>
 
-                {/* Chat Input */}
+                {/* Entrada del Chat */}
                 <div className="p-4 bg-white border-t border-gray-100 flex items-center gap-3">
                     <input
                         type="text"
@@ -138,7 +138,7 @@ const WhatsAppWidget = () => {
                 </div>
             </div>
 
-            {/* Floating Button */}
+            {/* Botón Flotante */}
             <button
                 onClick={() => {
                     setIsOpen(!isOpen);

@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 const Footer = () => {
   return (
     <footer className="bg-foreground text-background border-t border-border pt-16 pb-8 relative overflow-hidden">
-      {/* Court texture */}
+      {/* Textura de cancha */}
       <div className="absolute inset-0 court-lines opacity-5" />
 
       <div className="relative container mx-auto px-4">

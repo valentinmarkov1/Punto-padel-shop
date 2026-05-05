@@ -28,7 +28,7 @@ const CategorySection = () => {
   if (categoriesWithCounts.length === 0) return null;
   return (
     <section className="py-20 md:py-28 relative overflow-hidden">
-      {/* Court lines background */}
+      {/* Fondo de líneas de cancha */}
       <div className="absolute inset-0 court-lines opacity-50" />
 
       <div className="relative container mx-auto px-4">
@@ -64,7 +64,7 @@ const CategorySection = () => {
                 </div>
               )}
 
-              {/* Neon bottom line on hover */}
+              {/* Línea inferior neón al pasar el mouse */}
               <div className="absolute inset-x-0 bottom-0 h-0.5 bg-gradient-to-r from-primary via-[hsl(145,80%,42%)] to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
               <div className="absolute bottom-0 left-0 right-0 p-5 md:p-6">

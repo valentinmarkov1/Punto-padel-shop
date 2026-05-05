@@ -96,7 +96,7 @@ const ProductoDetalle = () => {
                 </button>
 
                 <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,0.9fr)_minmax(0,1.1fr)] gap-12 lg:gap-24 items-start">
-                    {/* Advanced Product Gallery */}
+                    {/* Galería de productos avanzada */}
                     <div className="animate-fade-in">
                         <ProductGallery images={product.images} name={product.name} />
                         {product.isOffer && (
@@ -109,7 +109,7 @@ const ProductoDetalle = () => {
                         )}
                     </div>
 
-                    {/* Product Info */}
+                    {/* Información del producto */}
                     <div className="flex flex-col">
                         <div className="space-y-4 mb-8">
                             <div className="flex items-center gap-2">
@@ -159,7 +159,7 @@ const ProductoDetalle = () => {
                             })}
                         </div>
 
-                        {/* Attributes for Palas */}
+                        {/* Atributos para Palas */}
                         {product.category === "Palas" && (product.type || product.level) && (
                             <div className="grid grid-cols-2 gap-4 mb-10">
                                 {product.type && (

@@ -5,19 +5,19 @@ import { Button } from "@/components/ui/button";
 const BrandSection = () => {
   return (
     <section className="relative py-32 md:py-40 overflow-hidden">
-      {/* Background */}
+      {/* Fondo */}
       <div className="absolute inset-0">
         <img src={brandBg} alt="Pádel profesional en acción" className="w-full h-full object-cover" />
         <div className="absolute inset-0 bg-black/75" />
         <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-black/80" />
-        {/* Spotlight */}
+        {/* Foco de luz */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[800px] h-[400px] bg-[radial-gradient(ellipse,hsl(145_80%_42%_/_0.15)_0%,transparent_70%)]" />
       </div>
 
-      {/* Diagonal lines */}
+      {/* Líneas diagonales */}
       <div className="absolute inset-0 diagonal-accent opacity-30" />
 
-      {/* Content */}
+      {/* Contenido */}
       <div className="relative container mx-auto px-4 text-center">
         <p className="text-[hsl(145,80%,42%)] font-heading font-bold text-sm uppercase tracking-[0.3em] mb-6 animate-slide-up">
           Filosofía Punto Pádel

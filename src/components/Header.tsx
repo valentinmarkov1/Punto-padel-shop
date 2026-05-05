@@ -83,7 +83,7 @@ const Header = () => {
         setSearchOpen(false);
       }
       
-      // Close desktop dropdowns if clicking outside desktop nav
+      // Cerrar menús desplegables si se hace clic fuera de la navegación
       const nav = document.querySelector('nav');
       if (nav && !nav.contains(e.target as Node) && !mobileMenuRef.current?.contains(e.target as Node)) {
         setActiveDropdown(null);
@@ -104,7 +104,7 @@ const Header = () => {
 
   return (
     <>
-      {/* Top ticker */}
+      {/* Cinta de anuncios superior */}
       <div className="bg-foreground text-background overflow-hidden">
         <div className="animate-marquee flex whitespace-nowrap py-1.5">
           {Array.from({ length: 4 }).map((_, i) => (
@@ -120,13 +120,13 @@ const Header = () => {
       <header className="sticky top-0 z-50 bg-card/95 backdrop-blur-xl border-b border-border shadow-sm">
         <div className="container mx-auto px-4">
           <div className="flex items-center justify-between h-14 md:h-20">
-            {/* Logo */}
+            {/* Logotipo */}
             <Link to="/" className="flex items-center gap-1.5 md:gap-2 font-heading text-2xl md:text-3xl font-black tracking-tighter">
               <span className="text-black hidden md:block leading-none">PUNTO PADEL SHOP</span>
               <img src="/logo-corona.png" alt="Icono Punto Padel" className="w-9 h-9 md:w-12 md:h-12 object-contain mix-blend-multiply transition-all" />
             </Link>
 
-            {/* Desktop Navigation */}
+            {/* Navegación de Escritorio */}
             <nav className="hidden lg:flex items-center gap-0.5">
               {categories.map((cat) => (
                 <div
@@ -163,9 +163,9 @@ const Header = () => {
               </Link>
             </nav>
 
-            {/* Actions */}
+            {/* Acciones */}
             <div className="flex items-center gap-2">
-              {/* Search */}
+              {/* Búsqueda */}
               <div ref={searchRef} className="relative">
                 <button
                   className="p-2 text-foreground/70 hover:text-primary transition-colors"
@@ -247,7 +247,7 @@ const Header = () => {
           </div>
         </div>
 
-        {/* Mobile Menu */}
+        {/* Menú Móvil */}
         {mobileMenuOpen && (
           <div ref={mobileMenuRef} className="lg:hidden bg-background border-t border-border animate-fade-in shadow-2xl">
             <div className="container mx-auto px-4 py-4 space-y-1">

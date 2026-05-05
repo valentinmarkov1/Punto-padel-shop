@@ -24,7 +24,7 @@ const SEO = ({
 
   return (
     <Helmet>
-      {/* Basic Meta Tags */}
+      {/* Etiquetas Meta Básicas */}
       <title>{fullTitle}</title>
       <meta name="description" content={finalDescription} />
       <link rel="canonical" href={url} />
@@ -43,7 +43,7 @@ const SEO = ({
       <meta name="twitter:description" content={finalDescription} />
       <meta name="twitter:image" content={image} />
 
-      {/* JSON-LD Structured Data */}
+      {/* Datos estructurados JSON-LD */}
       {schema && (
         <script type="application/ld+json">
           {JSON.stringify(schema)}

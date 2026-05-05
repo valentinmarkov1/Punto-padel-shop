@@ -50,14 +50,14 @@ const ProductCard = (props: ProductCardProps) => {
       onClick={() => slug && navigate(`/producto/${slug}`)}
       className="group bg-card rounded-2xl border border-border overflow-hidden transition-all duration-500 hover:border-primary/60 hover:shadow-[0_8px_40px_rgba(74,222,128,0.2)] hover:-translate-y-2 cursor-pointer"
     >
-      {/* Image */}
+      {/* Imagen */}
       <div className="relative aspect-square overflow-hidden bg-secondary">
         <img
           src={image}
           alt={name}
           className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
         />
-        {/* Badges */}
+        {/* Etiquetas */}
         <div className="absolute top-3 left-3 flex flex-col gap-2">
           {isOffer && (
             <span className="px-3 py-1 text-[10px] font-black uppercase tracking-widest bg-destructive text-white rounded-full shadow-[0_0_15px_rgba(239,68,68,0.4)] animate-pulse">
@@ -75,7 +75,7 @@ const ProductCard = (props: ProductCardProps) => {
             </span>
           )}
         </div>
-        {/* Mobile Quick Add (Permanent on small screens) */}
+        {/* Añadido rápido móvil (Permanente en pantallas pequeñas) */}
         <Button
           size="icon"
           onClick={handleAddToCart}
@@ -85,7 +85,7 @@ const ProductCard = (props: ProductCardProps) => {
           <ShoppingCart className="w-4 h-4" />
         </Button>
 
-        {/* Hover Actions (Desktop only) */}
+        {/* Acciones al pasar el mouse (Solo escritorio) */}
         <div className="absolute inset-0 bg-foreground/70 opacity-0 md:group-hover:opacity-100 transition-all duration-300 hidden md:flex items-center justify-center gap-4">
           <Button
             size="icon"
@@ -107,11 +107,11 @@ const ProductCard = (props: ProductCardProps) => {
             <ShoppingCart className="w-5 h-5" />
           </Button>
         </div>
-        {/* Neon glow on hover */}
+        {/* Resplandor neón al pasar el mouse */}
         <div className="absolute inset-x-0 bottom-0 h-1 bg-gradient-to-r from-primary via-[hsl(145,80%,42%)] to-primary opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
       </div>
 
-    {/* Info */}
+    {/* Información */}
     <div className="p-4 md:p-5 space-y-2">
       <p className="text-[11px] text-[hsl(145,80%,42%)] font-bold uppercase tracking-widest">{category}</p>
       <h3 className="font-heading font-bold text-foreground text-sm md:text-base leading-tight line-clamp-2">{name}</h3>

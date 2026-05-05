@@ -15,18 +15,18 @@ const particles = Array.from({ length: 20 }, (_, i) => ({
 const HeroSection = () => {
   return (
     <section className="relative h-[95vh] min-h-[650px] flex items-center overflow-hidden">
-      {/* Background with zoom animation */}
+      {/* Fondo con animación de zoom */}
       <div className="absolute inset-0">
         <img src={heroBg} alt="Jugador profesional de pádel en acción" className="w-full h-full object-cover animate-hero-zoom" />
-        {/* Darker overlays for drama */}
+        {/* Capas oscuras para mayor dramatismo */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/40" />
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/40" />
-        {/* Green/yellow spotlight effect */}
+        {/* Efecto de foco verde/amarillo */}
         <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-[radial-gradient(circle,hsl(145_80%_42%_/_0.12)_0%,transparent_70%)] blur-3xl" />
         <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-[radial-gradient(circle,hsl(48_96%_53%_/_0.1)_0%,transparent_70%)] blur-3xl" />
       </div>
 
-      {/* Dust particles */}
+      {/* Partículas de polvo */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         {particles.map((p) => (
           <div
@@ -45,10 +45,10 @@ const HeroSection = () => {
         ))}
       </div>
 
-      {/* Diagonal accent line */}
+      {/* Línea de acento diagonal */}
       <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[hsl(145,80%,42%)] via-primary to-[hsl(145,80%,42%)]" />
 
-      {/* Content */}
+      {/* Contenido */}
       <div className="relative container mx-auto px-4">
         <div className="max-w-3xl space-y-8">
           <div className="inline-flex items-center gap-2 bg-[hsl(145,80%,42%)]/15 border border-[hsl(145,80%,42%)]/30 rounded-full px-5 py-2 animate-slide-up" style={{ animationDelay: "0.1s" }}>

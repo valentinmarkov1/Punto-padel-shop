@@ -351,7 +351,7 @@ const AdminOrders = () => {
                 </table>
             </div>
 
-            {/* Modals... */}
+            {/* Modales... */}
             <Dialog open={isDetailsOpen} onOpenChange={setIsDetailsOpen}>
                 <DialogContent className="max-w-2xl w-[95vw] sm:w-full max-h-[90vh] flex flex-col bg-card border-border rounded-3xl p-0 overflow-hidden border-none shadow-none">
                     <div id="order-details-content" className="bg-white text-black p-0 relative flex-1 overflow-y-auto">
@@ -534,7 +534,7 @@ const AdminOrders = () => {
                 </DialogContent>
             </Dialog>
 
-            {/* Confirmation Dialog for Deletion */}
+            {/* Diálogo de confirmación para eliminación */}
             <AlertDialog open={isDeleteDialogOpen} onOpenChange={setIsDeleteDialogOpen}>
                 <AlertDialogContent className="bg-card border-border rounded-3xl p-8">
                     <AlertDialogHeader>

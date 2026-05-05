@@ -84,8 +84,8 @@ export const CartProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const subtotal = items.reduce((total, item) => total + item.price * item.quantity, 0);
     const itemCount = items.reduce((total, item) => total + item.quantity, 0);
 
-    const SHIPPING_THRESHOLD = 200000;
-    const FIXED_SHIPPING_COST = 20000;
+    const SHIPPING_THRESHOLD = 350000;
+    const FIXED_SHIPPING_COST = 25000;
 
     const shippingCost = subtotal >= SHIPPING_THRESHOLD || subtotal === 0 ? 0 : FIXED_SHIPPING_COST;
     const total = subtotal + shippingCost;

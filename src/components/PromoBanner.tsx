@@ -1,7 +1,7 @@
 import { Truck, Shield, RefreshCw, Headphones } from "lucide-react";
 
 const features = [
-  { icon: Truck, title: "Envío gratis", desc: "En compras +$200.000" },
+  { icon: Truck, title: "Envío gratis", desc: "En compras +$350.000" },
   { icon: Shield, title: "Garantía oficial", desc: "En todos los productos" },
   { icon: RefreshCw, title: "Cambios gratis", desc: "Hasta 30 días" },
   { icon: Headphones, title: "Soporte 24/7", desc: "Te asesoramos siempre" },
@@ -10,7 +10,7 @@ const features = [
 const PromoBanner = () => {
   return (
     <section className="py-10 border-y border-border bg-secondary/50 relative overflow-hidden">
-      {/* Subtle court lines */}
+      {/* Líneas de cancha sutiles */}
       <div className="absolute inset-0 court-lines opacity-30" />
       <div className="relative container mx-auto px-4">
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">

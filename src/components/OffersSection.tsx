@@ -26,12 +26,12 @@ const OffersSection = () => {
 
   return (
     <section className="py-20 md:py-28 relative overflow-hidden">
-      {/* Court texture background */}
+      {/* Fondo de textura de cancha */}
       <div className="absolute inset-0 bg-gradient-to-b from-background via-[hsl(145,80%,42%)]/5 to-background" />
       <div className="absolute inset-0 court-texture" />
 
       <div className="relative container mx-auto px-4">
-        {/* Header with countdown */}
+        {/* Encabezado con cuenta regresiva */}
         <div className="flex flex-col md:flex-row items-start md:items-end justify-between mb-12 gap-6">
           <div>
             <div className="flex items-center gap-2 mb-3">
@@ -48,7 +48,7 @@ const OffersSection = () => {
             </h2>
           </div>
 
-          {/* Modern Countdown */}
+          {/* Cuenta regresiva moderna */}
           <div className="flex items-center gap-3">
             {time.isExpired ? (
               <div className="bg-foreground rounded-xl px-6 py-3 shadow-lg relative overflow-hidden">
@@ -67,7 +67,7 @@ const OffersSection = () => {
                     { val: pad(time.minutes), label: "MINUTOS" },
                   ].map((t, i) => (
                     <div key={t.label} className="relative bg-foreground rounded-xl px-4 py-3 text-center min-w-[64px] shadow-lg overflow-hidden">
-                      {/* Neon border */}
+                      {/* Borde neón */}
                       <div className="absolute inset-0 rounded-xl border border-primary/30" />
                       <span className="font-heading font-black text-3xl text-primary animate-countdown inline-block">
                         {t.val}

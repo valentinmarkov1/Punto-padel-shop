@@ -167,7 +167,7 @@ const Carrito = () => {
                                             <span className="font-bold">{formatPrice(shippingCost)}</span>
                                         )}
                                     </div>
-                                    {subtotal >= 200000 && (
+                                    {subtotal >= 350000 && (
                                         <div className="flex items-center gap-2 p-3 bg-destructive/5 text-destructive rounded-xl border border-destructive/10 animate-pulse">
                                             <Zap className="w-4 h-4 fill-current" />
                                             <span className="text-[10px] font-black uppercase tracking-widest leading-none">¡Tenés envío gratis aplicado!</span>

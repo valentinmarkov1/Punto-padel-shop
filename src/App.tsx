@@ -48,7 +48,7 @@ const App = () => (
                   <Route path="/contacto" element={<Contacto />} />
                   <Route path="/gracias-por-tu-compra" element={<GraciasPorTuCompra />} />
                   
-                  {/* Admin Routes */}
+                  {/* Rutas de Administración */}
                   <Route path="/admin-login" element={<AdminLogin />} />
                   <Route 
                     path="/admin/*" 
@@ -59,7 +59,7 @@ const App = () => (
                     } 
                   />
 
-                  {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+                  {/* AGREGAR TODAS LAS RUTAS PERSONALIZADAS POR ENCIMA DE LA RUTA COMODÍN "*" */}
                   <Route path="*" element={<NotFound />} />
                 </Routes>
                 <WhatsAppWidget />

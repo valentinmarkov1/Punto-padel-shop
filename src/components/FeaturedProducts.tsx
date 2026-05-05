@@ -25,7 +25,7 @@ const FeaturedProducts = () => {
 
   return (
     <section className="py-20 md:py-28 relative overflow-hidden">
-      {/* Subtle diagonal texture */}
+      {/* Textura diagonal sutil */}
       <div className="absolute inset-0 diagonal-accent" />
       <div className="absolute inset-0 bg-secondary/30" />
 

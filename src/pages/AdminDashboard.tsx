@@ -97,7 +97,7 @@ const AdminDashboard = () => {
 
   return (
     <div className="min-h-screen bg-secondary/10 flex">
-      {/* Desktop Sidebar */}
+      {/* Barra Lateral de Escritorio */}
       <aside
         className={`${sidebarOpen ? 'w-64' : 'w-20'
           } bg-card border-r border-border transition-all duration-300 hidden md:flex flex-col z-50`}
@@ -105,7 +105,7 @@ const AdminDashboard = () => {
         <SidebarContent />
       </aside>
 
-      {/* Main Content */}
+      {/* Contenido Principal */}
       <main className="flex-1 flex flex-col min-w-0 overflow-hidden">
         <header className="h-16 bg-card border-b border-border flex items-center justify-between px-4 md:px-8 sticky top-0 z-40">
           <div className="flex items-center gap-2">
