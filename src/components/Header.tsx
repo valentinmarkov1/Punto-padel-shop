@@ -82,7 +82,7 @@ const Header = () => {
       if (searchRef.current && !searchRef.current.contains(e.target as Node)) {
         setSearchOpen(false);
       }
-      
+
       // Cerrar menús desplegables si se hace clic fuera de la navegación
       const nav = document.querySelector('nav');
       if (nav && !nav.contains(e.target as Node) && !mobileMenuRef.current?.contains(e.target as Node)) {
@@ -109,7 +109,7 @@ const Header = () => {
         <div className="animate-marquee flex whitespace-nowrap py-1.5">
           {Array.from({ length: 4 }).map((_, i) => (
             <span key={i} className="mx-8 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-              <Zap className="w-3 h-3 text-primary" /> ENVÍO GRATIS EN COMPRAS +$200.000
+              <Zap className="w-3 h-3 text-primary" /> ENVÍO GRATIS EN COMPRAS +$350.000
               <span className="mx-4 text-primary">•</span>
               NUEVA COLECCIÓN 2026 DISPONIBLE
             </span>
@@ -253,15 +253,15 @@ const Header = () => {
             <div className="container mx-auto px-4 py-4 space-y-1">
               {categories.map((cat) => (
                 <div key={cat.name}>
-                    <div 
-                      className="flex items-center justify-between w-full py-3 cursor-pointer"
-                      onClick={() => setActiveDropdown(activeDropdown === cat.name ? null : cat.name)}
-                    >
-                      <span className="text-sm font-bold text-foreground/90 uppercase tracking-wide">
-                        {cat.name}
-                      </span>
-                      <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === cat.name ? 'rotate-180' : ''}`} />
-                    </div>
+                  <div
+                    className="flex items-center justify-between w-full py-3 cursor-pointer"
+                    onClick={() => setActiveDropdown(activeDropdown === cat.name ? null : cat.name)}
+                  >
+                    <span className="text-sm font-bold text-foreground/90 uppercase tracking-wide">
+                      {cat.name}
+                    </span>
+                    <ChevronDown className={`w-4 h-4 transition-transform ${activeDropdown === cat.name ? 'rotate-180' : ''}`} />
+                  </div>
                   {activeDropdown === cat.name && (
                     <div className="pl-4 space-y-1 pb-2">
                       {cat.subcategories.map((sub) => (
