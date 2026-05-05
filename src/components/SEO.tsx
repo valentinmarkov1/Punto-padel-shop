@@ -21,12 +21,14 @@ const SEO = ({
   const fullTitle = title ? `${title} | ${siteName}` : 'Punto Pádel - Tienda Online de Pádel';
   const defaultDescription = 'Equipamiento profesional de pádel. Palas, bolsos, indumentaria y accesorios.';
   const finalDescription = description || defaultDescription;
+  const keywords = "pádel, palas de pádel, pelotas de pádel, bolsos de pádel, indumentaria pádel, argentina, berazategui, punto pádel";
 
   return (
     <Helmet>
       {/* Etiquetas Meta Básicas */}
       <title>{fullTitle}</title>
       <meta name="description" content={finalDescription} />
+      <meta name="keywords" content={keywords} />
       <link rel="canonical" href={url} />
 
       {/* Open Graph / Facebook */}

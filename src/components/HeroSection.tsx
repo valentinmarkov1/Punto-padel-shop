@@ -57,12 +57,12 @@ const HeroSection = () => {
               Equipamiento de élite 2026
             </span>
           </div>
-          <h1 className="font-heading text-5xl sm:text-6xl md:text-[5rem] font-extrabold leading-[1.1] tracking-[-0.02em] text-white animate-slide-up" style={{ animationDelay: "0.2s" }}>
-            POTENCIA
+          <h1 className="font-heading text-5xl sm:text-6xl md:text-[5.5rem] font-extrabold leading-[1.1] tracking-[-0.02em] text-white animate-slide-up" style={{ animationDelay: "0.2s" }}>
+            EQUIPAMIENTO
             <br />
-            <span className="text-white">PRECISIÓN</span>
+            <span className="text-primary">PROFESIONAL</span>
             <br />
-            <span className="text-white">DOMINIO</span>
+            <span className="text-white">DE PÁDEL</span>
           </h1>
           <p className="text-white/60 text-lg md:text-xl max-w-lg animate-slide-up leading-relaxed" style={{ animationDelay: "0.3s" }}>
             Todo lo necesario para jugadores que no vinieron a participar. Vinieron a ganar.
