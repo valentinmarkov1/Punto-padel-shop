@@ -87,6 +87,16 @@ const Productos = () => {
         } else {
             newParams.delete(key);
         }
+
+        // When category changes, always clear subcategory and specific paddle filters
+        if (key === "categoria") {
+            newParams.delete("subcategoria");
+            if (value !== "palas") {
+                newParams.delete("nivel");
+                newParams.delete("tipo");
+            }
+        }
+
         setSearchParams(newParams);
     };
 
@@ -213,7 +223,7 @@ const Productos = () => {
                 </>
             )}
 
-            {(categoryFilter || offerFilter || levelFilter || typeFilter || searchFilter || subcategoryFilter) && (
+            {(categoryFilter || offerFilter || levelFilter || typeFilter || searchFilter || subcategoryFilter || minPrice !== null || maxPrice !== null) && (
                 <Button
                     variant="ghost"
                     size="sm"
