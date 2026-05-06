@@ -5,6 +5,9 @@ import CategorySection from "@/components/CategorySection";
 import OffersSection from "@/components/OffersSection";
 import BrandSection from "@/components/BrandSection";
 import FeaturedProducts from "@/components/FeaturedProducts";
+import ProductsCarousel from "@/components/ProductsCarousel";
+import BrandsCarousel from "@/components/BrandsCarousel";
+import GoogleReviews from "@/components/GoogleReviews";
 import Footer from "@/components/Footer";
 import SEO from "@/components/SEO";
 
@@ -55,10 +58,13 @@ const Index = () => {
       <main>
         <HeroSection />
         <PromoBanner />
+        <ProductsCarousel />
+        <BrandsCarousel />
         <CategorySection />
         <OffersSection />
         <BrandSection />
         <FeaturedProducts />
+        <GoogleReviews />
       </main>
       <Footer />
     </div>

@@ -2,17 +2,18 @@ import React, { useState } from 'react';
 import { useAdmin } from '@/context/AdminContext';
 import { Product } from '@/data/products';
 import { Button } from '@/components/ui/button';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  MoreVertical, 
-  Edit, 
-  Trash2, 
+import {
+  Plus,
+  Search,
+  Filter,
+  MoreVertical,
+  Edit,
+  Trash2,
   ExternalLink,
   Tag as TagIcon,
-  Star as StarIcon,
-  Package
+  Package,
+  Eye,
+  EyeOff
 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import {
@@ -41,7 +42,7 @@ import {
 import ProductForm from './ProductForm';
 
 const AdminProducts = () => {
-  const { products, deleteProduct, addProduct, updateProduct } = useAdmin();
+  const { products, deleteProduct, addProduct, updateProduct, togglePublished } = useAdmin();
   const [searchTerm, setSearchTerm] = useState('');
   const [isEditing, setIsEditing] = useState(false);
   const [editingProduct, setEditingProduct] = useState<Product | undefined>(undefined);
@@ -166,15 +167,23 @@ const AdminProducts = () => {
                   </div>
                 </TableCell>
                 <TableCell>
-                  <div className="flex gap-2">
-                    {product.isOffer && (
-                      <div title="En Oferta">
-                        <TagIcon className="w-4 h-4 text-orange-500 fill-orange-500/20" />
-                      </div>
-                    )}
-                    {product.isNew && (
-                      <Badge className="bg-primary text-[8px] px-1 h-4 font-black">DESTACADO</Badge>
-                    )}
+                  <div className="flex flex-col gap-1.5">
+                    <Badge
+                      className={`text-[9px] px-2 h-5 font-black w-fit ${product.published !== false ? 'bg-green-500/15 text-green-700 border-green-500/30' : 'bg-zinc-200 text-zinc-500 border-zinc-300'}`}
+                      variant="outline"
+                    >
+                      {product.published !== false ? 'PUBLICADO' : 'DESPUBLICADO'}
+                    </Badge>
+                    <div className="flex gap-1.5">
+                      {product.isOffer && (
+                        <div title="En Oferta">
+                          <TagIcon className="w-4 h-4 text-orange-500 fill-orange-500/20" />
+                        </div>
+                      )}
+                      {product.isNew && (
+                        <Badge className="bg-primary text-[8px] px-1 h-4 font-black">DESTACADO</Badge>
+                      )}
+                    </div>
                   </div>
                 </TableCell>
                 <TableCell className="text-right">
@@ -195,6 +204,15 @@ const AdminProducts = () => {
                       <DropdownMenuItem className="rounded-lg gap-2 cursor-pointer font-bold text-[10px] uppercase tracking-widest group">
                         <ExternalLink className="w-4 h-4 text-muted-foreground group-hover:text-primary" />
                         Ver en tienda
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => togglePublished(product.id, product.published !== false)}
+                        className="rounded-lg gap-2 cursor-pointer font-bold text-[10px] uppercase tracking-widest group"
+                      >
+                        {product.published !== false
+                          ? <><EyeOff className="w-4 h-4 text-muted-foreground group-hover:text-orange-500" />Despublicar</>
+                          : <><Eye className="w-4 h-4 text-muted-foreground group-hover:text-green-500" />Publicar</>
+                        }
                       </DropdownMenuItem>
                       <Separator className="my-1" />
                       <DropdownMenuItem 

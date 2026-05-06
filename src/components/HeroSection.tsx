@@ -1,85 +1,95 @@
-import heroBg from "@/assets/hero-padel.jpg";
-import { ArrowRight, Trophy } from "lucide-react";
-import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import imgPaleta from "@/assets/product-paleta.jpg";
+import imgHero from "@/assets/hero-padel.jpg";
+import imgBolso from "@/assets/product-bolso.jpg";
+import imgIndu from "@/assets/product-indumentaria.jpg";
 
-const particles = Array.from({ length: 20 }, (_, i) => ({
-  id: i,
-  left: `${Math.random() * 100}%`,
-  size: Math.random() * 3 + 1,
-  duration: Math.random() * 8 + 6,
-  delay: Math.random() * 5,
-  opacity: Math.random() * 0.4 + 0.1,
-}));
+const VER = ({ to }: { to: string }) => (
+  <Link
+    to={to}
+    className="inline-block mt-3 bg-white/10 hover:bg-white/20 text-white text-xs font-heading font-bold uppercase tracking-widest px-4 py-1.5 transition-colors duration-200 w-fit"
+  >
+    Ver
+  </Link>
+);
 
 const HeroSection = () => {
   return (
-    <section className="relative h-[95vh] min-h-[650px] flex items-center overflow-hidden">
-      {/* Fondo con animación de zoom */}
-      <div className="absolute inset-0">
-        <img src={heroBg} alt="Jugador profesional de pádel en acción" className="w-full h-full object-cover animate-hero-zoom" />
-        {/* Capas oscuras para mayor dramatismo */}
-        <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/75 to-black/40" />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/40" />
-        {/* Efecto de foco verde/amarillo */}
-        <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-[radial-gradient(circle,hsl(145_80%_42%_/_0.12)_0%,transparent_70%)] blur-3xl" />
-        <div className="absolute bottom-0 left-1/3 w-[500px] h-[500px] bg-[radial-gradient(circle,hsl(48_96%_53%_/_0.1)_0%,transparent_70%)] blur-3xl" />
-      </div>
+    <section className="w-full bg-black">
+      <div className="container mx-auto px-4 py-4">
+        <div className="grid grid-cols-1 md:grid-cols-[3fr_2fr] gap-2 h-auto md:h-[520px]">
 
-      {/* Partículas de polvo */}
-      <div className="absolute inset-0 pointer-events-none overflow-hidden">
-        {particles.map((p) => (
-          <div
-            key={p.id}
-            className="absolute rounded-full bg-primary/60 animate-particle"
-            style={{
-              left: p.left,
-              bottom: "-10px",
-              width: `${p.size}px`,
-              height: `${p.size}px`,
-              animationDuration: `${p.duration}s`,
-              animationDelay: `${p.delay}s`,
-              opacity: p.opacity,
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Línea de acento diagonal */}
-      <div className="absolute bottom-0 left-0 right-0 h-1.5 bg-gradient-to-r from-[hsl(145,80%,42%)] via-primary to-[hsl(145,80%,42%)]" />
-
-      {/* Contenido */}
-      <div className="relative container mx-auto px-4">
-        <div className="max-w-3xl space-y-8">
-          <div className="inline-flex items-center gap-2 bg-[hsl(145,80%,42%)]/15 border border-[hsl(145,80%,42%)]/30 rounded-full px-5 py-2 animate-slide-up" style={{ animationDelay: "0.1s" }}>
-            <Trophy className="w-4 h-4 text-[hsl(145,80%,42%)]" />
-            <span className="text-[hsl(145,80%,42%)] font-heading font-bold text-xs uppercase tracking-[0.2em]">
-              Equipamiento de élite 2026
-            </span>
+          {/* ── Banner principal izquierda ── */}
+          <div className="relative overflow-hidden min-h-[320px]">
+            <img
+              src={imgHero}
+              alt="Nueva colección de palas"
+              className="absolute inset-0 w-full h-full object-cover object-center"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+            <div className="absolute bottom-0 left-0 p-6 md:p-8">
+              <p className="text-primary font-heading font-black text-3xl md:text-4xl uppercase leading-tight">
+                Colección 2026
+              </p>
+              <p className="text-white/80 font-heading font-bold text-sm uppercase tracking-wider mt-1">
+                Nueva colección de palas
+              </p>
+              <VER to="/productos?categoria=palas" />
+            </div>
           </div>
-          <h1 className="font-heading text-5xl sm:text-6xl md:text-[5.5rem] font-extrabold leading-[1.1] tracking-[-0.02em] text-white animate-slide-up" style={{ animationDelay: "0.2s" }}>
-            EQUIPAMIENTO
-            <br />
-            <span className="text-white">PROFESIONAL</span>
-            <br />
-            <span className="text-white">DE PÁDEL</span>
-          </h1>
-          <p className="text-white/60 text-lg md:text-xl max-w-lg animate-slide-up leading-relaxed" style={{ animationDelay: "0.3s" }}>
-            Todo lo necesario para jugadores que no vinieron a participar. Vinieron a ganar.
-          </p>
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 animate-slide-up" style={{ animationDelay: "0.4s" }}>
-            <Button size="lg" asChild className="font-heading font-black text-base uppercase tracking-wider animate-pulse-glow w-full sm:w-auto px-10 h-14 md:h-16 text-lg rounded-xl">
-              <Link to="/productos">
-                <Trophy className="mr-2 w-5 h-5" />
-                Ver Productos
-                <ArrowRight className="ml-2 w-5 h-5" />
-              </Link>
-            </Button>
-            <Button size="lg" asChild className="font-heading font-bold text-base uppercase tracking-wider bg-[hsl(145,80%,42%)] text-white hover:bg-[hsl(145,80%,42%)]/90 w-full sm:w-auto px-7 h-14 md:h-16 rounded-xl border border-[hsl(145,80%,42%)]/50">
-              <Link to="/productos?ofertas=true">
-                Ofertas
-              </Link>
-            </Button>
+
+          {/* ── 3 banners derecha ── */}
+          <div className="grid grid-rows-3 gap-2 min-h-[400px] md:min-h-0">
+
+            {/* Banner 1 — Palas */}
+            <div className="relative overflow-hidden">
+              <img
+                src={imgPaleta}
+                alt="Palas de élite"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/55" />
+              <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-5">
+                <p className="text-white font-heading font-black text-xl md:text-2xl uppercase leading-tight">
+                  Palas de <span className="text-primary">élite</span>
+                </p>
+                <p className="text-white/70 text-xs mt-0.5">Para todos los niveles.</p>
+                <VER to="/productos?categoria=palas" />
+              </div>
+            </div>
+
+            {/* Banner 2 — Indumentaria próximamente */}
+            <div className="relative overflow-hidden">
+              <img
+                src={imgIndu}
+                alt="Indumentaria próximamente"
+                className="absolute inset-0 w-full h-full object-cover grayscale opacity-60"
+              />
+              <div className="absolute inset-0 bg-black/60" />
+              <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-5">
+                <p className="text-white font-heading font-black text-xl md:text-2xl uppercase leading-tight">
+                  Indumentaria
+                </p>
+                <p className="text-white/50 text-xs mt-0.5 uppercase tracking-widest font-bold">Próximamente</p>
+              </div>
+            </div>
+
+            {/* Banner 3 — Bolsos próximamente */}
+            <div className="relative overflow-hidden">
+              <img
+                src={imgBolso}
+                alt="Bolsos próximamente"
+                className="absolute inset-0 w-full h-full object-cover grayscale opacity-60"
+              />
+              <div className="absolute inset-0 bg-black/60" />
+              <div className="absolute inset-0 flex flex-col justify-end p-4 md:p-5">
+                <p className="text-white font-heading font-black text-xl md:text-2xl uppercase leading-tight">
+                  Bolsos
+                </p>
+                <p className="text-white/50 text-xs mt-0.5 uppercase tracking-widest font-bold">Próximamente</p>
+              </div>
+            </div>
+
           </div>
         </div>
       </div>

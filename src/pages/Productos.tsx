@@ -46,13 +46,14 @@ const SUBCATEGORIES = {
 };
 
 const Productos = () => {
-    const { products, loading } = useAdmin();
+    const { publicProducts: products, loading } = useAdmin();
     const [searchParams, setSearchParams] = useSearchParams();
     const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
     // Get filter values from URL
     const categoryFilter = searchParams.get("categoria");
     const offerFilter = searchParams.get("ofertas") === "true";
+    const sinStockFilter = searchParams.get("sinstock") === "true";
     const searchFilter = searchParams.get("search");
     const levelFilter = searchParams.get("nivel");
     const typeFilter = searchParams.get("tipo");
@@ -65,6 +66,7 @@ const Productos = () => {
         return products.filter((product) => {
             if (categoryFilter && product.category.toLowerCase() !== categoryFilter.toLowerCase()) return false;
             if (offerFilter && !product.isOffer) return false;
+            if (sinStockFilter && (product.stock === undefined || product.stock > 0)) return false;
             if (levelFilter && product.level !== levelFilter) return false;
             if (typeFilter && product.type !== typeFilter) return false;
             if (searchFilter && !product.name.toLowerCase().includes(searchFilter.toLowerCase())) return false;
@@ -150,6 +152,15 @@ const Productos = () => {
                         {offerFilter && <X className="w-3 h-3" />}
                     </div>
                     Solo Ofertas
+                </button>
+                <button
+                    onClick={() => updateFilters("sinstock", sinStockFilter ? null : "true")}
+                    className={`flex items-center gap-2 text-sm font-medium transition-colors hover:text-primary ${sinStockFilter ? 'text-primary' : 'text-foreground/70'}`}
+                >
+                    <div className={`w-4 h-4 rounded border flex items-center justify-center transition-colors ${sinStockFilter ? 'bg-primary border-primary text-primary-foreground' : 'border-border'}`}>
+                        {sinStockFilter && <X className="w-3 h-3" />}
+                    </div>
+                    Sin stock / A pedido
                 </button>
             </div>
 

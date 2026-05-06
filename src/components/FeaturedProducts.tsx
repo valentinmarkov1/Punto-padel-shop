@@ -5,8 +5,8 @@ import ProductCard from "./ProductCard";
 import { useAdmin } from "@/context/AdminContext";
 
 const FeaturedProducts = () => {
-  const { products, loading } = useAdmin();
-  const featured = products.filter(p => p.isNew).slice(0, 8); // Only take products marked as isNew (Featured)
+  const { publicProducts, loading } = useAdmin();
+  const featured = publicProducts.filter(p => p.isNew).slice(0, 8); // Only take products marked as isNew (Featured)
 
   if (loading) {
     return (

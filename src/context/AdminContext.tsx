@@ -37,12 +37,14 @@ export interface Order {
 }
 
 interface AdminContextType {
-  products: Product[];
+  products: Product[];        // todos (admin)
+  publicProducts: Product[];  // solo published=true (tienda pública)
   settings: SiteSettings;
   orders: Order[];
   loading: boolean;
   addProduct: (product: Omit<Product, 'id' | 'slug' | 'priceFormatted'>) => Promise<void>;
   updateProduct: (id: string, product: Partial<Product>) => Promise<void>;
+  togglePublished: (id: string, current: boolean) => Promise<void>;
   deleteProduct: (id: string) => Promise<void>;
   updateSettings: (settings: Partial<SiteSettings>) => Promise<void>;
   fetchOrders: () => Promise<void>;
@@ -127,7 +129,8 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           tag1: p.tag1,
           tag2: p.tag2,
           subcategory: p.subcategory,
-          stock: p.stock ?? 0
+          stock: p.stock ?? 0,
+          published: p.published ?? true,
         };
       });
       setProducts(formattedProducts);
@@ -360,6 +363,7 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (updatedFields.tag1 !== undefined) updateData.tag1 = updatedFields.tag1;
     if (updatedFields.subcategory !== undefined) updateData.subcategory = updatedFields.subcategory;
     if (updatedFields.stock !== undefined) updateData.stock = updatedFields.stock;
+    if (updatedFields.published !== undefined) updateData.published = updatedFields.published;
 
     const { error } = await supabase
       .from('products')
@@ -373,6 +377,21 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
     toast.success('Producto actualizado');
     await fetchProducts();
+  };
+
+  const togglePublished = async (id: string, current: boolean) => {
+    const { error } = await supabase
+      .from('products')
+      .update({ published: !current })
+      .eq('id', id);
+
+    if (error) {
+      toast.error('Error al cambiar visibilidad: ' + error.message);
+      return;
+    }
+
+    setProducts(prev => prev.map(p => p.id === id ? { ...p, published: !current } : p));
+    toast.success(!current ? 'Producto publicado' : 'Producto despublicado');
   };
 
   const deleteProduct = async (id: string) => {
@@ -452,14 +471,18 @@ export const AdminProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     setSettings({ ...settings, ...newSettings });
   };
 
+  const publicProducts = products.filter(p => p.published !== false);
+
   return (
-    <AdminContext.Provider value={{ 
-      products, 
-      settings, 
-      loading, 
-      addProduct, 
-      updateProduct, 
-      deleteProduct, 
+    <AdminContext.Provider value={{
+      products,
+      publicProducts,
+      settings,
+      loading,
+      addProduct,
+      updateProduct,
+      togglePublished,
+      deleteProduct,
       updateSettings,
       orders,
       fetchOrders,

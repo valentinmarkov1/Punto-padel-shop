@@ -8,9 +8,9 @@ import { useAdmin } from "@/context/AdminContext";
 import { getTimeLeft } from "@/lib/offer-utils";
 
 const OffersSection = () => {
-  const { products, settings, loading } = useAdmin();
+  const { publicProducts, settings, loading } = useAdmin();
   const [time, setTime] = useState(() => getTimeLeft(settings.offerCountdownEnd));
-  const offerProducts = products.filter(p => p.isOffer).slice(0, 3);
+  const offerProducts = publicProducts.filter(p => p.isOffer).slice(0, 3);
 
   useEffect(() => {
     setTime(getTimeLeft(settings.offerCountdownEnd));

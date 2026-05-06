@@ -28,6 +28,7 @@ export interface Product {
     tag2?: string;
     subcategory?: string;
     stock?: number;
+    published?: boolean;
 }
 
 const generateSlug = (name: string) => {
