@@ -24,7 +24,7 @@ const ProductoDetalle = () => {
     const [quantity, setQuantity] = useState(1);
     const { settings } = useAdmin();
 
-    const product = products.find((p) => p.slug === slug);
+    const product = products.find((p) => p.slug === slug && p.published !== false);
 
     if (loading) {
         return (

@@ -63,6 +63,7 @@ const Productos = () => {
 
     const filteredProducts = useMemo(() => {
         return products.filter((product) => {
+            if (product.published === false) return false;
             if (categoryFilter && product.category.toLowerCase() !== categoryFilter.toLowerCase()) return false;
             if (offerFilter && !product.isOffer) return false;
             if (levelFilter && product.level !== levelFilter) return false;

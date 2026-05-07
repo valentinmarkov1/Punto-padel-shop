@@ -10,7 +10,7 @@ import { getTimeLeft } from "@/lib/offer-utils";
 const OffersSection = () => {
   const { products, settings, loading } = useAdmin();
   const [time, setTime] = useState(() => getTimeLeft(settings.offerCountdownEnd));
-  const offerProducts = products.filter(p => p.isOffer).slice(0, 3);
+  const offerProducts = products.filter(p => p.isOffer && p.published !== false).slice(0, 3);
 
   useEffect(() => {
     setTime(getTimeLeft(settings.offerCountdownEnd));

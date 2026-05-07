@@ -6,7 +6,7 @@ import { useAdmin } from "@/context/AdminContext";
 
 const FeaturedProducts = () => {
   const { products, loading } = useAdmin();
-  const featured = products.filter(p => p.isNew).slice(0, 8); // Only take products marked as isNew (Featured)
+  const featured = products.filter(p => p.isNew && p.published !== false).slice(0, 8); // Only take products marked as isNew (Featured) and published
 
   if (loading) {
     return (

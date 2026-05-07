@@ -21,7 +21,7 @@ const CategorySection = () => {
   const categoriesWithCounts = categoryMetadata
     .map(cat => ({
       ...cat,
-      count: products.filter(p => p.category.toLowerCase() === cat.name.toLowerCase()).length,
+      count: products.filter(p => p.category.toLowerCase() === cat.name.toLowerCase() && p.published !== false).length,
       tag: settings.categoryTags?.[cat.name.toLowerCase()] || cat.tag
     }));
 

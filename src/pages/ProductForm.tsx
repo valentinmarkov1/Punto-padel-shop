@@ -52,6 +52,7 @@ const productSchema = z.object({
   tag1: z.string().optional(),
   subcategory: z.string().optional(),
   stock: z.coerce.number().min(0, 'El stock no puede ser negativo').default(0),
+  published: z.boolean().default(true),
 });
 
 type ProductFormValues = z.infer<typeof productSchema>;
@@ -82,6 +83,7 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
       tag1: product?.tag1 || '',
       subcategory: product?.subcategory || '',
       stock: product?.stock || 0,
+      published: product?.published !== undefined ? product.published : true,
     },
   });
 
@@ -418,6 +420,22 @@ const ProductForm: React.FC<ProductFormProps> = ({ product, onSubmit, onCancel }
               render={({ field }) => (
                 <div className="flex items-center justify-between p-4 bg-secondary/5 border border-border rounded-2xl">
                   <FormLabel className="uppercase text-[10px] font-black tracking-widest leading-none">Marcar como Destacado</FormLabel>
+                  <FormControl>
+                    <Switch checked={field.value} onCheckedChange={field.onChange} />
+                  </FormControl>
+                </div>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="published"
+              render={({ field }) => (
+                <div className="flex items-center justify-between p-4 bg-emerald-500/5 border border-emerald-500/20 rounded-2xl">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <FormLabel className="uppercase text-[10px] font-black tracking-widest leading-none text-emerald-700">Producto Publicado</FormLabel>
+                  </div>
                   <FormControl>
                     <Switch checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
