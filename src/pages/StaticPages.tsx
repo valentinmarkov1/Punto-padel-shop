@@ -27,7 +27,7 @@ const BasePage = ({ title, description, children }: PageProps) => (
 );
 
 export const SobreNosotros = () => (
-    <BasePage 
+    <BasePage
         title="Sobre nosotros"
         description="Conocé Punto Pádel, la tienda de equipamiento profesional. Descubrí nuestra misión y visión enfocada en mejorar tu rendimiento en la cancha."
     >
@@ -40,7 +40,7 @@ export const SobreNosotros = () => (
 );
 
 export const Envios = () => (
-    <BasePage 
+    <BasePage
         title="Envíos"
         description="Información detallada sobre costos, zonas y tiempos de envío de Punto Pádel para toda la República Argentina."
     >
@@ -55,7 +55,7 @@ export const Envios = () => (
             </section>
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Costos de envío</h2>
-                <p>El costo se calcula automáticamente al ingresar tu código postal en el carrito de compras. ¡Atención! Ofrecemos <strong>Envío Gratis</strong> en compras superiores al monto indicado en nuestra barra superior.</p>
+                <p>El costo se calcula automáticamente al ingresar tu código postal en el carrito de compras</p>
             </section>
             <section>
                 <h2 className="text-xl font-bold text-foreground uppercase mb-4 text-primary">Metodos de Envio</h2>
@@ -70,7 +70,7 @@ export const Envios = () => (
 );
 
 export const Devoluciones = () => (
-    <BasePage 
+    <BasePage
         title="Devoluciones"
         description="Política de devoluciones y cambios de Punto Pádel. Comprá con tranquilidad, te explicamos cómo gestionar cambios de talles o modelos."
     >
@@ -96,7 +96,7 @@ export const Devoluciones = () => (
 );
 
 export const MetodosPago = () => (
-    <BasePage 
+    <BasePage
         title="Métodos de pago"
         description="Aceptamos todas las tarjetas de crédito, débito, transferencia y Mercado Pago. Aprovechá nuestras cuotas y descuentos exclusivos."
     >
@@ -134,7 +134,7 @@ export const Contacto = () => {
 
         const text = `¡Hola! Me contacto desde la web:\n\n*Nombre:* ${nombre}\n*Teléfono:* ${telefono}\n*Mensaje:* ${mensaje}`;
         const encodedText = encodeURIComponent(text);
-        const PHONE_NUMBER = settings.whatsapp || '1138582368'; 
+        const PHONE_NUMBER = settings.whatsapp || '1138582368';
 
         window.open(`https://wa.me/549${PHONE_NUMBER}?text=${encodedText}`, '_blank');
 

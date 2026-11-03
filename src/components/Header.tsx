@@ -109,9 +109,7 @@ const Header = () => {
         <div className="animate-marquee flex whitespace-nowrap py-1.5">
           {Array.from({ length: 4 }).map((_, i) => (
             <span key={i} className="mx-8 text-xs font-bold uppercase tracking-wider flex items-center gap-2">
-              <Zap className="w-3 h-3 text-primary" /> ENVÍO GRATIS EN COMPRAS +$350.000
-              <span className="mx-4 text-primary">•</span>
-              NUEVA COLECCIÓN 2026 DISPONIBLE
+              <Zap className="w-3 h-3 text-primary" /> NUEVA COLECCIÓN 2026 DISPONIBLE
             </span>
           ))}
         </div>
